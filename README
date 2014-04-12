@@ -1,0 +1,12 @@
+GITHUB README for NWEN304/MDDN352 team project.
+
+The intention of this project is to allow visitors to Abel Tasman National Park to report sightings of natural predators of New Zealands Native flaura and fauna. i.e. ferrets, stoats, cats, and possum. 
+
+This application uses Phone Gap for the front end and nodejs as the backend.
+
+Front-end repo - https://github.com/doublethink/Judas-Phonegap.git
+Server folder - https://github.com/doublethink/Judas-Server.git
+
+The phonegap repo can simply be linked to Phonegap-Build instead of bothering to zip and upload.
+
+For correspondence email me at: Stephen@doublethink.co.nz
