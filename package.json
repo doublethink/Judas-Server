@@ -19,7 +19,8 @@
   "homepage": "https://github.com/doublethink/Judas-Server",
   "dependencies": {
     "express": "^4.0.0",
-    "logfmt": "^1.1.2"
+    "logfmt": "^1.1.2",
+    "pg": "^3.0.3"
   },
   
   "engines": {
