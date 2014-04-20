@@ -1,0 +1,28 @@
+{
+  "name": "Judas-Server",
+  "version": "0.0.0",
+  "description": "Back-end of Judas project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/doublethink/Judas-Server.git"
+  },
+  "author": "Judas project team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/doublethink/Judas-Server/issues"
+  },
+  "homepage": "https://github.com/doublethink/Judas-Server",
+  "dependencies": {
+    "express": "^4.0.0",
+    "logfmt": "^1.1.2"
+  },
+  
+  "engines": {
+    "node": "0.10.26"
+  }
+}
