@@ -31,7 +31,7 @@ app.post('/pestspotted', function(req, res) {
 });
 
 app.get('/', function(req, res) {
-  res.send('Hello World!');
+  res.send('Hello World!\nMatt was here...\n\n');
 });
 
 var port = Number(process.env.PORT || 5000);
