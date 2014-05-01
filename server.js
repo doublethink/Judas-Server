@@ -3,7 +3,12 @@
 var express = require("express");
 var logfmt = require("logfmt");
 var app = express();
+//app.engine('html', require('ejs').renderfile);
+//app.set("view options", {layout: false});
+//app.use(express.static(__dirname + '/public'));
 
+app.set('views', __dirname + '/views');
+app.engine('html', require('ejs').renderFile);
 
 //=====================================
 // cribbed from devcenter.heroku.com/articles/getting-started-with-nodejs
@@ -22,6 +27,9 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 // ====================================
 
 
+//=====================================
+// pestspotted code & dummy spots
+//=====================================
 app.use(logfmt.requestLogger());
 
 var spots = [
@@ -43,16 +51,34 @@ app.post('/pestspotted', function(req, res) {
     userid : req.body.userid
   };
 
-  quote.push(newSpot);
+  quote.push(newSpot); // =======> quote should be spots?
   Console.log("Added new location");
   res.send(true);
 });
+// end pestspotted
+//======================================
 
+
+//======================================
+// restful interface
+//======================================
 app.get('/', function(req, res) {
-  res.send('Hello World!\nMatt was here...\n\n');
+//  res.send('Hello World!\nMatt was here...\n\n');
+//  res.sendfile('./Judas-Phonegap/www/index.html');
+  res.render('index.html');
+//app.use(express.static(path.join(__dirname, 'public')));
 });
 
+// end rest
+//======================================
+
+
+//======================================
+// server
+//======================================
 var port = Number(process.env.PORT || 5000);
 app.listen(port, function() {
   console.log("Listening on " + port);
 });
+// end server
+//======================================

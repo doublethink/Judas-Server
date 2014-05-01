@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Judas Project</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.2.min.css" />
+<link rel="stylesheet" type="text/css" href="css/index.css" /> 
+<script src="js/jquery-1.9.1.min.js"></script>
+<script src="js/jquery.mobile-1.4.2.min.js"></script>
+<script type="text/javascript" src="phonegap.js"></script>
+<script type="text/javascript" src="js/facebook-js-sdk.js"></script>
+<script type="text/javascript" src="js/cdv-plugin-fb-connect.js"></script>
+<script type="text/javascript" src="js/init.js"></script>
+<script type="text/javascript" src="js/bindings.js"></script>
+
+</head>
+<body>
+
+    <!-- Start of login page, will not appear if already logged in -->
+    <div data-role="page" id="login">
+
+        <!-- Slider panel -->
+        <div data-role="panel" id="menu-panel" animate="true" display="reveal">
+            <ul data-role="listview">
+                <li data-role="list-divider">Selector Menu</li>
+                <li class="FB-login">Login with Facebook</li>
+                <li class="report-button">Report pest</li>
+                <li class="FB-logout">Logout</li>
+            </ul>
+        </div>
+
+        <!-- Universal header -->
+        <div data-role="header" data-position="fixed">
+                <a href="#menu-panel" data-icon="bars">Menu</a>
+                <h1>The Judas Project</h1>
+        </div>
+
+        <!-- Page content -->
+        <div role="main" class="ui-content" data-role="content">
+
+            <div id="center-button" style="text-align: center;">
+                <button class="FB-login" id="login-with-facebook" data-inline="true">Login with Facebook</button>
+
+                 <a href="#mainpage" data-role="button" data-mini="true" data-inline="true">Shortcut to mainpage (dev)</a>
+            </div>
+
+        </div><!-- content-->
+
+        
+
+    </div>
+
+    <!-- MAIN PAGE -->
+    <div data-role="page" id="mainpage">
+
+
+        <!-- Slider panel -->
+        <div data-role="panel" id="main-menu-panel" animate="true" display="reveal">
+            <ul data-role="listview">
+                <li data-role="list-divider">Selector Menu</li>
+                <li class="FB-login">Login with Facebook</li>
+                <li class="report-button">Report pest</li>
+                <li class="FB-logout">Logout</li>
+            </ul>
+        </div>
+
+        <!-- Universal header -->
+        <div data-role="header" data-position="fixed">
+                <a href="#main-menu-panel" data-icon="bars">Menu</a>
+                <h1>The Judas Project</h1>
+        </div>
+
+        <!-- Page content -->
+        <div role="main" class="ui-content">
+
+            <!--Center button wrapper -->
+            <div id="center-report" style="text-align: center;">
+
+                <!-- REPORT BUTTON -->
+                <a href="#popupDialog" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-transition="pop" data-icon="check" data-theme="a">Report Pest</a>
+                <div data-role="popup" id="popupDialog" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
+                    <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+                    <div data-role="header" data-theme="a" class="ui-corner-top">
+                        <h1>Send report?</h1>
+                    </div>
+                    <div data-role="content" data-theme="a" class="ui-corner-bottom ui-content">
+                        <h3 class="ui-title">Are you sure you want to report a pest?</h3>
+                        <p>This action cannot be undone.</p>
+                        <a href="#" data-role="button" data-inline="true" data-rel="back">Cancel</a>
+                        <button data-inline="true" data-rel="back" id="send-report">Report pest</button>
+                    </div>
+                </div><!--report button-->
+
+            </div><!--center wrapper-->
+
+        </div><!-- /content -->
+
+    </div><!-- /page -->
+
+</body>
+
+</html> 
