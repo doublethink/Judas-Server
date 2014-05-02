@@ -63,10 +63,7 @@ app.post('/pestspotted', function(req, res) {
 // restful interface
 //======================================
 app.get('/', function(req, res) {
-//  res.send('Hello World!\nMatt was here...\n\n');
-//  res.sendfile('./Judas-Phonegap/www/index.html');
-  res.render('index.html');
-//app.use(express.static(path.join(__dirname, 'public')));
+  res.send('Hello World!\nMatt was here...\n\n');
 });
 
 // end rest
