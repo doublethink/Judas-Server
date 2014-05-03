@@ -35,20 +35,28 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 });
 // end crib
 
+// TODO create a file for this
 var serverHomePage = 
-"Hello People!<br>" +
-"Matt was here...,<br>" +
-" stuff";
+"<br><h2>Members of Team Judas - I Greet You !!!</h2><br><br>" +
+"Your Server-Master (err... aspring novice) Matt brings you stuff...<br>" +
+" Home page, just serves you this text. Intended only as a team aid to exprimenting.<br>"+
+" As more functionality is added, I will add brief notes here.<br><br>"+
+" So far, these URI's exist:<br>"+
+" All based on the prefix... judas.herokuapp.com <br><br>"+
+" <b>GET</b>"+
+" /test     ...returns a string \"Server responds to \\\"test\\\".<br>\"<br>"+
+" /matt     ...alternate test, will return a string starting with \"Matt\" and saying something random.<br>"+
+" /pest1    ...(in progress) returns a value from dummy data.<br>";
 
 //======================================
 // restful interface
 //======================================
 app.get('/', function(req, res) {
-  res.send("Matt was here");
+  res.send(serverHomePage);
 });
 
 app.get('/matt', function(req, res) {
-  res.send(serverHomePage);
+  res.send("Matt was here... bwahahaha");
 });
 
 app.get('/test', function(req, res){
@@ -57,17 +65,13 @@ app.get('/test', function(req, res){
 });
 
 
+app.get('/pest1', function(req, res) {
+  res.send("Matt is working on. Might return \"possum\" or \"chiwawa\".");
+});
 
 
 
 // end rest
-
-
-
-
-
-
-
 
 //=====================================
 // pestspotted code & dummy spots
