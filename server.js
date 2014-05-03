@@ -19,6 +19,12 @@ var spots = [
   { timestamp : '2014-04-20 1300', longitude : 174.7777222, latitude : -41.288889, userid: '12345'},
   { timestamp : '2014-04-20 1310', longitude : 174.7777222, latitude : -41.288889, userid: '10000'},
 ];
+
+var pests = [
+  {name : 'Possum', colour : 'grey', danger : 'eats trees', found : 'look in trees'},
+  {name : 'Stoat', colour : 'black and white', danger : 'eats eggs', found : 'around tree bottoms'}
+];
+
 // end dummy
 
 //=====================================
@@ -48,7 +54,7 @@ var serverHomePage =
 " <b>GET</b><br>"+
 " /test     ...returns a string \"Server responds to \"test\".<br>"+
 " /matt     ...alternate test, will return a string starting with \"Matt\" and saying something random.<br>"+
-" /pest1    ...(in progress) returns a value from dummy data.<br>";
+" /pests/[possum, stoat]    ...returns the name, a little text and its colour, from dummy data.<br>";
 
 //======================================
 // restful interface
@@ -67,6 +73,18 @@ app.get('/test', function(req, res){
 });
 
 
+app.get('/pests/:id', function(req, res){
+  if(req.param('id') == 'possum'){
+  	res.send(pests[0].name + ", fur is " + pests[0].colour);
+  }else
+  if(req.param('id') == 'stoat'){
+  	res.send(pests[1].name + ", fur is " + pests[1].colour);
+  }else {
+  	res.send("here");
+  }
+});
+
+
 app.get('/pest1', function(req, res) {
   res.send("Matt is working on. Might return \"possum\" or \"chiwawa\".");
 });
@@ -74,6 +92,8 @@ app.get('/pest1', function(req, res) {
 
 
 // end rest
+
+
 
 //=====================================
 // pestspotted code & dummy spots
