@@ -45,7 +45,7 @@ Matt was here...,<br>
 // restful interface
 //======================================
 app.get('/', function(req, res) {
-  res.send(serverHomePage);
+  res.send("Matt was here");
 });
 
 app.get('/test', function(req, res){
