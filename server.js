@@ -54,7 +54,8 @@ var serverHomePage =
 " <b>GET</b><br>"+
 " /test     ...returns a string \"Server responds to \"test\".<br>"+
 " /matt     ...alternate test, will return a string starting with \"Matt\" and saying something random.<br>"+
-" /pests/[possum, stoat]    ...returns the name, a little text and its colour, from dummy data.<br>";
+" /pests/[possum, stoat]    ...returns the name, a little text and its colour, from dummy data.<br>"+
+" /pests/[possum, stoat]/found    ...returns text from dummy data on where to look for the pest.<br>";
 
 //======================================
 // restful interface
@@ -79,6 +80,17 @@ app.get('/pests/:id', function(req, res){
   }else
   if(req.param('id') == 'stoat'){
   	res.send(pests[1].name + ", fur is " + pests[1].colour);
+  }else {
+  	res.send("here");
+  }
+});
+
+app.get('/pests/:id/:s', function(req, res){
+  if(req.param('id') == 'possum' && req.param('s') == 'found'){
+  	res.send(pests[0].found);
+  }else
+  if(req.param('id') == 'stoat' && req.param('s') == 'found'){
+  	res.send(pests[1].found);
   }else {
   	res.send("here");
   }
