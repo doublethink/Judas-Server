@@ -2,6 +2,8 @@
 
 var express = require("express");
 var logfmt = require("logfmt");
+var pg = require('pg');
+
 var app = express();
 //app.engine('html', require('ejs').renderfile);
 //app.set("view options", {layout: false});
@@ -23,8 +25,7 @@ var spots = [
 // cribbed from devcenter.heroku.com/articles/getting-started-with-nodejs
 // hooks up the postgres db
 //=====================================
-var pg = require('pg');
-
+/*
 pg.connect(process.env.DATABASE_URL, function(err, client, done) {
   client.query('SELECT * FROM your_table', function(err, result) {
     done();
@@ -33,6 +34,7 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     console.log(result.rows);
   });
 });
+*/
 // end crib
 
 // TODO create a file for this
@@ -43,8 +45,8 @@ var serverHomePage =
 " As more functionality is added, I will add brief notes here.<br><br>"+
 " So far, these URI's exist:<br>"+
 " All based on the prefix... judas.herokuapp.com <br><br>"+
-" <b>GET</b>"+
-" /test     ...returns a string \"Server responds to \\\"test\\\".<br>\"<br>"+
+" <b>GET</b><br>"+
+" /test     ...returns a string \"Server responds to \"test\".<br>"+
 " /matt     ...alternate test, will return a string starting with \"Matt\" and saying something random.<br>"+
 " /pest1    ...(in progress) returns a value from dummy data.<br>";
 
