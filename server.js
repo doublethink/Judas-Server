@@ -10,6 +10,15 @@ var app = express();
 app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
 
+//====================================
+// dummy data
+//====================================
+var spots = [
+  { timestamp : '2014-04-20 1300', longitude : 174.7777222, latitude : -41.288889, userid: '12345'},
+  { timestamp : '2014-04-20 1310', longitude : 174.7777222, latitude : -41.288889, userid: '10000'},
+];
+// end dummy
+
 //=====================================
 // cribbed from devcenter.heroku.com/articles/getting-started-with-nodejs
 // hooks up the postgres db
@@ -25,35 +34,42 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
   });
 });
 // end crib
-// ====================================
 
+var serverHomePage = "
+Hello People!<br>
+Matt was here...,<br>
+
+";
 
 //======================================
 // restful interface
 //======================================
 app.get('/', function(req, res) {
-  res.send('Hello World!\nMatt was here...\n\n');
+  res.send(serverHomePage);
 });
 
+app.get('/test', function(req, res){
+	res.send(404, 'Server responds to \"test\".<br>');
+//	res.send(spots[0]);
+});
+
+
+
+
+
 // end rest
-//======================================
+
+
+
+
+
+
 
 
 //=====================================
 // pestspotted code & dummy spots
 //=====================================
 app.use(logfmt.requestLogger());
-
-var spots = [
-  { timestamp : '2014-04-20 1300', longitude : 174.7777222, latitude : -41.288889, userid: '12345'},
-  { timestamp : '2014-04-20 1310', longitude : 174.7777222, latitude : -41.288889, userid: '10000'},
-];
-
-app.get('/matt', function(req, res){
-	res.send(404, 'Matt responds to you.\n\n');
-	res.send(spots[0]);
-});
-
 
 app.post('/pestspotted', function(req, res) {
 	console.log("   ### =============> Matt was here\n");
@@ -80,15 +96,13 @@ app.post('/pestspotted', function(req, res) {
   res.send(true);
 });
 // end pestspotted
-//======================================
 
 
 //======================================
-// server
+// server start
 //======================================
 var port = Number(process.env.PORT || 5000);
 app.listen(port, function() {
   console.log("Listening on " + port);
 });
 // end server
-//======================================
