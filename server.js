@@ -35,17 +35,20 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 });
 // end crib
 
-var serverHomePage = "
-Hello People!<br>
-Matt was here...,<br>
-
-";
+var serverHomePage = 
+"Hello People!<br>" +
+"Matt was here...,<br>" +
+" stuff";
 
 //======================================
 // restful interface
 //======================================
 app.get('/', function(req, res) {
   res.send("Matt was here");
+});
+
+app.get('/matt', function(req, res) {
+  res.send(serverHomePage);
 });
 
 app.get('/test', function(req, res){
