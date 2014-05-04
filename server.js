@@ -102,7 +102,7 @@ app.get('/pests/:id', function(req, res){
   if(req.param('id') == 'stoat'){
   	res.send(pests[1].name + ", fur is " + pests[1].colour);
   }else {
-  	res.send("here");
+  	res.send("Did not recognise that.");
   }
 });
 
@@ -113,7 +113,7 @@ app.get('/pests/:id/:s', function(req, res){
   if(req.param('id') == 'stoat' && req.param('s') == 'found'){
   	res.send(pests[1].found);
   }else {
-  	res.send("here");
+  	res.send("Did not recognise that.");
   }
 });
 
