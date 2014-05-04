@@ -1,8 +1,12 @@
 // NWEN304 Project
+//===================================
 
 var express = require("express");
 var logfmt = require("logfmt");
 var pg = require('pg');
+
+var http = require('http'); // am backing off express for the moment
+
 
 var app = express();
 //app.engine('html', require('ejs').renderfile);
@@ -25,7 +29,7 @@ var pests = [
   {name : 'Stoat', colour : 'black and white', danger : 'eats eggs', found : 'around tree bottoms'}
 ];
 
-// end dummy
+// end dummy data
 
 //=====================================
 // cribbed from devcenter.heroku.com/articles/getting-started-with-nodejs
@@ -43,34 +47,51 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 */
 // end crib
 
-// TODO create a file for this
-var serverHomePage = 
-"<br><h2>Members of Team Judas - I Greet You !!!</h2><br><br>" +
-"Your Server-Master (err... aspring novice) Matt brings you stuff...<br>" +
-" Home page, just serves you this text. Intended only as a team aid to exprimenting.<br>"+
-" As more functionality is added, I will add brief notes here.<br><br>"+
-" So far, these URI's exist:<br>"+
-" All based on the prefix... judas.herokuapp.com <br><br>"+
-" <b>GET</b><br>"+
-" /test     ...returns a string \"Server responds to \"test\".<br>"+
-" /matt     ...alternate test, will return a string starting with \"Matt\" and saying something random.<br>"+
-" /pests/[possum, stoat]    ...returns the name, a little text and its colour, from dummy data.<br>"+
-" /pests/[possum, stoat]/found    ...returns text from dummy data on where to look for the pest.<br>";
 
 //======================================
-// restful interface
+// restful interfaces
 //======================================
-app.get('/', function(req, res) {
-  res.send(serverHomePage);
-});
+/* this appears to serve index.html from /views, without a get... */
+app.use(express.static(__dirname + '/views'));
 
 app.get('/matt', function(req, res) {
-  res.send("Matt was here... bwahahaha");
+  res.statusCode = 502;
+  res.setHeader("Set-Cookie", ["type=ninja", "language=javascript"]);
+
+  //...node.js method, write, write then end. 
+  //...is not parsed as html text (set Content-Type = text/html)
+  //res.setHeader("Content-Type", "text/html");
+  //res.write('Matt testing...<br>');
+  //res.end('Last testing text.');
+
+
+  //...sends files. Filepath, relative is ./views or views, absolute is /views
+  //...parses at html (set Content-Type = text/html)
+  res.sendfile('./views/test.html');
+
+  //...not working, hangs up
+  //res.render('./views/test.html', function(err, html){ 'I am a render.' });
+  
+  //res.send("Matt was here... bwahahaha");
 });
 
 app.get('/test', function(req, res){
-	res.send(404, 'Server responds to \"test\".<br>');
-//	res.send(spots[0]);
+  //...sends text
+  //...parses as html (Content-Type = text/html)
+  res.send('Server responds to \"test\".\"<br>');
+});
+
+app.get('/test/:id', function(req, res){
+  if(req.param('id') == 'test'){
+    res.sendfile('./views/test.html');
+  }else if(req.param('id') == 'page' ||
+      req.param('id') == 'testpage' ||
+      req.param('id') == 'testpage.html'
+      ){
+    res.sendfile('./views/testpage.html');
+  }else{
+    res.send('Sorry, don\'t recognise that command.<br>');
+  }
 });
 
 
@@ -97,8 +118,8 @@ app.get('/pests/:id/:s', function(req, res){
 });
 
 
-app.get('/pest1', function(req, res) {
-  res.send("Matt is working on. Might return \"possum\" or \"chiwawa\".");
+app.get('/error/:id', function(req, res) {
+  res.send(req.param('id'), "Error : "+req.param('id'));
 });
 
 
@@ -108,7 +129,7 @@ app.get('/pest1', function(req, res) {
 
 
 //=====================================
-// pestspotted code & dummy spots
+// pestspotted code
 //=====================================
 app.use(logfmt.requestLogger());
 
