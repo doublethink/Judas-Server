@@ -4,6 +4,7 @@
 var express = require("express");
 var logfmt = require("logfmt");
 var pg = require('pg');
+var bodyParser = require('body-parser');
 
 var http = require('http'); // am backing off express for the moment
 
@@ -15,6 +16,11 @@ var app = express();
 
 app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
+
+app.use(logfmt.requestLogger());
+
+// npm install body-parser
+app.use(bodyParser());
 
 //====================================
 // dummy data
@@ -122,23 +128,22 @@ app.get('/error/:id', function(req, res) {
   res.send(req.param('id'), "Error : "+req.param('id'));
 });
 
+app.post('/fish', function(req, res) {
+  res.send("Fish : " + req.param('fred') + "\nMike : " + req.param('mike'));
+});
 
+app.post('/fish', function(req, res) {
+  res.send("Fish : " + req.param('fred') + "\nMike : " + req.param('mike'));
+});
 
-// end rest
-
-
-
-//=====================================
-// pestspotted code
-//=====================================
-app.use(logfmt.requestLogger());
-
+// test curl for pestspotted
+// curl --request POST "localhost:5000/pestspotted" --data "longitude=22&latitude=44&userid=Matt"
 app.post('/pestspotted', function(req, res) {
 	console.log("   ### =============> Matt was here\n");
   console.log(req.body);
-  console.log(req.params);
-  console.log(req.param());
-  console.log(req.query);
+  console.log(req.body.longitude);
+  console.log(req.body.latitude);
+  console.log(req.body.userid);
 	console.log("\n   ### =============> Matt was here\n");
   if(!req.body.hasOwnProperty('longitude') || !req.body.hasOwnProperty('latitude') || !req.body.hasOwnProperty('userid')) 
 	{
@@ -153,12 +158,12 @@ app.post('/pestspotted', function(req, res) {
     userid : req.body.userid
   };
 
-  quote.push(newSpot); // =======> quote should be spots?
-  Console.log("Added new location");
+  spots.push(newSpot);
+  console.log("Added new location\r\n\r\n");
   res.send(true);
 });
-// end pestspotted
 
+// end rest
 
 //======================================
 // server start
