@@ -19,8 +19,8 @@ app.use(bodyParser());
 // dummy data
 //====================================
 var spots = [
-  { timestamp : '2014-04-20 1300', longitude : 174.7777222, latitude : -41.288889, userid: '12345', name : 'Possum'},
-  { timestamp : '2014-04-20 1310', longitude : 174.7777222, latitude : -41.288889, userid: '10000', name : 'Stoat'},
+  { timestamp : '2014-04-20 1300', longitude : 174.7777222, latitude : -41.288889, userid: 'Matt', name : 'Possum'},
+  { timestamp : '2014-04-20 1310', longitude : 174.7777222, latitude : -41.288889, userid: 'Fred', name : 'Stoat'},
 ];
 
 var pests = [
@@ -29,9 +29,9 @@ var pests = [
 ];
 
 var users = [ 
-	{user : 'Matt', password : 'stuff'},
-	{user : 'Fred', password : 'f'},
-	{user : 'Mike', password : '56tygh'}
+	{userId : 'Matt', name : 'Matt Stevens', password : 'stuff'},
+	{userId : 'Fred', name : 'Freddy Mercury', password : 'f'},
+	{userId : 'Mike', name : 'Mike the Plumber', password : '56tygh'}
 ];
 // end dummy data
 
@@ -168,16 +168,21 @@ app.post('/pestspotted', function(req, res) {
 });
 
 // test curl for authenticating user
-// curl --request POST "localhost:5000/user" --data "user=Matt&password=stuff"
+// curl --request POST "localhost:5000/user" --data "userId=Matt&password=stuff"
+// ref RFC2831 Digest SASL Authentication for steps to implement
+//   NB: not a great security protocol, but gets basic securtity in place that can be upgraded later.
+//   using qop = 'auth'
+//   1. User has not recently authenticated
+//   2. User has already authenticated and knows {userId, realm, qop and nonce}
 app.post('/user', function(req,res){
   console.log("Authenticating user.")
-  if(req.body.user == null || req.body.password == null){
+  if(req.body.userId == null || req.body.password == null){
     console.log("No user or password supplied.");
     res = setAuthenticateResponse(res);
     res.send(401, false); // TODO per wikipedia, need to add a WWW-Authenticate header field to response
   }
   for user in users{
-    if(req.body.user == user.name && req.body.password == user.password){
+    if(req.body.userId == userId.name && req.body.password == user.password){
       console.log("Supplied user and password match.");
       res.send(200, true);
     }
