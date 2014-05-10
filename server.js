@@ -181,13 +181,18 @@ app.post('/user', function(req,res){
     res = setAuthenticateResponse(res);
     res.send(401, false); // TODO per wikipedia, need to add a WWW-Authenticate header field to response
   }
-  for user in users{
-    if(req.body.userId == userId.name && req.body.password == user.password){
+  for (user in users){
+    console.log("userId : " + users[user].userId);
+    console.log("password : " + users[user].password);
+    if(req.body.userId == users[user].userId && req.body.password == users[user].password){
       console.log("Supplied user and password match.");
       res.send(200, true);
+			return;
     }
   }
   console.log("Supplied user and password failed.");
+  console.log("userId : " + req.body.userId);
+  console.log("password : " + req.body.password);
   res = setAuthenticateResponse(res)
   res.send(401, false);
 });
