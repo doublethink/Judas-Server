@@ -136,13 +136,12 @@ app.post('/fish', function(req, res) {
 // test curl for pestspotted
 // curl --request POST "localhost:5000/pestspotted" --data "longitude=22&latitude=44&userid=Matt&name=possum"
 app.post('/pestspotted', function(req, res) {
-	console.log("   ### =============> Matt was here\n");
-  console.log(req.body);
-  console.log(req.body.longitude);
-  console.log(req.body.latitude);
-  console.log(req.body.userid);
-  console.log(req.body.name);
-	console.log("\n   ### =============> Matt was here\n");
+	//console.log("   ### =============> Matt was here\n");
+  //console.log(req.body);
+  //console.log(req.body.longitude);
+  //console.log(req.body.latitude);
+  //console.log(req.body.userid);
+  //console.log(req.body.name);
   if(!req.body.hasOwnProperty('longitude') ||
      !req.body.hasOwnProperty('latitude') ||
      !req.body.hasOwnProperty('userid') ||
@@ -161,9 +160,10 @@ app.post('/pestspotted', function(req, res) {
   };
 
   spots.push(newSpot);
-  console.log("New pest spotted data is " + spots[spots.length -1]); // TODO check sizeof array syntax
+  console.log("New pest spotted data is ");
+  console.log(spots[spots.length -1]);
   console.log("Added new location\r\n\r\n");
-  var result = "{ resourceId : " + spots.length-1 + "}";
+  var result = "{ resourceId : " + (spots.length-1) + "}";
   res.send(201, result); // 201 is success resource created
 });
 
@@ -179,20 +179,20 @@ app.post('/user', function(req,res){
   if(req.body.userId == null || req.body.password == null){
     console.log("No user or password supplied.");
     res = setAuthenticateResponse(res);
-    res.send(401, false); // TODO per wikipedia, need to add a WWW-Authenticate header field to response
+    res.send(401, false); 
   }
-  for (user in users){
-    console.log("userId : " + users[user].userId);
-    console.log("password : " + users[user].password);
-    if(req.body.userId == users[user].userId && req.body.password == users[user].password){
+  for (i in users){
+    //console.log("userId : " + users[i].userId);
+    //console.log("password : " + users[i].password);
+    if(req.body.userId == users[i].userId && req.body.password == users[i].password){
       console.log("Supplied user and password match.");
       res.send(200, true);
 			return;
     }
   }
   console.log("Supplied user and password failed.");
-  console.log("userId : " + req.body.userId);
-  console.log("password : " + req.body.password);
+  //console.log("userId : " + req.body.userId);
+  //console.log("password : " + req.body.password);
   res = setAuthenticateResponse(res)
   res.send(401, false);
 });
