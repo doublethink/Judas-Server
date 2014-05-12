@@ -48,6 +48,8 @@ var users = [
 
 //=====================================
 // database
+// everything happens inside a query.on listener for {row, end, err}.
+// outside that, its just variable assignment. 
 //=====================================
 app.get('/db/new', function(req,res){
 
@@ -60,14 +62,7 @@ app.get('/db/new', function(req,res){
   query.on('end', function(result){ client.end(); });
 
 	console.log("db new table query processed.");
-  //pg.connect(connectionString, function(err, client, done) {
-    //client.query(myQuery, function(err, result) {
-      //done();
-		  //console.log("   ### =============> Matt was here line 22ish\n");
-      //if(err) return console.error(err);
-      //console.log(result.rows);
-    //});
-  //});
+
   res.send("new db\n");
 });
 
@@ -76,10 +71,8 @@ app.get('/db/i', function(req,res){
 	var date = new Date();
 
   client.query('INSERT INTO '+mydb+'(date) VALUES ($1)', [date]);
-	console.log("db insert query processed.");
 
   query = client.query('SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = $1', [date]);
-	console.log("db count query processed.");
 
   query.on('row', function(result){ 
     console.log('result : '+result);
@@ -89,37 +82,25 @@ app.get('/db/i', function(req,res){
     else { 
       res.send('Visits today : ' + result.count); }
   });
-
-	console.log("db should not get here.");
 });
 
 
 app.get('/db', function(req, res){
-  var size = -1;
   var rows = [];
-
   var query = client.query('SELECT * FROM ' +mydb);//', [mydb]);
-	console.log("here");
 
   query.on('row', function(row, result){ 
     rows.push(row.date);
     console.log("row : " + row.date);
   });
 
-	console.log("db query ended.");
-
   query.on('end', function(row, result){ 
-    size = rows.length;
-    console.log("size : " + size);
-    res.send("row count is : "+rows);
+    console.log("size : " + rows.length);
+		var str = "";
+    for(i = 0; i < rows.length; i++){
+      str += rows[i].date + "<br>";
+    res.send("Datebase holds :\n" + str);
   });
-
-//  console.log("size2 : " + rows.length);
-
-//  console.log("row : start of loop");
-//  for(r = 0; r < rows.length; r++){
-//  	console.log("row : " + rows[r]);
-//  }
 
   
 });
