@@ -94,10 +94,10 @@ app.get('/db/i', function(req,res){
 });
 
 
-app.get('/db', function(req,res){
+app.get('/db', function(req, res){
   var rows = [];
 
-  query = client.query('SELECT * FROM visits');//', [mydb]);
+  query = client.query('SELECT * FROM $1', [mydb]);//', [mydb]);
 	console.log("db select * query processed.");
 
   query.on('row', function(row, result){ 
