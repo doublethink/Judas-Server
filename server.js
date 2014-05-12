@@ -39,7 +39,7 @@ var users = [
 // cribbed from devcenter.heroku.com/articles/getting-started-with-nodejs
 // hooks up the postgres db
 //=====================================
-/*
+
 pg.connect(process.env.DATABASE_URL, function(err, client, done) {
   client.query('SELECT * FROM your_table', function(err, result) {
     done();
@@ -48,7 +48,6 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     console.log(result.rows);
   });
 });
-*/
 // end crib
 
 
