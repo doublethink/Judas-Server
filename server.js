@@ -102,7 +102,7 @@ app.get('/db', function(req, res){
 	console.log("here");
 
   query.on('row', function(row, result){ 
-    rows.push(row);
+    rows.push(row.date);
     console.log("row : " + row.date);
   });
 
