@@ -99,7 +99,7 @@ app.get('/db', function(req,res){
   query = client.query('SELECT * FROM visits');//', [mydb]);
 	console.log("db select * query processed.");
 
-  query.on('row', function(result){ 
+  query.on('end', function(result){ 
 //    done();
 	  console.log("db query ended.");
 //    client.end();
