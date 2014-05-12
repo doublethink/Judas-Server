@@ -109,9 +109,9 @@ app.get('/db', function(req, res){
   query.on('end', function(row, result){ 
     size = result.rows.length;
     console.log("size : " + size);
+    res.send("row count is : "+size);
   });
 
-  res.send("row count is : "+size);
 
 //  console.log("row : start of loop");
 //  for(r = 0; r < rows.length; r++){
