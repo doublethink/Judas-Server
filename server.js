@@ -102,7 +102,7 @@ app.get('/db', function(req,res){
   query.on('row', function(result){ 
 	  console.log("db query ended.");
 //    client.end();
-    res.send("result : "+result.count);
+    res.send("result : "+result);
   });
 	console.log("db should not get here.");
 });
