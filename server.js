@@ -76,7 +76,7 @@ app.get('/db/new', function(req,res){
 app.get('/db/i', function(req,res){
 	var date = new Date();
 
-  client.query('INSERT INTO '+mydb+'(date) VALUES ($1)', [date])';
+  client.query('INSERT INTO '+mydb+'(date) VALUES ($1)', [date]);
 	console.log("db insert query processed.");
 
   query = client.query('SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = $1', [date]);
