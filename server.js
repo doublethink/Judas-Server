@@ -95,20 +95,22 @@ app.get('/db/i', function(req,res){
 
 
 app.get('/db', function(req,res){
+  var rows = [];
 
   query = client.query('SELECT * FROM visits');//', [mydb]);
 	console.log("db select * query processed.");
 
   query.on('row', function(row, result){ 
-    result.addRow(row);
+    rows.push(row);
 
   });
 
 	  console.log("db query ended.");
 
-    res.send("result : "+query.result);
-
-	console.log("db should not get here.");
+    res.send("row count is : "+ result.rowCount);
+  for(r = 0; r < result.rowCount; r++){
+  	console.log("row : " + rows[r]);
+  }
 });
 // end database
 
