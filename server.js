@@ -105,10 +105,11 @@ app.get('/db', function(req,res){
 
   });
 
-	  console.log("db query ended.");
+	console.log("db query ended.");
 
-    res.send("row count is : "+ result.rowCount);
-  for(r = 0; r < result.rowCount; r++){
+  res.send("row count is : "+ rows.length);
+  
+  for(r = 0; r < rows.length; r++){
   	console.log("row : " + rows[r]);
   }
 });
