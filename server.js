@@ -114,7 +114,7 @@ app.get('/db', function(req, res){
   });
 
   res.send("row count is : "+rows.length);
-  console.log("size2 : " + size);
+  console.log("size2 : " + rows.length);
 
 //  console.log("row : start of loop");
 //  for(r = 0; r < rows.length; r++){
