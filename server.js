@@ -101,11 +101,12 @@ app.get('/db', function(req,res){
 
   query.on('row', function(row, result){ 
     result.addRow(row);
+
   });
 
 	  console.log("db query ended.");
 
-    res.send("result : "+result);
+    res.send("result : "+query.result);
 
 	console.log("db should not get here.");
 });
