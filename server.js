@@ -98,7 +98,7 @@ app.get('/db', function(req, res){
     console.log("size : " + rows.length);
 		var str = "";
     for(i = 0; i < rows.length; i++){
-      str += rows[i] + "<br>";
+      str += "row : "+i+", value : "+rows[i] + "<br>";
     }
     res.send("Datebase holds :<br>" + str);
   });
