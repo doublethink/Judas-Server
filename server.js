@@ -95,7 +95,7 @@ app.get('/db/i', function(req,res){
 
 
 app.get('/db', function(req, res){
-  var rows = [];
+  var size = -1;
 
   query = client.query('SELECT * FROM $1', [mydb]);//', [mydb]);
 	console.log("db select * query processed.");
@@ -107,9 +107,11 @@ app.get('/db', function(req, res){
 	console.log("db query ended.");
 
   query.on('end', function(row, result){ 
-    res.send("row count is : "+ result.rows.length);
+    size = result.rows.length;
+    console.log("size : " + size);
   });
 
+  res.send("row count is : "+size);
 
 //  console.log("row : start of loop");
 //  for(r = 0; r < rows.length; r++){
