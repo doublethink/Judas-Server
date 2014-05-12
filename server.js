@@ -3,7 +3,13 @@
 
 var express = require("express");
 var logfmt = require("logfmt");
-var pg = require('pg');
+var pg = require('pg')
+  , connectionString = process.env.DATABASE_URL
+  , client
+  , query;
+
+
+
 // npm install body-parser
 var bodyParser = require('body-parser');
 var http = require('http'); // TODO remove?
@@ -40,14 +46,90 @@ var users = [
 // hooks up the postgres db
 //=====================================
 
-pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-  client.query('SELECT * FROM your_table', function(err, result) {
-    done();
-		console.log("   ### =============> Matt was here line 22ish\n");
-    if(err) return console.error(err);
-    console.log(result.rows);
-  });
+var mydb = "judasdb";
+
+app.get('/db/new', function(req,res){
+
+  var myQuery = 'DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date)';
+
+	client = new pg.Client(connectionString);
+  client.connect();
+
+  query = client.query(myQuery);
+  query.on('end', function(result){ client.end(); });
+
+	console.log("db new table query processed.");
+  //pg.connect(connectionString, function(err, client, done) {
+    //client.query(myQuery, function(err, result) {
+      //done();
+		  //console.log("   ### =============> Matt was here line 22ish\n");
+      //if(err) return console.error(err);
+      //console.log(result.rows);
+    //});
+  //});
+  res.send("new db\n");
 });
+
+
+app.get('/db/i', function(req,res){
+
+	var date = new Date();
+  var myQuery = 'INSERT INTO '+mydb+' VALUES ('+date+')';
+	console.log(myQuery +'\n');
+
+	client = new pg.Client(connectionString);
+  client.connect();
+
+//  query = client.query(myQuery);
+//  query.on('end', function(result){ client.end(); });
+
+	console.log("db insert query processed.");
+
+  myQuery = 'SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = ' + date;
+
+	console.log(myQuery +'\n');
+//	client = new pg.Client(connectionString);
+//  client.connect();
+
+  query = client.query(myQuery);
+  console.log("query : "+query);
+
+  query.on('row', function(result){ 
+    console.log('result : '+result);
+    if(!result){ 
+      return res.send('No data found.'); }
+    else { 
+      res.send('Visits today : ' + result.count); }
+  });
+
+//client.end(); });
+	console.log("db should not get here.");
+});
+
+
+app.get('/db', function(req,res){
+
+  var myQuery = 'SELECT * FROM '+mydb;
+
+	client = new pg.Client(connectionString);
+  client.connect();
+
+  query = client.query(myQuery);
+  query.on('end', function(result){ client.end(); });
+
+	console.log("db select * query processed.");
+
+  //pg.connect(connectionString, function(err, client, done) {
+    //client.query(myQuery, function(err, result) {
+      //done();
+		  //console.log("   ### =============> Matt was here line 22ish\n");
+      //if(err) return console.error(err);
+      //console.log(result.rows);
+    //});
+  //});
+  res.send(query);
+});
+
 // end crib
 
 
