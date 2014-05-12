@@ -49,7 +49,8 @@ var users = [
 //=====================================
 // database
 // everything happens inside a query.on listener for {row, end, err}.
-// outside that, its just variable assignment. 
+// outside that, its just variable assignment.
+// a query can accept serial sql instructions.
 //=====================================
 app.get('/db/new', function(req,res){
 
@@ -67,16 +68,14 @@ app.get('/db/new', function(req,res){
 });
 
 
-app.get('/db/i', function(req,res){
+app.get('/db/visits/i', function(req,res){
 	var date = new Date();
 
   client.query('INSERT INTO '+mydb+'(date) VALUES ($1)', [date]);
-
   query = client.query('SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = $1', [date]);
 
   query.on('row', function(result){ 
     console.log('result : '+result);
-
     if(!result){ 
       return res.send('No data found.'); }
     else { 
@@ -85,7 +84,7 @@ app.get('/db/i', function(req,res){
 });
 
 
-app.get('/db', function(req, res){
+app.get('/db/visits', function(req, res){
   var rows = [];
   var query = client.query('SELECT * FROM ' +mydb);//', [mydb]);
 
@@ -100,10 +99,8 @@ app.get('/db', function(req, res){
     for(i = 0; i < rows.length; i++){
       str += "row : "+i+", value : "+rows[i] + "<br>";
     }
-    res.send("Datebase holds :<br>" + str);
+    res.send("Datebase holds :<br>" + str +"There are " + rows.length + " rows.");
   });
-
-  
 });
 // end database
 
