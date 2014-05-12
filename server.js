@@ -100,6 +100,7 @@ app.get('/db', function(req,res){
 	console.log("db select * query processed.");
 
   query.on('row', function(result){ 
+    done();
 	  console.log("db query ended.");
 //    client.end();
     res.send("result : "+result);
