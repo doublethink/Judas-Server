@@ -101,18 +101,21 @@ app.get('/db', function(req, res){
 	console.log("db select * query processed.");
 
   query.on('row', function(row, result){ 
-    rows.push(row);
-
+    result.addRow(row);
   });
 
 	console.log("db query ended.");
 
-  console.log("row : start of loop");
-  for(r = 0; r < rows.length; r++){
-  	console.log("row : " + rows[r]);
-  }
+  query.on('end', function(row, result){ 
+    res.send("row count is : "+ rows.length);
+  });
 
-  res.send("row count is : "+ rows.length);
+
+//  console.log("row : start of loop");
+//  for(r = 0; r < rows.length; r++){
+//  	console.log("row : " + rows[r]);
+//  }
+
   
 });
 // end database
