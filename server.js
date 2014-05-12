@@ -107,7 +107,7 @@ app.get('/db', function(req, res){
 	console.log("db query ended.");
 
   query.on('end', function(row, result){ 
-    res.send("row count is : "+ rows.length);
+    res.send("row count is : "+ result.rows.length);
   });
 
 
