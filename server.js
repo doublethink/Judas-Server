@@ -99,6 +99,7 @@ app.get('/db', function(req, res){
 		var str = "";
     for(i = 0; i < rows.length; i++){
       str += rows[i].date + "<br>";
+    }
     res.send("Datebase holds :\n" + str);
   });
 
