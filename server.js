@@ -111,7 +111,7 @@ app.get('/db', function(req, res){
   query.on('end', function(row, result){ 
     size = rows.length;
     console.log("size : " + size);
-    res.send("row count is : "+rows.length);
+    res.send("row count is : "+rows);
   });
 
 //  console.log("size2 : " + rows.length);
