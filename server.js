@@ -1,6 +1,9 @@
 // NWEN304 Project
 //===================================
 
+
+var mydb = "visits";
+
 var express = require("express");
 var logfmt = require("logfmt");
 var pg = require('pg')
@@ -47,8 +50,6 @@ var users = [
 // cribbed from devcenter.heroku.com/articles/getting-started-with-nodejs
 // hooks up the postgres db
 //=====================================
-
-var mydb = "judasdb";
 
 app.get('/db/new', function(req,res){
 
@@ -115,7 +116,7 @@ app.get('/db', function(req,res){
       //console.log(result.rows);
     //});
   //});
-  res.send(query);
+  res.send("Matt standing by the db.");
 });
 
 // end crib
