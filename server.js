@@ -8,6 +8,8 @@ var pg = require('pg')
   , client
   , query;
 
+client = new pg.Client(connectionString);
+client.connect();
 
 
 // npm install body-parser
@@ -72,37 +74,23 @@ app.get('/db/new', function(req,res){
 
 
 app.get('/db/i', function(req,res){
-
 	var date = new Date();
-  var myQuery = 'INSERT INTO '+mydb+' VALUES ('+date+')';
-	console.log(myQuery +'\n');
 
-	client = new pg.Client(connectionString);
-  client.connect();
-
-//  query = client.query(myQuery);
-//  query.on('end', function(result){ client.end(); });
-
+  client.query('INSERT INTO '+mydb+'(date) VALUES ($1)', [date])';
 	console.log("db insert query processed.");
 
-  myQuery = 'SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = ' + date;
-
-	console.log(myQuery +'\n');
-//	client = new pg.Client(connectionString);
-//  client.connect();
-
-  query = client.query(myQuery);
-  console.log("query : "+query);
+  query = client.query('SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = $1', [date]);
+	console.log("db count query processed.");
 
   query.on('row', function(result){ 
     console.log('result : '+result);
+
     if(!result){ 
       return res.send('No data found.'); }
     else { 
       res.send('Visits today : ' + result.count); }
   });
 
-//client.end(); });
 	console.log("db should not get here.");
 });
 
