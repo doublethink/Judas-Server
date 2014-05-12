@@ -96,19 +96,20 @@ app.get('/db/i', function(req,res){
 
 app.get('/db', function(req, res){
   var size = -1;
+  var rows = [];
 
   var query = client.query('SELECT * FROM ' +mydb);//', [mydb]);
 	console.log("here");
 
   query.on('row', function(row, result){ 
-    result.addRow(row);
+    rows.push(row);
     console.log("row : " + row.date);
   });
 
 	console.log("db query ended.");
 
   query.on('end', function(row, result){ 
-    size = result.rows.length;
+    size = rows.length;
     console.log("size : " + size);
   });
 
