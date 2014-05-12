@@ -47,10 +47,8 @@ var users = [
 // end dummy data
 
 //=====================================
-// cribbed from devcenter.heroku.com/articles/getting-started-with-nodejs
-// hooks up the postgres db
+// database
 //=====================================
-
 app.get('/db/new', function(req,res){
 
   var myQuery = 'DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date)';
@@ -98,29 +96,17 @@ app.get('/db/i', function(req,res){
 
 app.get('/db', function(req,res){
 
-  var myQuery = 'SELECT * FROM '+mydb;
-
-	client = new pg.Client(connectionString);
-  client.connect();
-
-  query = client.query(myQuery);
-  query.on('end', function(result){ client.end(); });
-
+  query = client.query('SELECT * FROM $1', [mydb]);
 	console.log("db select * query processed.");
 
-  //pg.connect(connectionString, function(err, client, done) {
-    //client.query(myQuery, function(err, result) {
-      //done();
-		  //console.log("   ### =============> Matt was here line 22ish\n");
-      //if(err) return console.error(err);
-      //console.log(result.rows);
-    //});
-  //});
-  res.send("Matt standing by the db.");
+  query.on('row', function(result){ 
+	  console.log("db query ended.");
+//    client.end();
+    res.send("result : "+result.count);
+  });
+	console.log("db should not get here.");
 });
-
-// end crib
-
+// end database
 
 //======================================
 // restful interfaces
