@@ -182,19 +182,6 @@ app.get('/pests/spotted', function(req, res) {
 });
 
   /*====== POST ======*/
-// Notes... (will delete later)
-	//console.log("   ### =============> Matt was here\n");
-  //console.log(req.body);
-  //console.log(req.body.longitude);
-  //console.log(req.body.latitude);
-  //console.log(req.body.userid);
-  //console.log(req.body.name);
-
-app.post('/fish', function(req, res) {
-  res.send("Fish : " + req.param('fred') + "\nMike : " + req.param('mike'));
-});
-
-
 /* ****************************************************************** 
    test curl, nested jason format -> matches client side post request, hopefully...
    ******************************************************************
@@ -217,36 +204,47 @@ app.post('/pestspotted', function(req, res) {
     return res.send('Error 400: A value is missing.');
   }
 
-  var newSpot = req.body.packet;
+  // check user authentication TODO
+  var authorised = true;
+	if(authorised){
+    // add to db (TODO just an array for now)
+    var newSpot = req.body.packet;
+    spots.push(newSpot);
 
-  console.log(spots[spots.length -1]);
+    // create log message
+    var record = spots[spots.length-1];
+    var result = "{ resourceId : " + (spots.length-1) + "}\r\n";
+    result += "The user is "+record.auth.uid+", the access token is "+record.auth.accessToken+".\r\n";
+    result += "Longitude/Latitude/Accuracy is ";
+    result += record.position.longitude+"/"+record.position.latitude+"/"+record.position.accuracy+"\r\n";
+    console.log(result);
 
-  spots.push(newSpot);
-  console.log("New pest spotted data is ");
-  console.log(spots[spots.length -1]);
-  console.log("Added new location\r\n\r\n");
-
-  var record = spots[spots.length-1];
-  var result = "{ resourceId : " + (spots.length-1) + "}\r\n";
-  result += "The user is "+record.auth.uid+", the access token is "+record.auth.accessToken+".\r\n";
-  result += "Longitude/Latitude/Accuracy is "+record.position.longitude+"/"+record.position.latitude+"/"+record.position.accuracy+"\r\n";
-  res.send(201, result); // 201 is success resource created
+    // feedback to client
+    res.send(201, result); // 201 is success resource created
+  }else{
+    res = setAuthenticateResponse(res);
+		res.send("ID has not been recognised.");
+  }
 });
 
 // test curl for authenticating user
 // curl --request POST "localhost:5000/user" --data "userId=Matt&password=stuff"
-// ref RFC2831 Digest SASL Authentication for steps to implement
-//   NB: not a great security protocol, but gets basic securtity in place that can be upgraded later.
-//   using qop = 'auth'
-//   1. User has not recently authenticated
-//   2. User has already authenticated and knows {userId, realm, qop and nonce}
 app.post('/user', function(req,res){
+  /* 
+   ref RFC2831 Digest SASL Authentication for steps to implement
+     NB: not a great security protocol, but gets basic securtity in place that can be upgraded later.
+     using qop = 'auth'
+     1. User has not recently authenticated
+     2. User has already authenticated and knows {userId, realm, qop and nonce}
+   */
   console.log("Authenticating user.")
+
   if(req.body.userId == null || req.body.password == null){
     console.log("No user or password supplied.");
     res = setAuthenticateResponse(res);
     res.send(401, false); 
   }
+
   for (i in users){
     //console.log("userId : " + users[i].userId);
     //console.log("password : " + users[i].password);
@@ -256,18 +254,18 @@ app.post('/user', function(req,res){
 			return;
     }
   }
-  console.log("Supplied user and password failed.");
-  //console.log("userId : " + req.body.userId);
-  //console.log("password : " + req.body.password);
+
+  var str = "Supplied user and password failed.";
+  console.log(str);
   res = setAuthenticateResponse(res)
-  res.send(401, false);
+  res.send(401, str);
 });
 // end rest
 
 //======================================
 // helpers
 //======================================
-function setAuthenticateResponse(res, message){
+function setAuthenticateResponse(res){
   // Challenge Digest scheme is...
   //   source http://technet.microsoft.com/en-us/library/cc780170%28v=ws.10%29.aspx
   // Challenge = “Digest” digest-challenge
