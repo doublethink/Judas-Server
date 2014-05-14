@@ -29,9 +29,10 @@ app.use(bodyParser());
 //====================================
 // dummy data
 //====================================
+
 var spots = [
-  { timestamp : '2014-04-20 1300', longitude : 174.7777222, latitude : -41.288889, userid: 'Matt', name : 'Possum'},
-  { timestamp : '2014-04-20 1310', longitude : 174.7777222, latitude : -41.288889, userid: 'Fred', name : 'Stoat'},
+  { position: { longitude : 174.7777222, latitude : -41.288889, accuracy: 0.0005, timestamp : '2014-04-20 1300'}, auth: {uid: 'Matt', accessToken : 'Possum'}},
+  { position: { longitude : 174.7777222, latitude : -41.288889, accuracy: 0.0005, timestamp : '2014-04-20 1300'}, auth: {uid: 'Fred', accessToken : 'Stoat'}},
 ];
 
 var pests = [
@@ -181,41 +182,54 @@ app.get('/pests/spotted', function(req, res) {
 });
 
   /*====== POST ======*/
-app.post('/fish', function(req, res) {
-  res.send("Fish : " + req.param('fred') + "\nMike : " + req.param('mike'));
-});
-
-// test curl for pestspotted
-// curl --request POST "localhost:5000/pestspotted" --data "longitude=22&latitude=44&userid=Matt&name=possum"
-app.post('/pestspotted', function(req, res) {
+// Notes... (will delete later)
 	//console.log("   ### =============> Matt was here\n");
   //console.log(req.body);
   //console.log(req.body.longitude);
   //console.log(req.body.latitude);
   //console.log(req.body.userid);
   //console.log(req.body.name);
-  if(!req.body.hasOwnProperty('longitude') ||
-     !req.body.hasOwnProperty('latitude') ||
-     !req.body.hasOwnProperty('userid') ||
-     !req.body.hasOwnProperty('name')
+
+app.post('/fish', function(req, res) {
+  res.send("Fish : " + req.param('fred') + "\nMike : " + req.param('mike'));
+});
+
+
+/* ****************************************************************** 
+   test curl, nested jason format -> matches client side post request, hopefully...
+   ******************************************************************
+curl localhost:5000/pestspotted -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "timestamp": "15 May"}, "auth": {"uid": "Matt", "accessToken": "possum"}}}' -H "Content-Type: application/json"
+*/
+app.post('/pestspotted', function(req, res) {
+  // TODO check for valid json?
+  // verify input -> everything is present
+  if(req.body.packet == null ||
+     req.body.packet.position == null ||
+     req.body.packet.position.longitude == null ||
+     req.body.packet.position.latitude == null ||
+     req.body.packet.position.accuracy == null ||
+     req.body.packet.position.timestamp == null ||
+     req.body.packet.auth == null ||
+     req.body.packet.auth.uid == null ||
+     req.body.packet.auth.accessToken == null
     ){
     res.statusCode = 400;
-    return res.send('Error 400: Post syntax incorrect.');
+    return res.send('Error 400: A value is missing.');
   }
 
-  var newSpot = {
-    timestamp : Date.now().toString(),
-    longitude : req.body.longitude,
-    latitude : req.body.latitude,
-    userid : req.body.userid,
-    name : req.body.name
-  };
+  var newSpot = req.body.packet;
+
+  console.log(spots[spots.length -1]);
 
   spots.push(newSpot);
   console.log("New pest spotted data is ");
   console.log(spots[spots.length -1]);
   console.log("Added new location\r\n\r\n");
-  var result = "{ resourceId : " + (spots.length-1) + "}";
+
+  var record = spots[spots.length-1];
+  var result = "{ resourceId : " + (spots.length-1) + "}\r\n";
+  result += "The user is "+record.auth.uid+", the access token is "+record.auth.accessToken+".\r\n";
+  result += "Longitude/Latitude/Accuracy is "+record.position.longitude+"/"+record.position.latitude+"/"+record.position.accuracy+"\r\n";
   res.send(201, result); // 201 is success resource created
 });
 

@@ -1,5 +1,5 @@
 // run using
-// heroku run:detached node schema.js --app <name of app>
+// heroku run:detached node schema.js [--app <name of app>]
 
 var pg = require('pg').native
   , connectionString = process.env.DATABASE_URL
