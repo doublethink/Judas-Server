@@ -223,42 +223,41 @@ app.post('/pestspotted', function(req, res) {
     res.send(201, result); // 201 is success resource created
   }else{
     res = setAuthenticateResponse(res);
-		res.send("ID has not been recognised.");
+		res.send(401, "ID has not been recognised."); // 401 Unauthorized
   }
 });
 
 // test curl for authenticating user
 // curl --request POST "localhost:5000/user" --data "userId=Matt&password=stuff"
 app.post('/user', function(req,res){
-  /* 
-   ref RFC2831 Digest SASL Authentication for steps to implement
-     NB: not a great security protocol, but gets basic securtity in place that can be upgraded later.
-     using qop = 'auth'
-     1. User has not recently authenticated
-     2. User has already authenticated and knows {userId, realm, qop and nonce}
-   */
+/* 
+ref RFC2831 Digest SASL Authentication for steps to implement
+  NB: not a great security protocol, but gets basic securtity in place that can be upgraded later.
+  using qop = 'auth'
+  1. User has not recently authenticated
+  2. User has already authenticated and knows {userId, realm, qop and nonce}
+*/
+  var error;
   console.log("Authenticating user.")
-
   if(req.body.userId == null || req.body.password == null){
-    console.log("No user or password supplied.");
-    res = setAuthenticateResponse(res);
-    res.send(401, false); 
-  }
-
-  for (i in users){
-    //console.log("userId : " + users[i].userId);
-    //console.log("password : " + users[i].password);
-    if(req.body.userId == users[i].userId && req.body.password == users[i].password){
-      console.log("Supplied user and password match.");
-      res.send(200, true);
-			return;
+    error = "No user or password supplied.";
+  }else{
+    for (i in users){
+      //console.log("userId : " + users[i].userId);
+      //console.log("password : " + users[i].password);
+      if(req.body.userId == users[i].userId && req.body.password == users[i].password){
+        var success = "Supplied user and password match.";
+        console.log(success);
+        res.send(200, success);
+			  return;
+      }
     }
   }
 
-  var str = "Supplied user and password failed.";
-  console.log(str);
+  var error = error || "Supplied user and password failed.";
+  console.log(error);
   res = setAuthenticateResponse(res)
-  res.send(401, str);
+  res.send(401, error); // 401 Unauthorized
 });
 // end rest
 
