@@ -213,10 +213,19 @@ app.post('/pestspotted', function(req, res) {
 
     // create log message
     var record = spots[spots.length-1];
-    var result = "{ resourceId : " + (spots.length-1) + "}\r\n";
-    result += "The user is "+record.auth.uid+", the access token is "+record.auth.accessToken+".\r\n";
-    result += "Longitude/Latitude/Accuracy is ";
-    result += record.position.longitude+"/"+record.position.latitude+"/"+record.position.accuracy+"\r\n";
+    var resourceId = spots.length-1;
+    var text1 = "The user is "+record.auth.uid+", the access token is "+record.auth.accessToken+".";
+		var text2 = "Longitude/Latitude/Accuracy is " + record.position.longitude+"/"+record.position.latitude+"/"+record.position.accuracy;
+
+    var result = {"resourceId": resourceId, "text1": text1, "text2": text2 }; 
+
+//    var result = "{result : ";
+//		result += "{ resourceId : " + (spots.length-1) + "}";
+//    result += "{text1 : The user is "+record.auth.uid+", the access token is "+record.auth.accessToken+".}";
+//    result += "{text2 : Longitude/Latitude/Accuracy is ";
+//    result += record.position.longitude+"/"+record.position.latitude+"/"+record.position.accuracy+"}";
+//    result += "}"
+
     console.log(result);
 
     // feedback to client
