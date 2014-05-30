@@ -151,6 +151,10 @@ app.get('/test/:id', function(req, res){
   }
 });
 
+app.get('/pests/spotted', function(req, res) {
+  res.send(spots);
+});
+
 app.get('/pests/:id', function(req, res){
   if(req.param('id') == 'possum'){
   	res.send(pests[0].name + ", fur is " + pests[0].colour);
@@ -177,9 +181,6 @@ app.get('/error/:id', function(req, res) {
   res.send(req.param('id'), "Error : "+req.param('id'));
 });
 
-app.get('/pests/spotted', function(req, res) {
-  res.send(spots);
-});
 
   /*====== POST ======*/
 /* ****************************************************************** 
