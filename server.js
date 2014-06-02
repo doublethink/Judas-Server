@@ -191,12 +191,16 @@ curl localhost:5000/pestspotted -v -d '{"packet": {"position": {"longitude": "22
 app.post('/pestspotted', function(req, res) {
   // TODO check for valid json?
   // verify input -> everything is present
-  if(req.body.position.longitude == undefined ||
-     req.body.position.latitude == undefined ||
-     req.body.position.accuracy == undefined ||
-     req.body.position.timestamp == undefined ||
-     req.body.auth.uid == undefined ||
-     req.body.auth.accessToken == undefined
+  if(
+//     req.body.packet == null ||
+//     req.body.packet.position == null ||
+     req.body.packet.position.longitude == null ||
+     req.body.packet.position.latitude == null ||
+     req.body.packet.position.accuracy == null ||
+     req.body.packet.position.timestamp == null ||
+//     req.body.packet.auth == null ||
+     req.body.packet.auth.uid == null ||
+     req.body.packet.auth.accessToken == null
     ){
     res.statusCode = 400;
     return res.send('Error 400: A value is missing.'+req.body.position);
