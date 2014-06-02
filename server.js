@@ -203,7 +203,7 @@ app.post('/pestspotted', function(req, res) {
      req.body.packet.auth.accessToken == undefined
     ){
     res.statusCode = 400;
-    var packetError = req.body.packet == undefined ? "undefined" : "";
+    var packetError = req.body.packet == undefined ? "undefined, please provide a root element." : "";
     var positionError = req.body.packet.position == undefined ? "undefined" :
       "\n  longitude: "+req.body.packet.position.longitude+
       "\n  latitude: "+req.body.packet.position.latitude+
