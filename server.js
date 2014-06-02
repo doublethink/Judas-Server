@@ -204,12 +204,12 @@ app.post('/pestspotted', function(req, res) {
     ){
     res.statusCode = 400;
     var packetError = req.body.packet == undefined ? "undefined, please provide a root element." : "";
-    var positionError = req.body.packet.position == undefined ? "undefined" :
+    var positionError = req.body.packet != undefined && req.body.packet.position == undefined ? "undefined" :
       "\n  longitude: "+req.body.packet.position.longitude+
       "\n  latitude: "+req.body.packet.position.latitude+
       "\n  accuracy: "+req.body.packet.position.accuracy+
       "\n  timestamp: "+req.body.packet.position.timestamp;
-		var authError = req.body.packet.auth == undefined ? "undefined" :
+		var authError = req.body.packet != undefined && req.body.packet.auth == undefined ? "undefined" :
       "\n  uid: "+req.body.packet.auth.uid+
       "\n  accessToken: "+req.body.packet.auth.accessToken;
     return res.send('Error 400: A value is missing.\n' +
