@@ -213,9 +213,9 @@ app.post('/pestspotted', function(req, res) {
         "\nuid: "+req.body.packet.auth.uid+
         "\naccessToken: "+req.body.packet.auth.accessToken;
 		var errorString = 
-      "packet: "+packetError+
-      "position: "+positionError+
-      "auth: "+authError;
+      "\npacket: "+packetError+
+      "\nposition: "+positionError+
+      "\nauth: "+authError;
     return res.send('Error 400: A value is missing.\n' + errorString);
   }
 
