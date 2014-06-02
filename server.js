@@ -194,13 +194,13 @@ app.post('/pestspotted', function(req, res) {
   if(
 //     req.body.packet == null ||
 //     req.body.packet.position == null ||
-     req.body.packet.position.longitude == null ||
-     req.body.packet.position.latitude == null ||
-     req.body.packet.position.accuracy == null ||
-     req.body.packet.position.timestamp == null ||
+     req.body.packet.position.longitude == undefined ||
+     req.body.packet.position.latitude == undefined ||
+     req.body.packet.position.accuracy == undefined ||
+     req.body.packet.position.timestamp == undefined ||
 //     req.body.packet.auth == null ||
-     req.body.packet.auth.uid == null ||
-     req.body.packet.auth.accessToken == null
+     req.body.packet.auth.uid == undefined ||
+     req.body.packet.auth.accessToken == undefined
     ){
     res.statusCode = 400;
     return res.send('Error 400: A value is missing.'+req.body.position);
