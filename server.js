@@ -203,7 +203,7 @@ app.post('/pestspotted', function(req, res) {
      req.body.packet.auth.accessToken == undefined
     ){
     res.statusCode = 400;
-    return res.send('Error 400: A value is missing.'+req.body.position);
+    return res.send('Error 400: A value is missing.\n'+req.body.packet);
   }
 
   // check user authentication TODO
