@@ -192,13 +192,13 @@ app.post('/pestspotted', function(req, res) {
   // TODO check for valid json?
   // verify input -> everything is present
   if(
-//     req.body.packet == null ||
-//     req.body.packet.position == null ||
+     req.body.packet == undefined ||
+     req.body.packet.position == undefined ||
      req.body.packet.position.longitude == undefined ||
      req.body.packet.position.latitude == undefined ||
      req.body.packet.position.accuracy == undefined ||
      req.body.packet.position.timestamp == undefined ||
-//     req.body.packet.auth == null ||
+     req.body.packet.auth == undefined ||
      req.body.packet.auth.uid == undefined ||
      req.body.packet.auth.accessToken == undefined
     ){
