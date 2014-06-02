@@ -212,7 +212,10 @@ app.post('/pestspotted', function(req, res) {
 		var authError = req.body.packet.auth == undefined ? "undefined" :
         "\nuid: "+req.body.packet.auth.uid+
         "\naccessToken: "+req.body.packet.auth.accessToken;
-		var errorString = packetError + positionError + authError;
+		var errorString = 
+      "packet: "+packetError+
+      "position: "+positionError+
+      "auth: "+authError;
     return res.send('Error 400: A value is missing.\n' + errorString);
   }
 
