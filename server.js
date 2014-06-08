@@ -3,7 +3,6 @@
 
 
 var mydb = "visits";
-var DATABASE = "judasDB";
 
 var express = require("express");
 var logfmt = require("logfmt");
@@ -27,110 +26,6 @@ app.engine('html', require('ejs').renderFile);
 app.use(logfmt.requestLogger());
 app.use(bodyParser());
 
-//============================
-// set up db for pests spotted
-//============================
-app.get('/pestspotteddb/new', function(req,res){
-  // create pest spotted table
-  var sql_ct = 'DROP TABLE '+DATABASE+';'+
-   'CREATE TABLE '+DATABASE+' ('+
-   'ID        SERIAL  PRIMARY KEY,'+
-   'longitude real    NOT NULL,'+
-   'latitude  real    NOT NULL,'+
-   'accuracy  real,'+
-   'timestamp date    NOT NULL,'+
-   'uid       varchar NOT NULL,'+
-   'pest      varchar NOT NULL );';
-  // create initial dummy data
-  sql_ct += String.format('INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, timestamp, uid, pest) '+
-     'VALUES ($1, $2, $3, $4, $5, $6)',
-     [22,
-      33,
-      0.4,
-      '4 June 2014',
-      'Matt',
-      'possum'
-     ]);
-  sql_ct += String.format('INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, timestamp, uid, pest) '+
-     'VALUES ($1, $2, $3, $4, $5, $6)',
-     [22.5,
-      33.5,
-      0.5,
-      '5 June 2014',
-      'Matt',
-      'Stoat'
-     ]);
-
-	client = new pg.Client(connectionString);
-  client.connect();
-
-  query = client.query(sql_ct);
-  query.on('end', function(result){ client.end(); });
-
-	console.log("db new table query processed.");
-
-  res.send("new pestspotted db\n");
-});
-
-app.get('/pestspotted/:date'){
-
-
-
-}
-
-//============================
-// app post for pestspotted[2]
-//============================
-app.post('/pestspotted2', function(req, res) {
-  if(!verifyInput_pestspotted(req, res)) return;
-
-	if(!authorised(true)){ // TODO replace true with req
-    res = setAuthenticateResponse(res);
-		res.send(401, "User ID has not been recognised."); // 401 Unauthorized
-  }else{
-    var packet = req.body.packet;
-    // create sql INSERT
-    var sql_insert = String.format('INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, timestamp, uid, pest) '+
-     'VALUES ($1, $2, $3, $4, $5, $6)',
-     [packet.position.longitude,
-      packet.position.latitude,
-      packet.position.accuracy,
-      packet.position.timestamp,
-      packet.auth.uid,
-      packet.pest
-     ]);
-
-    // submit DB insert
-    client.query(sql_insert);
-    query = client.query(SCOPE_IDENTITY());
-
-    query.on('row', function(result){ // result should == _id
-      console.log('result : '+result); // TODO revise the 2 log thing
-      // create log note
-      var resourceId = result;
-      var text1 = "The user is "+packet.auth.uid+", reporting a "+packet.pest+".";
-		  var text2 = "Longitude/Latitude/Accuracy is " + packet.position.longitude+"/"+packet.position.latitude+"/"+packet.position.accuracy;
-
-      var response = {"resourceId": resourceId, "text1": text1, "text2": text2 }; 
-      console.log(response + "\n"+sql_insert);
-
-      if(!result){ 
-        return res.send('No data found.'); }
-      else { 
-        // feedback to client
-        res.send(201, result); // 201 is success resource created
-    });
-  }
-});
-
-//=============================================================================
-//===================== test methods, etc below this point =========================
-// NB: keep helpers & server start at bottom...
-
-
 //====================================
 // dummy data
 //====================================
@@ -151,45 +46,6 @@ var users = [
 	{userId : 'Mike', name : 'Mike the Plumber', password : '56tygh'}
 ];
 // end dummy data
-
-//======================================
-// original test post for pestspotted
-//======================================
-/* ****************************************************************** 
-   test curl, nested jason format -> matches client side post request, hopefully...
-   ******************************************************************
-curl localhost:5000/pestspotted -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "timestamp": "15 May"}, "auth": {"uid": "Matt", "accessToken": "possum"}}}' -H "Content-Type: application/json"
-*/
-app.post('/pestspotted', function(req, res) {
-  // TODO check for valid json?
-  if(!verifyInput_pestspotted(req, res)) return;
-
-  var authorised = true; // TODO check user authentication
-
-	if(authorised){
-    // add to db (TODO just an array for now)
-    var newSpot = req.body.packet;
-    spots.push(newSpot);
-
-    // create log message
-    var record = spots[spots.length-1];
-    var resourceId = spots.length-1;
-    var text1 = "The user is "+record.auth.uid+", the access token is "+record.auth.accessToken+".";
-		var text2 = "Longitude/Latitude/Accuracy is " + record.position.longitude+"/"+record.position.latitude+"/"+record.position.accuracy;
-
-    var result = {"resourceId": resourceId, "text1": text1, "text2": text2 }; 
-
-    console.log(result);
-
-    // feedback to client
-    res.send(201, result); // 201 is success resource created
-  }else{
-    res = setAuthenticateResponse(res);
-		res.send(401, "ID has not been recognised."); // 401 Unauthorized
-  }
-});
-
-
 
 //=====================================
 // database
@@ -327,6 +183,72 @@ app.get('/error/:id', function(req, res) {
 
 
   /*====== POST ======*/
+/* ****************************************************************** 
+   test curl, nested jason format -> matches client side post request, hopefully...
+   ******************************************************************
+curl localhost:5000/pestspotted -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "timestamp": "15 May"}, "auth": {"uid": "Matt", "accessToken": "possum"}}}' -H "Content-Type: application/json"
+*/
+app.post('/pestspotted', function(req, res) {
+  // TODO check for valid json?
+  // verify input -> everything is present
+  if(
+     req.body.packet == undefined ||
+     req.body.packet.position == undefined ||
+     req.body.packet.position.longitude == undefined ||
+     req.body.packet.position.latitude == undefined ||
+     req.body.packet.position.accuracy == undefined ||
+     req.body.packet.position.timestamp == undefined ||
+     req.body.packet.auth == undefined ||
+     req.body.packet.auth.uid == undefined ||
+     req.body.packet.auth.accessToken == undefined
+    ){
+    res.statusCode = 400;
+    var packetError = req.body.packet == undefined ? "undefined, please provide a root element." : "";
+    var positionError = req.body.packet == undefined || req.body.packet.position == undefined ? "undefined" :
+      "\n  longitude: "+req.body.packet.position.longitude+
+      "\n  latitude: "+req.body.packet.position.latitude+
+      "\n  accuracy: "+req.body.packet.position.accuracy+
+      "\n  timestamp: "+req.body.packet.position.timestamp;
+		var authError = req.body.packet == undefined || req.body.packet.auth == undefined ? "undefined" :
+      "\n  uid: "+req.body.packet.auth.uid+
+      "\n  accessToken: "+req.body.packet.auth.accessToken;
+    return res.send('Error 400: A value is missing.\n' +
+      "\npacket: "+packetError+
+      "\nposition: "+positionError+
+      "\nauth: "+authError);
+  }
+
+  // check user authentication TODO
+  var authorised = true;
+	if(authorised){
+    // add to db (TODO just an array for now)
+    var newSpot = req.body.packet;
+    spots.push(newSpot);
+
+    // create log message
+    var record = spots[spots.length-1];
+    var resourceId = spots.length-1;
+    var text1 = "The user is "+record.auth.uid+", the access token is "+record.auth.accessToken+".";
+		var text2 = "Longitude/Latitude/Accuracy is " + record.position.longitude+"/"+record.position.latitude+"/"+record.position.accuracy;
+
+    var result = {"resourceId": resourceId, "text1": text1, "text2": text2 }; 
+
+//    var result = "{result : ";
+//		result += "{ resourceId : " + (spots.length-1) + "}";
+//    result += "{text1 : The user is "+record.auth.uid+", the access token is "+record.auth.accessToken+".}";
+//    result += "{text2 : Longitude/Latitude/Accuracy is ";
+//    result += record.position.longitude+"/"+record.position.latitude+"/"+record.position.accuracy+"}";
+//    result += "}"
+
+    console.log(result);
+
+    // feedback to client
+    res.send(201, result); // 201 is success resource created
+  }else{
+    res = setAuthenticateResponse(res);
+		res.send(401, "ID has not been recognised."); // 401 Unauthorized
+  }
+});
 
 // test curl for authenticating user
 // curl --request POST "localhost:5000/user" --data "userId=Matt&password=stuff"
@@ -378,51 +300,6 @@ function setAuthenticateResponse(res){
     'qop' : 'auth', // qop Quality Of Protection, auth = authorisation only
     'nonce' : '12345'}); // nonce, unique encoded value generated for this challenge
   return res;	
-}
-
-function authorised(req){
-  if(req == true) return true; // TODO for testing, remove from production code
-  
-  return false;
-}
-
-// Check input for pestspotted
-// return boolean on success/fail
-function verifyInput_pestspotted(req, res){
-  if(
-     req.body.packet == undefined ||
-     req.body.packet.position == undefined ||
-     req.body.packet.position.longitude == undefined ||
-     req.body.packet.position.latitude == undefined ||
-     req.body.packet.position.accuracy == undefined ||
-     req.body.packet.position.timestamp == undefined ||
-// TODO     req.body.packet.pest == undefined ||
-     req.body.packet.auth == undefined ||
-     req.body.packet.auth.uid == undefined ||
-     req.body.packet.auth.accessToken == undefined
-    ){
-    // input failed, create & send error message
-    res.statusCode = 400;
-    var packetError = req.body.packet == undefined ? "undefined, please provide a root element." : "";
-    var positionError = req.body.packet == undefined || req.body.packet.position == undefined ? "undefined" :
-      "\n  longitude: "+req.body.packet.position.longitude+
-      "\n  latitude: "+req.body.packet.position.latitude+
-      "\n  accuracy: "+req.body.packet.position.accuracy+
-      "\n  timestamp: "+req.body.packet.position.timestamp;
-		var authError = req.body.packet == undefined || req.body.packet.auth == undefined ? "undefined" :
-      "\n  uid: "+req.body.packet.auth.uid+
-      "\n  accessToken: "+req.body.packet.auth.accessToken;
-    var pestError = req.body.packet == undefined || req.body.packet.pest == undefined ? "undefined" :
-      req.body.packet.pest;
-    
-    res.send('Error 400: A value is missing.\n' +
-      "\npacket: "   +packetError+
-      "\nposition: " +positionError+
-// TODO      "\npest: "     +pestError+
-      "\nauth: "     +authError);
-    return false;
-  }
-  return true;
 }
 // end helpers
 
