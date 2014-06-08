@@ -55,16 +55,6 @@ app.get('/pestspotteddb/new', function(req,res){
   sql_ct += String.format('INSERT INTO '+DATABASE+
      '(longitude, latitude, accuracy, timestamp, uid, pest) '+
      'VALUES ($1, $2, $3, $4, $5, $6)',
-     [22,
-      33,
-      0.4,
-      '4 June 2014',
-      'Matt',
-      'house cat'
-     ]);
-  sql_ct += String.format('INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, timestamp, uid, pest) '+
-     'VALUES ($1, $2, $3, $4, $5, $6)',
      [22.5,
       33.5,
       0.5,
@@ -84,28 +74,10 @@ app.get('/pestspotteddb/new', function(req,res){
   res.send("new pestspotted db\n");
 });
 
-//=================================
-// app get all results for this day
-//=================================
 app.get('/pestspotted/:date'){
-  var rows = [];
-//  var query = client.query('SELECT pest FROM '+DATABASE+' WHERE timestamp == '+req.param('date')+';');
-// test query
-  var query = client.query('SELECT ID, pest FROM '+DATABASE+' WHERE timestamp == "4 June 2014" ;');
 
-  query.on('row', function(row, result){ 
-    rows.push(row.pest);
-    console.log("row ID: " + row.ID + " pest: " +row.pest);
-  });
-  
-  query.on('end', function(row, result){ // TODO tidy reply to client
-    console.log("size : " + rows.length);
-		var str = "";
-    for(i = 0; i < rows.length; i++){
-      str += "row : "+i+", value : "+rows[i] + "<br>";
-    }
-    res.send("pests on this day :<br>" + str +"There are " + rows.length + " rows.");
-  });
+
+
 }
 
 //============================
