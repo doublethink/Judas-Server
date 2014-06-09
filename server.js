@@ -33,7 +33,8 @@ app.use(bodyParser());
 
 app.get('/pestspotteddb/new', function(req,res){
   // create pest spotted table
-  var sql_ct = 'DROP TABLE '+DATABASE+'; '+
+  var sql_ct = ''+
+//   'DROP TABLE '+DATABASE+'; '+
    'CREATE TABLE '+DATABASE+' ('+
    'ID        SERIAL  PRIMARY KEY, '+
    'longitude real    NOT NULL, '+
