@@ -47,17 +47,17 @@ app.get('/pestspotteddb/new', function(req,res){
   sql_ct += 'INSERT INTO '+DATABASE+
      '(longitude, latitude, accuracy, timestamp, pest, uid) '+
      'VALUES ('+
-     '22, 33, 0.4, 4 June 2014, possum, Matt);';
+     '22, 33, 0.4, \'4 June 2014\', \'possum\', \'Matt\');';
 
   sql_ct += 'INSERT INTO '+DATABASE+
      '(longitude, latitude, accuracy, timestamp, pest, uid) '+
      'VALUES ('+
-			'22, 33, 0.4, 4 June 2014, house cat, Matt);';
+			'22, 33, 0.4, \'4 June 2014\', \'house cat\', \'Matt\');';
 
   sql_ct += 'INSERT INTO '+DATABASE+
      '(longitude, latitude, accuracy, timestamp, pest, uid) '+
      'VALUES ('+
-     '22.5, 33.5, 0.5, 5 June 2014, stoat, Matt);';
+     '22.5, 33.5, 0.5, \'5 June 2014\', \'stoat\', \'Matt\');';
 
 
 	client = new pg.Client(connectionString);
@@ -284,7 +284,6 @@ app.get('/db/visits/i', function(req, res){
   console.log("MATT log note---> post query");
 
   query.on('row', function(result){
-//  res.send('query : ' + myQuery); 
     console.log('MATT log ---> result : '+result.count);
     if(!result){ 
       console.log('MATT !result ---> true');
@@ -293,9 +292,6 @@ app.get('/db/visits/i', function(req, res){
       console.log('MATT !result ---> false');
       return res.send('Visits today : ' + result.count); }
   });
-
-//  console.log('query end');
-//  query.on('end', function(result){ client.end(); });
 });
 
 
