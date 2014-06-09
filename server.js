@@ -80,6 +80,7 @@ app.get('/db/new', function(req,res){
 
 app.get('/db/visits/i', function(req,res){
 	var date = new Date();
+  console.log("MATT log note---> get db/visits/i");
 
   client.query('INSERT INTO '+mydb+'(date) VALUES ($1)', [date]);
 
@@ -89,10 +90,11 @@ app.get('/db/visits/i', function(req,res){
 
 
   var query = client.query('SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = $1', [date]);
+  console.log("MATT log note---> post query");
 
   query.on('row', function(result){
 //  res.send('query : ' + myQuery); 
-    console.log('result : '+result);
+    console.log('MATT log ---> result : '+result);
     if(!result){ 
       return res.send('No data found.'); }
     else { 
@@ -112,7 +114,7 @@ app.get('/db/visits', function(req, res){
 
   query.on('row', function(row, result){ 
     rows.push(row.date);
-    console.log("row : " + row.date);
+    console.log("MATT log row : " + row.date);
   });
 
   query.on('err', function(err){
