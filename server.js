@@ -77,7 +77,7 @@ app.get('/pestspotted/all', function(req, res){
   var query = client.query('SELECT * FROM '+DATABASE+';');
 
   query.on('row', function(row, result){ 
-    rows.push(row.pest);
+    rows.push('{pest : '+row.pest+', date : '+row.timestamp+'}');
     console.log("row ID: " + row.ID + " pest: " +row.pest);
   });
   
