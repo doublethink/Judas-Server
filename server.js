@@ -81,7 +81,7 @@ app.get('/pestspotted/all', function(req, res){
     console.log("row ID: " + row.ID + " pest: " +row.pest);
   });
   
-  query.on('end', function(row, result){ // TODO tidy reply to client
+  query.on('end', function(row, result){
     console.log("size : " + rows.length);
 		var str = "";
     for(i = 0; i < rows.length; i++){
@@ -108,13 +108,14 @@ app.get('/pestspotted/:date', function(req, res){
     var rows = [];
     var query = client.query('SELECT ID, pest FROM '+DATABASE+
           ' WHERE datestamp >= ' + new Date(2014, 6, 4, 0,0,0,0)+' ;');
+    console.log("MATT log note---> ####### HELLO");
 
     query.on('row', function(row, result){ 
-      rows.push(row.pest);
+      rows.push('{pest : '+row.pest+', date : '+row.datestamp+'}');
       console.log("row ID: " + row.ID + " pest: " +row.pest);
     });
   
-    query.on('end', function(row, result){ // TODO tidy reply to client
+    query.on('end', function(row, result){
       console.log("size : " + rows.length);
 		  var str = "";
       for(i = 0; i < rows.length; i++){
