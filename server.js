@@ -65,6 +65,7 @@ app.get('/db/new', function(req,res){
   console.log("MATT log note---> myQuery : " + myQuery);
 
   query = client.query(myQuery);
+  console.log("MATT log note---> post query");
 
   query.on('err', function(err){
     res.send("error : "+err);
