@@ -59,8 +59,8 @@ app.get('/db/new', function(req,res){
 	client = new pg.Client(connectionString);
   client.connect();
 
-  var myQuery = 'DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date timestamp);';
-  myQuery += 'INSERT INTO '+mydb+'(date) VALUES (\"' +date+ '\");';
+  var myQuery = 'DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date timestamp); ';
+  myQuery += 'INSERT INTO '+mydb+'(date) VALUES (\'' +date+ '\');';
 
   console.log("MATT log note---> myQuery : " + myQuery);
 
