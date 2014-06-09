@@ -114,11 +114,12 @@ app.get('/db/visits', function(req, res){
   });
 
   query.on('end', function(row, result){ 
-    console.log("size : " + rows.length);
+    console.log("MATT log note---> size : " + rows.length);
 		var str = "";
     for(i = 0; i < rows.length; i++){
       str += "row : "+i+", value : "+rows[i] + "<br>";
     }
+    console.log("MATT log note---> value i : " + i);
     res.send("Datebase holds :<br>" + str +"There are " + rows.length + " rows.");
   });
 });
