@@ -63,24 +63,24 @@ app.get('/pestspotteddb/new', function(req,res){
 	client = new pg.Client(connectionString);
   client.connect();
 
-  query = client.query(sql_ct, function(err, result){
+  query = client.query(sql_ct);
+
+  query.on('end', function(err, result){
 //  client.query(sql_ct);
 //  query = client.query('LASTVAL()', function(err, result){
-    console.log("\nresult3 : " + err);
-    console.log("\nresult3 : " + result);
+//    console.log("\nresult3 : " + err);
+//    console.log("\nresult4 : " + result);
+	  console.log("db new table query processed.");
+    return res.send("new pestspotted db\n");
 
   });
 
-  console.log("\nresult2 : " + query);
+//  console.log("\nresult2 : " + query);
 
-  query.on('end', function(result){ 
-    console.log("\nresult : " + result);
-    client.end(); 
-  });
-
-	console.log("db new table query processed.");
-
-  res.send("new pestspotted db\n");
+//  query.on('end', function(result){ 
+//    console.log("\nresult : " + result);
+//    client.end(); 
+//  });
 });
 
 
