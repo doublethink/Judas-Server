@@ -54,15 +54,11 @@ var users = [
 // a query can accept serial sql instructions.
 //=====================================
 app.get('/db/new', function(req, res){
-  var date = new Date();
   console.log("MATT log note---> get db/new");
+  var date = new Date();
 
 	client = new pg.Client(connectionString);
   client.connect();
-
-//  var myQuery = 'DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date); ';
-//  myQuery += 'INSERT INTO '+mydb+'(date) VALUES (\'' +date+ '\');';
-
 
   query = client.query('DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date);');
   console.log("MATT log note---> post query");
@@ -70,6 +66,7 @@ app.get('/db/new', function(req, res){
   query.on('err', function(err){
     res.send("error : "+err);
   });
+
   query.on('end', function(result){ client.end(); });
 
 	console.log("db new table query processed.");
@@ -79,16 +76,10 @@ app.get('/db/new', function(req, res){
 
 
 app.get('/db/visits/i', function(req, res){
-	var date = new Date();
   console.log("MATT log note---> get db/visits/i");
+	var date = new Date();
 
   client.query('INSERT INTO '+mydb+'(date) VALUES ($1)', [date]);
-
-
-//  var myQuery = 'SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = \''+date+'\';';
-//  console.log('query : '+myQuery);
-
-
   var query = client.query('SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = $1', [date]);
   console.log("MATT log note---> post query");
 
@@ -100,13 +91,8 @@ app.get('/db/visits/i', function(req, res){
       return res.send('No data found.'); }
     else { 
       console.log('MATT !result ---> false');
-      res.send('Visits today : ' + result.count); }
+      return res.send('Visits today : ' + result.count); }
   });
-
- // query.on('end', function(result){ 
-//    res.send('end query : ' + result.count);
-//    client.end(); });
-
 });
 
 
