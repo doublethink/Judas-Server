@@ -75,8 +75,8 @@ app.get('/db/visits/i', function(req,res){
   var myquery = 'INSERT INTO '+mydb+'(date) VALUES (' +date+ ')';
   client.query(myquery);
 
-  myquery = 'SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = '+date;
-  query = client.query(myquery);
+  var myquery2 = 'SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = '+date;
+  query = client.query(myquery2);
 
   query.on('row', function(result){ 
     console.log('result : '+result);
