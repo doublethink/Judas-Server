@@ -59,8 +59,8 @@ app.get('/db/new', function(req,res){
 	client = new pg.Client(connectionString);
   client.connect();
 
-  var myQuery = 'DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date)';
-  myQuery += 'INSERT INTO '+mydb+'(date) VALUES (' +date+ ')';
+  var myQuery = 'DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date);';
+  myQuery += 'INSERT INTO '+mydb+'(date) VALUES (' +date+ ');';
 
   query = client.query(myQuery);
   query.on('end', function(result){ client.end(); });
