@@ -94,7 +94,7 @@ app.get('/db/visits/i', function(req,res){
 
   query.on('row', function(result){
 //  res.send('query : ' + myQuery); 
-    console.log('MATT log ---> result : '+result);
+    console.log('MATT log ---> result : '+result.count);
     if(!result){ 
       return res.send('No data found.'); }
     else { 
