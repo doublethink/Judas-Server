@@ -76,15 +76,15 @@ app.get('/db/visits/i', function(req,res){
   myquery = 'SELECT * FROM ' +mydb;
 //  var myquery = 'INSERT INTO '+mydb+'(date) VALUES (' +date+ ')';
   console.log('query : '+myquery);
-  client.query(myquery);
+//  client.query(myquery);
 
 /*
   var myquery = 'SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = '+date;
   console.log('query : '+myquery); */
 
-/*
+
   var query = client.query(myquery);
-*/
+
   query.on('row', function(result){
   res.send('query : ' + myquery); 
     console.log('result : '+result);
