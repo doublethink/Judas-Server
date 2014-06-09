@@ -60,7 +60,7 @@ app.get('/db/new', function(req,res){
   client.connect();
 
   var myQuery = 'DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date); ';
-  myQuery += 'INSERT INTO '+mydb+'(date) VALUES (\'' +date+ '\');';
+//  myQuery += 'INSERT INTO '+mydb+'(date) VALUES (\'' +date+ '\');';
 
   console.log("MATT log note---> myQuery : " + myQuery);
 
