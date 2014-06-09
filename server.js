@@ -53,7 +53,7 @@ var users = [
 // outside that, its just variable assignment.
 // a query can accept serial sql instructions.
 //=====================================
-app.get('/db/new', function(req,res){
+app.get('/db/new', function(req, res){
   var date = new Date();
 
 	client = new pg.Client(connectionString);
@@ -78,7 +78,7 @@ app.get('/db/new', function(req,res){
 });
 
 
-app.get('/db/visits/i', function(req,res){
+app.get('/db/visits/i', function(req, res){
 	var date = new Date();
   console.log("MATT log note---> get db/visits/i");
 
@@ -103,9 +103,9 @@ app.get('/db/visits/i', function(req,res){
       res.send('Visits today : ' + result.count); }
   });
 
-  query.on('end', function(result){ 
-    res.send('end query : ' + result.count);
-    client.end(); });
+ // query.on('end', function(result){ 
+//    res.send('end query : ' + result.count);
+//    client.end(); });
 
 });
 
