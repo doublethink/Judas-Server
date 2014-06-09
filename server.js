@@ -59,6 +59,7 @@ app.get('/pestspotteddb/new', function(req,res){
      'VALUES ('+
      '22.5, 33.5, 0.5, 5 June 2014, stoat, Matt);';
 
+
 	client = new pg.Client(connectionString);
   client.connect();
 
@@ -82,6 +83,7 @@ app.get('/pestspotteddb/new', function(req,res){
 
   res.send("new pestspotted db\n");
 });
+
 
 app.get('/pestspotted/all', function(req, res){
   var query = client.query('SELECT * FROM '+DATABASE+';');
