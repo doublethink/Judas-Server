@@ -59,8 +59,8 @@ app.get('/db/new', function(req,res){
 	client = new pg.Client(connectionString);
   client.connect();
 
-  var myQuery = 'DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date);';
-  myQuery += 'INSERT INTO '+mydb+'(date) VALUES (' +date.valueOf()+ ');';
+  var myQuery = 'DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(timestamp date);';
+  myQuery += 'INSERT INTO '+mydb+'(date) VALUES (' +date+ ');';
 
   console.log("MATT log note---> myQuery : " + myQuery);
 
@@ -117,6 +117,10 @@ app.get('/db/visits', function(req, res){
   query.on('row', function(row, result){ 
     rows.push(row.date);
     console.log("row : " + row.date);
+  });
+
+  query.on('err', function(err){
+    res.send("error : "+err);
   });
 
   query.on('end', function(row, result){ 
