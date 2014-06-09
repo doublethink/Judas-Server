@@ -114,7 +114,7 @@ app.get('/db/visits', function(req, res){
   var rows = [];
 //  var myQuery = 'SELECT * FROM ' +mydb+';';
 //  console.log("MATT log note---> myQuery : " + myQuery);
-  var query = client.query('SELECT * FROM $1;', [mydb]);
+  var query = client.query('SELECT * FROM ' + mydb);
 
   query.on('row', function(row, result){ 
     rows.push(row.date);
