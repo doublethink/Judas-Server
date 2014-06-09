@@ -55,16 +55,16 @@ var users = [
 //=====================================
 app.get('/db/new', function(req, res){
   var date = new Date();
+  console.log("MATT log note---> get db/new");
 
 	client = new pg.Client(connectionString);
   client.connect();
 
-  var myQuery = 'DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date); ';
+//  var myQuery = 'DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date); ';
 //  myQuery += 'INSERT INTO '+mydb+'(date) VALUES (\'' +date+ '\');';
 
-  console.log("MATT log note---> myQuery : " + myQuery);
 
-  query = client.query(myQuery);
+  query = client.query('DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date);');
   console.log("MATT log note---> post query");
 
   query.on('err', function(err){
