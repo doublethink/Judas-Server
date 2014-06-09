@@ -96,7 +96,7 @@ app.get('/pestspotted/all', function(req, res){
 //=================================
 // app get all results for this day
 //=================================
-app.post('/pestspotted/date', function(req, res){
+app.get('/pestspotted/:date', function(req, res){
   console.log("MATT log note---> get pestspotted/:date");
   var rows = [];
 //  var query = client.query('SELECT pest FROM '+DATABASE+' WHERE timestamp == '+req.param('date')+';');
