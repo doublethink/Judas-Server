@@ -81,9 +81,10 @@ app.get('/db/visits/i', function(req,res){
 /*
   var myquery = 'SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = '+date;
   console.log('query : '+myquery); */
+
+  res.send('query : ' + myquery);
+/*
   var query = client.query(myquery);
-
-
 
   query.on('row', function(result){ 
     console.log('result : '+result);
@@ -96,6 +97,7 @@ app.get('/db/visits/i', function(req,res){
   query.on('end', function(result){ 
     res.send('end query : ' + result.count);
     client.end(); });
+*/
 });
 
 
