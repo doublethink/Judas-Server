@@ -81,18 +81,14 @@ app.get('/db/new', function(req,res){
 app.get('/db/visits/i', function(req,res){
 	var date = new Date();
 
-
- // myQuery = 'SELECT * FROM ' +mydb;
-//  var myQuery = 'INSERT INTO '+mydb+'(date) VALUES (\'' +date+ '\');';
-//  console.log('query : '+myQuery);
   client.query('INSERT INTO '+mydb+'(date) VALUES ($1)', [date]);
 
 
-  var myQuery = 'SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = \''+date+'\';';
-  console.log('query : '+myQuery);
+//  var myQuery = 'SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = \''+date+'\';';
+//  console.log('query : '+myQuery);
 
 
-  var query = client.query(myQuery);
+  var query = client.query('SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = $1', [date]);
 
   query.on('row', function(result){
   res.send('query : ' + myQuery); 
@@ -112,8 +108,6 @@ app.get('/db/visits/i', function(req,res){
 
 app.get('/db/visits', function(req, res){
   var rows = [];
-//  var myQuery = 'SELECT * FROM ' +mydb+';';
-//  console.log("MATT log note---> myQuery : " + myQuery);
   var query = client.query('SELECT * FROM ' + mydb);
 
   query.on('row', function(row, result){ 
