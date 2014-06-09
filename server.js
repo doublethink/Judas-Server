@@ -96,8 +96,10 @@ app.get('/db/visits/i', function(req,res){
 //  res.send('query : ' + myQuery); 
     console.log('MATT log ---> result : '+result.count);
     if(!result){ 
+      console.log('MATT !result ---> true');
       return res.send('No data found.'); }
     else { 
+      console.log('MATT !result ---> false');
       res.send('Visits today : ' + result.count); }
   });
 
