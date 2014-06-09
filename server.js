@@ -91,7 +91,7 @@ app.get('/db/visits/i', function(req,res){
   var query = client.query('SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = $1', [date]);
 
   query.on('row', function(result){
-  res.send('query : ' + myQuery); 
+//  res.send('query : ' + myQuery); 
     console.log('result : '+result);
     if(!result){ 
       return res.send('No data found.'); }
