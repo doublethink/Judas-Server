@@ -107,7 +107,7 @@ app.get('/pestspotted/:date', function(req, res){
     console.log("MATT log note---> date validated.");
     var rows = [];
     var query = client.query('SELECT ID, pest FROM '+DATABASE+
-          ' WHERE timestamp >= ' + new Date("04-06-2014")+' ;');
+          ' WHERE timestamp >= ' + new Date(2014, 6, 4, 0,0,0,0)+' ;');
 
     query.on('row', function(row, result){ 
       rows.push(row.pest);
