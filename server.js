@@ -111,6 +111,7 @@ app.get('/db/visits/i', function(req, res){
 
 
 app.get('/db/visits', function(req, res){
+  console.log("MATT log note---> get db/visits");
   var rows = [];
   var query = client.query('SELECT * FROM ' + mydb);
 
@@ -120,7 +121,7 @@ app.get('/db/visits', function(req, res){
   });
 
   query.on('err', function(err){
-    res.send("error : "+err);
+    return res.send("error : "+err);
   });
 
   query.on('end', function(row, result){ 
@@ -130,7 +131,7 @@ app.get('/db/visits', function(req, res){
       str += "row : "+i+", value : "+rows[i] + "<br>";
     }
     console.log("MATT log note---> value i : " + i);
-    res.send("Datebase holds :<br>" + str +"There are " + rows.length + " rows.");
+    return res.send("Datebase holds :<br>" + str +"There are " + rows.length + " rows.");
   });
 });
 // end database
