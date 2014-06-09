@@ -80,8 +80,8 @@ app.get('/db/visits/i', function(req,res){
 
 
   var myquery = 'SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = '+date;
-  console.log('query : '+myquery);
-*/  var query = client.query(myquery);
+  console.log('query : '+myquery); */
+  var query = client.query(myquery);
 
 
 
