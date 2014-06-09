@@ -82,20 +82,20 @@ app.get('/db/visits/i', function(req,res){
 	var date = new Date();
 
 
- // myquery = 'SELECT * FROM ' +mydb;
-//  var myquery = 'INSERT INTO '+mydb+'(date) VALUES (\'' +date+ '\');';
-//  console.log('query : '+myquery);
+ // myQuery = 'SELECT * FROM ' +mydb;
+//  var myQuery = 'INSERT INTO '+mydb+'(date) VALUES (\'' +date+ '\');';
+//  console.log('query : '+myQuery);
   client.query('INSERT INTO '+mydb+'(date) VALUES ($1)', [date]);
 
 
-  myquery = 'SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = \''+date+'\';';
-  console.log('query : '+myquery);
+  var myQuery = 'SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = \''+date+'\';';
+  console.log('query : '+myQuery);
 
 
-  var query = client.query(myquery);
+  var query = client.query(myQuery);
 
   query.on('row', function(result){
-  res.send('query : ' + myquery); 
+  res.send('query : ' + myQuery); 
     console.log('result : '+result);
     if(!result){ 
       return res.send('No data found.'); }
@@ -112,8 +112,9 @@ app.get('/db/visits/i', function(req,res){
 
 app.get('/db/visits', function(req, res){
   var rows = [];
-  var myquery = 'SELECT * FROM ' +mydb+';';
-  var query = client.query(myquery);
+//  var myQuery = 'SELECT * FROM ' +mydb+';';
+//  console.log("MATT log note---> myQuery : " + myQuery);
+  var query = client.query('SELECT * FROM $1;', [mydb]);
 
   query.on('row', function(row, result){ 
     rows.push(row.date);
