@@ -74,10 +74,10 @@ app.get('/db/visits/i', function(req,res){
 
   var myquery = 'INSERT INTO '+mydb+'(date) VALUES (' +date+ ')';
   console.log('query : '+myquery);
-//  client.query(myquery);
+  client.query(myquery);
 
-//  var myquery = 'SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = '+date;
-  //console.log('query : '+myquery);
+  var myquery = 'SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = '+date;
+  console.log('query : '+myquery);
   query = client.query(myquery);
 
   query.on('row', function(result){ 
@@ -87,6 +87,8 @@ app.get('/db/visits/i', function(req,res){
     else { 
       res.send('Visits today : ' + result.count); }
   });
+
+  query.on('end', function(result){ client.end(); });
 });
 
 
