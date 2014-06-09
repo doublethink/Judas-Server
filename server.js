@@ -69,7 +69,6 @@ app.get('/pestspotteddb/new', function(req,res){
     console.log("\nresult3 : " + err);
     console.log("\nresult3 : " + result);
 
-
   });
 
   console.log("\nresult2 : " + query);
@@ -295,8 +294,8 @@ app.get('/db/visits/i', function(req, res){
       return res.send('Visits today : ' + result.count); }
   });
 
-  console.log('query end');
-  query.on('end', function(result){ client.end(); });
+//  console.log('query end');
+//  query.on('end', function(result){ client.end(); });
 });
 
 
