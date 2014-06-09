@@ -87,7 +87,8 @@ app.get('/db/visits/i', function(req,res){
 
 app.get('/db/visits', function(req, res){
   var rows = [];
-  var query = client.query('SELECT * FROM ' +mydb);//', [mydb]);
+  var myquery = 'SELECT * FROM ' +mydb;
+  var query = client.query(myquery);
 
   query.on('row', function(row, result){ 
     rows.push(row.date);
