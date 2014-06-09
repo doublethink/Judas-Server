@@ -34,7 +34,7 @@ app.use(bodyParser());
 app.get('/pestspotteddb/new', function(req,res){
   // create pest spotted table
   var sql_ct = ''+
-//   'DROP TABLE '+DATABASE+'; '+
+   'DROP TABLE '+DATABASE+'; '+   // comment the DROP TABLE out if the table does not yet exist
    'CREATE TABLE '+DATABASE+' ('+
    'ID        SERIAL  PRIMARY KEY, '+
    'longitude real    NOT NULL, '+
@@ -60,32 +60,21 @@ app.get('/pestspotteddb/new', function(req,res){
      'VALUES ('+
      '22.5, 33.5, 0.5, \'5 June 2014\', \'stoat\', \'Matt\');';
 
-
 	client = new pg.Client(connectionString);
   client.connect();
 
   query = client.query(sql_ct);
 
   query.on('end', function(err, result){
-//  client.query(sql_ct);
-//  query = client.query('LASTVAL()', function(err, result){
-//    console.log("\nresult3 : " + err);
-//    console.log("\nresult4 : " + result);
 	  console.log("db new table query processed.");
     return res.send("new pestspotted db\n");
-
   });
-
-//  console.log("\nresult2 : " + query);
-
-//  query.on('end', function(result){ 
-//    console.log("\nresult : " + result);
-//    client.end(); 
-//  });
 });
 
 
 app.get('/pestspotted/all', function(req, res){
+  console.log("MATT log note---> get pestspotted/all");
+  var rows = [];
   var query = client.query('SELECT * FROM '+DATABASE+';');
 
   query.on('row', function(row, result){ 
