@@ -98,24 +98,32 @@ app.get('/pestspotted/all', function(req, res){
 //=================================
 app.get('/pestspotted/:date', function(req, res){
   console.log("MATT log note---> get pestspotted/:date");
-  var rows = [];
+  console.log("MATT log note---> date = "+ req.param('date'));
+
+  if(!validateDate(req.param('date'))){
+		return res.send(400, "Invalid date format. Use DD-MM-YYYY."); // 400 Bad Request, syntax.
+
+  } else {
+    console.log("MATT log note---> date validated.");
+    var rows = [];
 //  var query = client.query('SELECT pest FROM '+DATABASE+' WHERE timestamp == '+req.param('date')+';');
 // test query
-  var query = client.query('SELECT ID, pest FROM '+DATABASE+' WHERE timestamp == "4 June 2014" ;');
+    var query = client.query('SELECT ID, pest FROM '+DATABASE+' WHERE timestamp == "4 June 2014" ;');
 
-  query.on('row', function(row, result){ 
-    rows.push(row.pest);
-    console.log("row ID: " + row.ID + " pest: " +row.pest);
-  });
+    query.on('row', function(row, result){ 
+      rows.push(row.pest);
+      console.log("row ID: " + row.ID + " pest: " +row.pest);
+    });
   
-  query.on('end', function(row, result){ // TODO tidy reply to client
-    console.log("size : " + rows.length);
-		var str = "";
-    for(i = 0; i < rows.length; i++){
-      str += "row : "+i+", value : "+rows[i] + "<br>";
-    }
-    res.send("pests on this day :<br>" + str +"There are " + rows.length + " rows.");
-  });
+    query.on('end', function(row, result){ // TODO tidy reply to client
+      console.log("size : " + rows.length);
+		  var str = "";
+      for(i = 0; i < rows.length; i++){
+        str += "row : "+i+", value : "+rows[i] + "<br>";
+      }
+      res.send("pests on this day :<br>" + str +"There are " + rows.length + " rows.");
+    });
+  }
 });
 
 //============================
@@ -445,6 +453,16 @@ function setAuthenticateResponse(res){
 function authorised(req){
   if(req == true) return true; // TODO for testing, remove from production code
   
+  return false;
+}
+
+function validateDate(d){
+  var date = new String(d);
+  var reg = new RegExp('(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.](19|20)[0-9][0-9]');
+
+  var test = reg.test(date);
+    console.log("MATT log note---> date regex result is; " + test);
+  if(test){ return true; }
   return false;
 }
 
