@@ -83,9 +83,9 @@ app.get('/db/visits/i', function(req,res){
 
 
  // myquery = 'SELECT * FROM ' +mydb;
-  var myquery = 'INSERT INTO '+mydb+'(date) VALUES (\'' +date+ '\');';
-  console.log('query : '+myquery);
-  client.query(myquery);
+//  var myquery = 'INSERT INTO '+mydb+'(date) VALUES (\'' +date+ '\');';
+//  console.log('query : '+myquery);
+  client.query('INSERT INTO '+mydb+'(date) VALUES ($1)', [date]);
 
 
   myquery = 'SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = \''+date+'\';';
