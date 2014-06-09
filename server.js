@@ -65,6 +65,10 @@ app.get('/db/new', function(req,res){
   console.log("MATT log note---> myQuery : " + myQuery);
 
   query = client.query(myQuery);
+
+  query.on('err', function(err){
+    res.send("error : "+err);
+  });
   query.on('end', function(result){ client.end(); });
 
 	console.log("db new table query processed.");
