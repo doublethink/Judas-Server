@@ -88,7 +88,9 @@ app.get('/db/visits/i', function(req,res){
       res.send('Visits today : ' + result.count); }
   });
 
-  query.on('end', function(result){ client.end(); });
+  query.on('end', function(result){ 
+    res.send('end query : ' + result.count);
+    client.end(); });
 });
 
 
