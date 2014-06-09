@@ -54,11 +54,13 @@ var users = [
 // a query can accept serial sql instructions.
 //=====================================
 app.get('/db/new', function(req,res){
-
-  var myQuery = 'DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date)';
+  var date = new Date();
 
 	client = new pg.Client(connectionString);
   client.connect();
+
+  var myQuery = 'DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date)';
+  myQuery += 'INSERT INTO '+mydb+'(date) VALUES (' +date+ ')';
 
   query = client.query(myQuery);
   query.on('end', function(result){ client.end(); });
