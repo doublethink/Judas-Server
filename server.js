@@ -30,7 +30,6 @@ app.use(bodyParser());
 //============================
 // set up db for pests spotted
 //============================
-
 app.get('/pestspotteddb/new', function(req,res){
   // create pest spotted table
   var sql_ct = ''+
@@ -71,7 +70,7 @@ app.get('/pestspotteddb/new', function(req,res){
   });
 });
 
-
+// test get only, returns list of pests spotted. no details.
 app.get('/pestspotted/all', function(req, res){
   console.log("MATT log note---> get pestspotted/all");
   var rows = [];
@@ -88,7 +87,7 @@ app.get('/pestspotted/all', function(req, res){
     for(i = 0; i < rows.length; i++){
       str += "row : "+i+", value : "+rows[i] + "<br>";
     }
-    res.send("pests on this day :<br>" + str +"There are " + rows.length + " rows.");
+    res.send("List of pests in db :<br>" + str +"There are " + rows.length + " rows.");
   });
 });
 
@@ -97,7 +96,8 @@ app.get('/pestspotted/all', function(req, res){
 //=================================
 // app get all results for this day
 //=================================
-app.get('/pestspotted/:date', function(req, res){
+app.post('/pestspotted/date', function(req, res){
+  console.log("MATT log note---> get pestspotted/:date");
   var rows = [];
 //  var query = client.query('SELECT pest FROM '+DATABASE+' WHERE timestamp == '+req.param('date')+';');
 // test query
