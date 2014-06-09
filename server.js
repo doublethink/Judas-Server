@@ -39,23 +39,23 @@ app.get('/pestspotteddb/new', function(req,res){
    'longitude real    NOT NULL, '+
    'latitude  real    NOT NULL, '+
    'accuracy  real, '+
-   'timestamp date    NOT NULL, '+
+   'datestamp date    NOT NULL, '+
    'pest      varchar NOT NULL, '+
    'uid       varchar NOT NULL '+
    ');';
   // create initial dummy data
   sql_ct += 'INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, timestamp, pest, uid) '+
+     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
      'VALUES ('+
      '22, 33, 0.4, \'4 June 2014\', \'possum\', \'Matt\');';
 
   sql_ct += 'INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, timestamp, pest, uid) '+
+     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
      'VALUES ('+
 			'22, 33, 0.4, \'4 June 2014\', \'house cat\', \'Matt\');';
 
   sql_ct += 'INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, timestamp, pest, uid) '+
+     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
      'VALUES ('+
      '22.5, 33.5, 0.5, \'5 June 2014\', \'stoat\', \'Matt\');';
 
@@ -77,7 +77,7 @@ app.get('/pestspotted/all', function(req, res){
   var query = client.query('SELECT * FROM '+DATABASE+';');
 
   query.on('row', function(row, result){ 
-    rows.push('{pest : '+row.pest+', date : '+row.timestamp+'}');
+    rows.push('{pest : '+row.pest+', date : '+row.datestamp+'}');
     console.log("row ID: " + row.ID + " pest: " +row.pest);
   });
   
@@ -107,7 +107,7 @@ app.get('/pestspotted/:date', function(req, res){
     console.log("MATT log note---> date validated.");
     var rows = [];
     var query = client.query('SELECT ID, pest FROM '+DATABASE+
-          ' WHERE timestamp >= ' + new Date(2014, 6, 4, 0,0,0,0)+' ;');
+          ' WHERE datestamp >= ' + new Date(2014, 6, 4, 0,0,0,0)+' ;');
 
     query.on('row', function(row, result){ 
       rows.push(row.pest);
@@ -128,7 +128,7 @@ app.get('/pestspotted/:date', function(req, res){
 //============================
 // app post for pestspotted[2]
 //============================
-// curl localhost:5000/pestspotted2 -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "timestamp": "15 May"}, "auth": {"uid": "Matt", "accessToken": "possum"}}}' -H "Content-Type: application/json"
+// curl localhost:5000/pestspotted2 -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "auth": {"uid": "Matt", "accessToken": "possum"}}}' -H "Content-Type: application/json"
 
 app.post('/pestspotted2', function(req, res) {
   if(!verifyInput_pestspotted(req, res)) return; // 400 error on fail, value missing
@@ -141,14 +141,14 @@ app.post('/pestspotted2', function(req, res) {
     var packet = req.body.packet;
     // create sql INSERT
     var sql_insert = 'INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, timestamp, '+
+     '(longitude, latitude, accuracy, datestamp, '+
 //     'pest, '+
      'uid) '+
      'VALUES ( '+
      packet.position.longitude+', '+
       packet.position.latitude+', '+
       packet.position.accuracy+', '+
-      packet.position.timestamp+', '+
+      packet.position.datestamp+', '+
 //      packet.pest+', '+
       packet.auth.uid+
       ')';
@@ -189,8 +189,8 @@ app.post('/pestspotted2', function(req, res) {
 //====================================
 
 var spots = [
-  { position: { longitude : 174.7777222, latitude : -41.288889, accuracy: 0.0005, timestamp : '2014-04-20 1300'}, auth: {uid: 'Matt', accessToken : 'Possum'}},
-  { position: { longitude : 174.7777222, latitude : -41.288889, accuracy: 0.0005, timestamp : '2014-04-20 1300'}, auth: {uid: 'Fred', accessToken : 'Stoat'}},
+  { position: { longitude : 174.7777222, latitude : -41.288889, accuracy: 0.0005, datestamp : '2014-04-20 1300'}, auth: {uid: 'Matt', accessToken : 'Possum'}},
+  { position: { longitude : 174.7777222, latitude : -41.288889, accuracy: 0.0005, datestamp : '2014-04-20 1300'}, auth: {uid: 'Fred', accessToken : 'Stoat'}},
 ];
 
 var pests = [
@@ -211,7 +211,7 @@ var users = [
 /* ****************************************************************** 
    test curl, nested jason format -> matches client side post request, hopefully...
    ******************************************************************
-curl localhost:5000/pestspotted -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "timestamp": "15 May"}, "auth": {"uid": "Matt", "accessToken": "possum"}}}' -H "Content-Type: application/json"
+curl localhost:5000/pestspotted -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "auth": {"uid": "Matt", "accessToken": "possum"}}}' -H "Content-Type: application/json"
 */
 app.post('/pestspotted', function(req, res) {
   // TODO check for valid json?
@@ -474,7 +474,7 @@ function verifyInput_pestspotted(req, res){
      req.body.packet.position.longitude == undefined ||
      req.body.packet.position.latitude == undefined ||
      req.body.packet.position.accuracy == undefined ||
-     req.body.packet.position.timestamp == undefined ||
+     req.body.packet.position.datestamp == undefined ||
 // TODO     req.body.packet.pest == undefined ||
      req.body.packet.auth == undefined ||
      req.body.packet.auth.uid == undefined ||
@@ -487,7 +487,7 @@ function verifyInput_pestspotted(req, res){
       "\n  longitude: "+req.body.packet.position.longitude+
       "\n  latitude: "+req.body.packet.position.latitude+
       "\n  accuracy: "+req.body.packet.position.accuracy+
-      "\n  timestamp: "+req.body.packet.position.timestamp;
+      "\n  datestamp: "+req.body.packet.position.datestamp;
 		var authError = req.body.packet == undefined || req.body.packet.auth == undefined ? "undefined" :
       "\n  uid: "+req.body.packet.auth.uid+
       "\n  accessToken: "+req.body.packet.auth.accessToken;
