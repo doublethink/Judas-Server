@@ -81,7 +81,7 @@ app.get('/pestspotted/all', function(req, res){
 });
 
 app.get('/pestspotted_on/:date', function(req, res){
-  res.redirect('/pestspotted_on/' + req.param('date')+'/');
+  res.redirect('/pestspotted_on/' + req.param('date')+'/ ');
 });
 
 
