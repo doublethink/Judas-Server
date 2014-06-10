@@ -104,7 +104,7 @@ app.get('/pestspotted/all', function(req, res){
 //=================================
 app.get('/pestspotted/:date', function(req, res){
   console.log("MATT log note---> get pestspotted/:date");
-  if(!validateDate(date)){
+  if(!validateDate(req.param('date'))){
 		return res.send(400, "Invalid date format. Use DD-MM-YYYY."); // 400 Bad Request, syntax.
   } else {
     console.log("MATT log note---> date validated.");
