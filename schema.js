@@ -1,6 +1,7 @@
 // run using
 // heroku run:detached node schema.js [--app <name of app>]
 
+
 //============================
 function createDummyData(createTable){
   // create initial dummy data
@@ -55,7 +56,7 @@ var createTable = ''+
 // add dummy data
 createTable += createDummyData(createTable);
 
-//client.query('DROP TABLE '+ DATABASE);
+//client.query('DROP TABLE '+ DATABASE +';');
 query = client.query(createTable);
 
 query.on('end', function(result) { client.end(); });
@@ -78,3 +79,8 @@ query = client.query('CREATE TABLE visits (date date)');
 query.on('end', function(result) { client.end(); });
 */
 
+/* gives access to pg sql interface
+heroku pg:psql --app "judas" 
+CREATE TABLE judasdb(ID SERIAL PRIMARY KEY, longitude real NOT NULL, latitude real NOT NULL, accuracy real, datestamp date NOT NULL, pest varchar NOT NULL, uid varchar NOT NULL);
+INSERT INTO judasdb(longitude, latitude, accuracy, datestamp, pest, uid) VALUES (22, 33, 0.4, '2014-05-03', 'possum', 'Matt');
+*/

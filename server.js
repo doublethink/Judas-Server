@@ -27,43 +27,51 @@ app.engine('html', require('ejs').renderFile);
 app.use(logfmt.requestLogger());
 app.use(bodyParser());
 
+
 //============================
-// set up db for pests spotted, for use by admin 
-// url is obsfucated for security
-// TODO add security to further limit access
-app.get('/h83vG8k', function(req,res){
-  console.log("MATT log note---> get /obscured new db");
-  if(!authorisedAdmin(req)){
-    res = setAuthenticateResponse(res);
-		res.send(401, "User ID has not been recognised."); // 401 Unauthorized
-  } else {
-    console.log("MATT log note---> new db authorised");
+// post /pestspotted
+// add pest to database
+// curl localhost:5000/pestspotted2 -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "pest" : "rabbit", "auth": {"uid": "Matt"}}}' -H "Content-Type: application/json"
 
-    // create pest spotted table
-    var createTable = ''+
-//     'DROP TABLE '+DATABASE+'; '+   // comment the DROP TABLE out if the table does not yet exist
-     'CREATE TABLE '+DATABASE+' ('+
-     'ID        SERIAL  PRIMARY KEY, '+
-     'longitude real    NOT NULL, '+
-     'latitude  real    NOT NULL, '+
-     'accuracy  real, '+
-     'datestamp date    NOT NULL, '+ 
-     'pest      varchar NOT NULL, '+
-     'uid       varchar NOT NULL '+
-     ');';
+app.post('/pestspotted', function(req, res) {
+  console.log('MATT log notes---> post /pestspotted');
 
-    // add dummy data
-    createTable += createDummyData(createTable);
+if(authorised(req)){
+  console.log('MATT log notes---> Passed authentication.');
 
-    // build db table
-    query = client.query(createTable);
+  if(!verifyInput_pestspotted(req, res)) return; // 400 error on fail, value missing
 
-    // send confirmation back to client
-    query.on('end', function(err, result){
-	    console.log("db new table query processed.");
-      return res.send("new pestspotted db\n");
-    });
-  }
+  var packet = req.body.packet
+    , insertId;
+
+  // create sql INSERT
+  var sql_insert = 'INSERT INTO '+DATABASE+
+       '(longitude, latitude, accuracy, datestamp, pest, uid) '+
+       'VALUES ( '+
+        packet.position.longitude+', '+
+        packet.position.latitude+', '+
+        packet.position.accuracy+', \''+
+        packet.position.datestamp+'\', \''+
+        packet.pest+'\', \''+
+        packet.auth.uid+'\')';
+  console.log('MATT log notes---> sql_insert : '+ sql_insert);
+
+  // add to db
+  client.query(sql_insert);
+  query = client.query('SELECT count(*) FROM '+DATABASE);
+
+  // get most recent inserts id baed on row count
+  query.on('row', function(row, result){
+    insertId = row.count - 1;
+  });
+
+  // reply to client with id
+  query.on('end', function(row, result){
+    console.log('MATT log notes---> data inserted');
+    console.log('MATT log notes---> result : '+insertId);
+    res.send(201, '{"id" : "'+insertId+'"}');                  // 201 is success resource created
+  });
+}
 });
 
 
@@ -75,6 +83,9 @@ app.get('/pestspotted/all', function(req, res){
 // Limited details, can expand on request from team
 app.get('/pestspotted/all/:json', function(req, res){
   console.log("MATT log note---> get pestspotted/all");
+
+if(authorised(req)){
+  console.log('MATT log notes---> Passed authentication.');
 
   // conduct search
   var rows = [];
@@ -100,12 +111,13 @@ app.get('/pestspotted/all/:json', function(req, res){
       }
       res.json('{packet : [' + str + ']}');
     } else {  
-    for(i = 0; i < rows.length; i++){
+      for(i = 0; i < rows.length; i++){
         str += "row : "+i+", value : "+rows[i] + "<br>";
       }
       res.send("List of pests in db :<br>" + str +"There are " + rows.length + " rows.");
     }
   });
+}
 });
 
 
@@ -118,22 +130,25 @@ app.get('/pestspotted_on/:date', function(req, res){
 app.get('/pestspotted_on/:date/:json', function(req, res){
   console.log("MATT log note---> get pestspotted/:date");
 
+if(authorised(req)){
+  console.log('MATT log notes---> Passed authentication.');
+
   if(!validateDate(req.param('date'))){
-		return res.send(400, "Invalid date format. Use DD-MM-YYYY."); // 400 Bad Request, syntax.
+ 	return res.send(400, "Invalid date format. Use DD-MM-YYYY."); // 400 Bad Request, syntax.
   } else {
     console.log("MATT log note---> date validated.");
 
-    // format date to match db format
+  // format date to match db format
     var split = req.param('date').split('-').reverse();
     var date = split.toString().replace(",","-").replace(",","-"); // odd, needs replace twice
     console.log("MATT log note---> date = "+ date);
 
-    // calc next day
+  // calc next day
     var nextDay = new Date(date);
     nextDay.setDate(nextDay.getDate()+1);
     console.log("MATT log note---> nextDay = "+ nextDay);
 
-    // create next day string for db search
+  // create next day string for db search
     var nextDayStr = ""+nextDay.getFullYear();
     var t = new String(nextDay.getMonth()+1);
     nextDayStr += t.length == 2 ? "-"+t : "-0"+t;
@@ -141,22 +156,22 @@ app.get('/pestspotted_on/:date/:json', function(req, res){
     nextDayStr += t.length == 2 ? "-"+t : "-0"+t;
     console.log("MATT log note---> nextDayStr = "+ nextDayStr);
 
-    // conduct search
+  // conduct search
     var rows = [];
     var query = client.query('SELECT ID, pest, datestamp FROM '+DATABASE+
-          ' WHERE datestamp >= \'' + date + '\''+
-              ' AND datestamp < \''+nextDayStr+'\' ;');
+        ' WHERE datestamp >= \'' + date + '\''+
+            ' AND datestamp < \''+nextDayStr+'\' ;');
 
-    // build result
+  // build result
     query.on('row', function(row, result){ 
       rows.push('{pest : '+row.pest+', date : '+row.datestamp+'}');
       console.log('MATT log notes---> added : '+ rows[rows.length-1]);
     });
 
-    // send it back to client
+  // send it back to client
     query.on('end', function(row, result){
       console.log("MATT log note---> size : " + rows.length);
-		  var str = "";
+      var str = "";
       if(req.param('json') == "json"){
         var first = true;
         for(i = 0; i < rows.length; i++){
@@ -173,54 +188,34 @@ app.get('/pestspotted_on/:date/:json', function(req, res){
       }
     });
   }
+}
 });
 
-//============================
-// post /pestspotted
-// add pest to database
-// curl localhost:5000/pestspotted2 -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "pest" : "rabbit", "auth": {"uid": "Matt"}}}' -H "Content-Type: application/json"
+//=======================================================================
+// total noumber of pests logged by this user
 
-app.post('/pestspotted', function(req, res) {
-  console.log('MATT log notes---> post /pestspotted');
+app.get('/pestspotted/:user', function(req, res){
+  console.log("MATT log note---> get pestspotted/:user");
 
-	if(!authorised(true)){ // TODO replace true with req
-    res = setAuthenticateResponse(res);
-		res.send(401, "User ID has not been recognised."); // 401 Unauthorized
-  }else{
+if(authorisedAdmin(req)){
+  console.log('MATT log notes---> Passed authentication.');
 
-    console.log('MATT log notes---> Passed authentication.');
-    if(!verifyInput_pestspotted(req, res)) return; // 400 error on fail, value missing
-   //var newSpot = req.body.packet;
-    var packet = req.body.packet;
-    var insertId;
-    console.log('MATT log notes---> packet : '+ packet.pest);
+    // conduct search
+  var count = 0;
+  var query = client.query('SELECT pests FROM '+DATABASE+' WHERE user = '+ req.param('user') +';');
 
-    // create sql INSERT
-    var sql_insert = 'INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
-     'VALUES ( '+
-      packet.position.longitude+', '+
-      packet.position.latitude+', '+
-      packet.position.accuracy+', \''+
-      packet.position.datestamp+'\', \''+
-      packet.pest+'\', \''+
-      packet.auth.uid+'\')';
-    console.log('MATT log notes---> sql_insert : '+ sql_insert);
-    // add to db
-    client.query(sql_insert);
-    query = client.query('SELECT count(*) FROM '+DATABASE);
+  // build result
+  query.on('row', function(row, result){ 
+    count += 1;
+  });
 
-    query.on('row', function(row, result){
-      insertId = row.count - 1;
-    });
-
-    query.on('end', function(row, result){
-      console.log('MATT log notes---> data inserted');
-      console.log('MATT log notes---> result : '+insertId);
-      res.send(201, '{"id" : "'+insertId+'"}');                  // 201 is success resource created
-		});
-  }
+  // send it back to client
+  query.on('end', function(row, result){
+    res.json('{count : ' + count +'}');
+  });
+}
 });
+
 
 //=============================================================================
 //===================== test methods, etc below this point =========================
@@ -497,37 +492,15 @@ function authorisedAdmin(req){
 
 function authorised(req){
   if(true) return true; // TODO
-  
+
+  res = setAuthenticateResponse(res);
+  res.send(401, "User ID has not been recognised."); // 401 Unauthorized
   return false;
-}
-
-function createDummyData(createTable){
-  // create initial dummy data
-  createTable += 'INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
-     'VALUES ('+
-     '22, 33, 0.4,'+
-     '\'2014-05-03\''+          // dates must be in single quotes...
-      ', \'possum\', \'Matt\');';
-
-  createTable += 'INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
-     'VALUES ('+
-			'22, 33, 0.4,'+
-     '\'2014-05-04\''+
-      ', \'house cat\', \'Matt\');';
-
-  createTable += 'INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
-     'VALUES ('+
-     '22.5, 33.5, 0.5,'+
-     '\'2014-05-05\''+
-      ', \'stoat\', \'Matt\');';
-  return createTable;
 }
 
 function validateDate(d){
   var date = new String(d);
+  // sufficient for now, would need upgrading in production. Leap years, variable days in month.
   var reg = new RegExp('(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.](19|20)[0-9][0-9]');
 
   var test = reg.test(date);
