@@ -39,7 +39,7 @@ app.get('/pestspotteddb/new', function(req,res){
    'longitude real    NOT NULL, '+
    'latitude  real    NOT NULL, '+
    'accuracy  real, '+
-   'datestamp varchar    NOT NULL, '+
+   'datestamp varchar    NOT NULL, '+  // dates stored as strings
    'pest      varchar NOT NULL, '+
    'uid       varchar NOT NULL '+
    ');';
@@ -62,7 +62,7 @@ app.get('/pestspotteddb/new', function(req,res){
      '(longitude, latitude, accuracy, datestamp, pest, uid) '+
      'VALUES ('+
      '22.5, 33.5, 0.5,'+
-      new Date(2014, 5, 4, 5,21,0,0).toString+
+      new Date(2014, 5, 4, 5,21,0,0).toString()+
       ', \'stoat\', \'Matt\');';
 
 	client = new pg.Client(connectionString);
