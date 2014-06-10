@@ -200,18 +200,18 @@ app.get('/pestspotted/:user', function(req, res){
 if(authorisedAdmin(req)){
   console.log('MATT log notes---> Passed authentication.');
 
-    // conduct search
-//  var count = 0;
-  var query = client.query('SELECT count(*) FROM '+DATABASE+' WHERE uid = \''+ req.param('user') +'\';');
+  // conduct search
+  var count = 0;
+  var query = client.query('SELECT pest FROM '+DATABASE+' WHERE uid = \''+ req.param('user') +'\';');
 
   // build result
-//  query.on('row', function(row, result){ 
-//    count += 1;
-//  });
+  query.on('row', function(row, result){ 
+    count += 1;
+  });
 
   // send it back to client
   query.on('end', function(row, result){
-    res.json('{count : ' + row.count +'}');
+    res.json('{count : ' + count +'}');
   });
 }
 });
