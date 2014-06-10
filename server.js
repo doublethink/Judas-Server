@@ -28,8 +28,8 @@ app.use(logfmt.requestLogger());
 app.use(bodyParser());
 
 //============================
-// set up db for pests spotted
-// for use by admin, url is obsfucated for security
+// set up db for pests spotted, for use by admin 
+// url is obsfucated for security
 // TODO add security to further limit access
 app.get('/h83vG8k', function(req,res){
   // create pest spotted table
@@ -55,7 +55,9 @@ app.get('/h83vG8k', function(req,res){
   });
 });
 
-// test get only, returns list of pests spotted. no details.
+//=======================================================
+// Returns list of all pests spotted. 
+// Limited details, can expand on request from team
 app.get('/pestspotted/all', function(req, res){
   console.log("MATT log note---> get pestspotted/all");
   // conduct search
@@ -63,6 +65,7 @@ app.get('/pestspotted/all', function(req, res){
   var query = client.query('SELECT * FROM '+DATABASE+';');
   // build result
   query.on('row', function(row, result){ 
+    // collect pest name and datetime they were spotted
     rows.push('{pest : '+row.pest+', date : '+row.datestamp+'}');
     console.log("row ID: " + row.ID + " pest: " +row.pest);
   });
@@ -77,10 +80,8 @@ app.get('/pestspotted/all', function(req, res){
   });
 });
 
-
-
 //=======================================================================
-// get all pests loged for this day
+// get all pests logged for this day
 // Day format must equal DD-MM-YYYY for example /pestspotted_on/04-05-2014
 app.get('/pestspotted_on/:date', function(req, res){
   console.log("MATT log note---> get pestspotted/:date");
@@ -143,14 +144,14 @@ app.post('/pestspotted2', function(req, res) {
     // create sql INSERT
     var sql_insert = 'INSERT INTO '+DATABASE+
      '(longitude, latitude, accuracy, datestamp, '+
-//     'pest, '+
+     'pest, '+
      'uid) '+
      'VALUES ( '+
      packet.position.longitude+', '+
       packet.position.latitude+', '+
       packet.position.accuracy+', '+
       packet.position.datestamp+', '+
-//      packet.pest+', '+
+      packet.pest+', '+
       packet.auth.uid+
       ')';
 
