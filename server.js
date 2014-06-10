@@ -148,7 +148,7 @@ app.post('/pestspotted2', function(req, res) {
 
     // create sql INSERT
     var sql_insert = 'INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, datestamp, pest, uid, ID) '+
+     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
      'VALUES ( '+
       packet.position.longitude+', '+
       packet.position.latitude+', '+
@@ -156,10 +156,10 @@ app.post('/pestspotted2', function(req, res) {
       packet.position.datestamp+'\', \''+
       packet.pest+'\', \''+
       packet.auth.uid+'\')';
-    sql_insert += " RETURNING ID";
     console.log('MATT log notes---> sql_insert : '+ sql_insert);
     // add to db
-    query = client.query(sql_insert);
+    client.query(sql_insert);
+    query = client.query('SELECT count() AS id FROM '+DATABASE);
 
     query.on('end', function(row, result){
       console.log('MATT log notes---> data inserted');
