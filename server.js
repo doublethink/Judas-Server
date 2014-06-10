@@ -32,10 +32,12 @@ app.use(bodyParser());
 // url is obsfucated for security
 // TODO add security to further limit access
 app.get('/h83vG8k', function(req,res){
+  console.log("MATT log note---> get /obscured new db");
   if(!authorisedAdmin(req)){
     res = setAuthenticateResponse(res);
 		res.send(401, "User ID has not been recognised."); // 401 Unauthorized
   } else {
+  console.log("MATT log note---> new db authorised");
     // create pest spotted table
     var createTable = ''+
 //     'DROP TABLE '+DATABASE+'; '+   // comment the DROP TABLE out if the table does not yet exist
