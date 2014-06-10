@@ -110,7 +110,7 @@ app.get('/pestspotted/:date', function(req, res){
     console.log("MATT log note---> date validated.");
 
     var split = req.param('date').split('-').reverse();
-    var date = split.toString().replace(",","-");
+    var date = (split.toString()).replace(",","-");
     console.log("MATT log note---> date = "+ date);
     var nextDay = new Date(date);
     nextDay = nextDay.setDate(nextDay.getDate()+1).toString();
