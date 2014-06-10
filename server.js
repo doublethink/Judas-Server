@@ -114,7 +114,7 @@ app.get('/pestspotted/:date', function(req, res){
     console.log("MATT log note---> date = "+ date);
 
     var nextDay = new Date(date);
-    nextDay = nextDay.setDate(nextDay.getDate()+1));
+    nextDay = nextDay.setDate(nextDay.getDate()+1);
     console.log("MATT log note---> nextDay = "+ nextDay.toString());
 
     var rows = [];
