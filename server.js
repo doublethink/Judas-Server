@@ -48,7 +48,7 @@ app.get('/pestspotteddb/new', function(req,res){
      '(longitude, latitude, accuracy, datestamp, pest, uid) '+
      'VALUES ('+
      '22, 33, 0.4,'+
-     '\'2014-05-04\''+          // dates must be in single quotes...
+     '\'2014-05-03\''+          // dates must be in single quotes...
       ', \'possum\', \'Matt\');';
 
   sql_ct += 'INSERT INTO '+DATABASE+
@@ -113,7 +113,8 @@ app.get('/pestspotted/:date', function(req, res){
     console.log("MATT log note---> date validated.");
     var rows = [];
     var query = client.query('SELECT ID, pest, datestamp FROM '+DATABASE+
-          ' WHERE datestamp >= \'2014-05-04\' ;');
+          ' WHERE datestamp >= \'2014-05-04\''+
+              ' AND datestamp < \'2014-05-05\' ;');
     console.log("MATT log note---> ####### HELLO");
 
     query.on('row', function(row, result){ 
