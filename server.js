@@ -113,7 +113,7 @@ app.get('/pestspotted/:date', function(req, res){
     console.log("MATT log note---> date validated.");
     var rows = [];
     var query = client.query('SELECT ID, pest, datestamp FROM '+DATABASE+
-          ' WHERE datestamp >= \'' + new Date(2014, 6, 4, 0,0,0,0)+'\' ;');
+          ' WHERE datestamp >= \'2014-05-04\' ;');
     console.log("MATT log note---> ####### HELLO");
 
     query.on('row', function(row, result){ 
