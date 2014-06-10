@@ -114,8 +114,8 @@ app.get('/pestspotted/:date', function(req, res){
     console.log("MATT log note---> date = "+ date);
 
     var nextDay = new Date(date);
-    nextDay = ((Date)nextDay.setDate(nextDay.getDate()+1)).toDateString();
-    console.log("MATT log note---> nextDay = "+ nextDay);
+    nextDay = nextDay.setDate(nextDay.getDate()+1));
+    console.log("MATT log note---> nextDay = "+ nextDay.toString());
 
     var rows = [];
     var query = client.query('SELECT ID, pest, datestamp FROM '+DATABASE+
