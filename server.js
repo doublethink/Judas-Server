@@ -156,25 +156,13 @@ app.post('/pestspotted2', function(req, res) {
       packet.position.datestamp+'\', \''+
       packet.pest+'\', \''+
       packet.auth.uid+'\')';
-/*
-  createTable += 'INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
-     'VALUES ('+
-			'22, 33, 0.4,'+
-     '\'2014-05-04\''+
-      ', \'house cat\', \'Matt\');';
-*/
-
-
-
     console.log('MATT log notes---> sql_insert : '+ sql_insert);
-
-    // submit DB insert
+    // add to db
     query = client.query(sql_insert);
     //query = client.query(LASTVAL());
 
-    query.on('row', function(result){ // result should == _id
-      console.log('result : '+result); // TODO revise the 2 log thing
+    query.on('end', function(row, result){ // result should == _id
+      console.log('MATT log notes---> data inserted');
 /*      // create log note
       var resourceId = result;
       var text1 = "The user is "+packet.auth.uid+", reporting a "+packet.pest+".";
