@@ -31,7 +31,7 @@ app.use(bodyParser());
 // set up db for pests spotted
 // for use by admin, url is obsfucated for security
 // TODO add security to further limit access
-app.get('/h83#vG*k', function(req,res){
+app.get('/h83vG8k', function(req,res){
   // create pest spotted table
   var createTable = ''+
    'DROP TABLE '+DATABASE+'; '+   // comment the DROP TABLE out if the table does not yet exist
