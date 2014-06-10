@@ -163,8 +163,8 @@ app.post('/pestspotted2', function(req, res) {
 
     query.on('end', function(row, result){
       console.log('MATT log notes---> data inserted');
-      console.log('MATT log notes---> result : '+result);
-      res.send(201, result);                  // 201 is success resource created
+      console.log('MATT log notes---> result : '+result.id);
+      res.send(201, result.id);                  // 201 is success resource created
 		});
   }
 });
