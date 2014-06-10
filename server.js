@@ -158,25 +158,12 @@ app.post('/pestspotted2', function(req, res) {
       packet.auth.uid+'\')';
     console.log('MATT log notes---> sql_insert : '+ sql_insert);
     // add to db
-    query = client.query(sql_insert);
-    //query = client.query(LASTVAL());
+    client.query(sql_insert);
+    query = client.query(LASTVAL());
 
-    query.on('end', function(row, result){ // result should == _id
+    query.on('end', function(row, result){
       console.log('MATT log notes---> data inserted');
-/*      // create log note
-      var resourceId = result;
-      var text1 = "The user is "+packet.auth.uid+", reporting a "+packet.pest+".";
-		  var text2 = "Longitude/Latitude/Accuracy is " + packet.position.longitude+"/"+packet.position.latitude+"/"+packet.position.accuracy;
-
-      var response = {"resourceId": resourceId, "text1": text1, "text2": text2 }; 
-      console.log(response + "\n"+sql_insert);
-*/
-      if(!result){ 
-        return res.send('No data found.'); }
-      else { 
-        // feedback to client
-        res.send(201, result); // 201 is success resource created
-    	}
+      res.send(201, "inserted");                  // 201 is success resource created
 		});
   }
 });
