@@ -3,7 +3,7 @@
 
 
 var mydb = "visits";
-var DATABASE = "judas_DB";
+var DATABASE = "judasDB";
 
 var express = require("express");
 var logfmt = require("logfmt");
@@ -37,7 +37,8 @@ app.get('/h83vG8k', function(req,res){
     res = setAuthenticateResponse(res);
 		res.send(401, "User ID has not been recognised."); // 401 Unauthorized
   } else {
-  console.log("MATT log note---> new db authorised");
+    console.log("MATT log note---> new db authorised");
+
     // create pest spotted table
     var createTable = ''+
 //     'DROP TABLE '+DATABASE+'; '+   // comment the DROP TABLE out if the table does not yet exist
