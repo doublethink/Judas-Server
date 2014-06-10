@@ -80,7 +80,7 @@ app.get('/pestspotted/all/:json', function(req, res){
   // build result
   query.on('row', function(row, result){ 
     // collect pest name and datetime they were spotted
-    rows.push('{"pest" : "'+row.pest+'", "date" : "'+row.datestamp+'"}');
+    rows.push('{pest : '+row.pest+', date : '+row.datestamp+'}');
     console.log("row ID: " + row.ID + " pest: " +row.pest);
   });
 
@@ -92,10 +92,10 @@ app.get('/pestspotted/all/:json', function(req, res){
       var first = true;
       for(i = 0; i < rows.length; i++){
         if(!first){ str += ', ' };
-        str += '{"row" : "'+i+'", "value" : '+rows[i] + '}';
+        str += '{row : '+i+', value : '+rows[i] + '}';
         first = false;
       }
-      res.json('{"packet" : [' + str + ']}');
+      res.json('{packet : [' + str + ']}');
     } else {  
     for(i = 0; i < rows.length; i++){
         str += "row : "+i+", value : "+rows[i] + "<br>";
@@ -146,7 +146,7 @@ app.get('/pestspotted_on/:date/:json', function(req, res){
 
     // build result
     query.on('row', function(row, result){ 
-      rows.push('{"pest" : "'+row.pest+'", "date" : "'+row.datestamp+'"}');
+      rows.push('{pest : '+row.pest+', date : '+row.datestamp+'}');
       console.log('MATT log notes---> added : '+ rows[rows.length-1]);
     });
 
@@ -158,10 +158,10 @@ app.get('/pestspotted_on/:date/:json', function(req, res){
         var first = true;
         for(i = 0; i < rows.length; i++){
           if(!first){ str += ', ' };
-          str += '{"row" : "'+i+'", "value" : '+rows[i] + '}';
+          str += '{row : '+i+', value : '+rows[i] + '}';
           first = false;
         }
-        res.json('{"packet" : [' + str + ']}');
+        res.json('{packet : [' + str + ']}');
       } else {
         for(i = 0; i < rows.length; i++){
           str += "row : "+i+", value : "+rows[i] + "<br>";
