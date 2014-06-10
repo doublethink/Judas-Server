@@ -32,7 +32,7 @@ app.use(bodyParser());
 //============================
 app.get('/pestspotteddb/new', function(req,res){
   // create pest spotted table
-  var sql_ct = ''+
+  var createTable = ''+
    'DROP TABLE '+DATABASE+'; '+   // comment the DROP TABLE out if the table does not yet exist
    'CREATE TABLE '+DATABASE+' ('+
    'ID        SERIAL  PRIMARY KEY, '+
@@ -43,33 +43,11 @@ app.get('/pestspotteddb/new', function(req,res){
    'pest      varchar NOT NULL, '+
    'uid       varchar NOT NULL '+
    ');';
-  // create initial dummy data
-  sql_ct += 'INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
-     'VALUES ('+
-     '22, 33, 0.4,'+
-     '\'2014-05-03\''+          // dates must be in single quotes...
-      ', \'possum\', \'Matt\');';
-
-  sql_ct += 'INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
-     'VALUES ('+
-			'22, 33, 0.4,'+
-     '\'2014-05-04\''+
-      ', \'house cat\', \'Matt\');';
-
-  sql_ct += 'INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
-     'VALUES ('+
-     '22.5, 33.5, 0.5,'+
-     '\'2014-05-05\''+
-      ', \'stoat\', \'Matt\');';
-
-//	client = new pg.Client(connectionString);
-//  client.connect();
-
-  query = client.query(sql_ct);
-
+  // add dummy data
+  createTable += createDummyData(createTable);
+  // build db table
+  query = client.query(createTable);
+  // send confirmation back to client
   query.on('end', function(err, result){
 	  console.log("db new table query processed.");
     return res.send("new pestspotted db\n");
@@ -475,6 +453,31 @@ function authorised(req){
   if(req == true) return true; // TODO for testing, remove from production code
   
   return false;
+}
+
+function createDummyData(createTable){
+  // create initial dummy data
+  createTable += 'INSERT INTO '+DATABASE+
+     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
+     'VALUES ('+
+     '22, 33, 0.4,'+
+     '\'2014-05-03\''+          // dates must be in single quotes...
+      ', \'possum\', \'Matt\');';
+
+  createTable += 'INSERT INTO '+DATABASE+
+     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
+     'VALUES ('+
+			'22, 33, 0.4,'+
+     '\'2014-05-04\''+
+      ', \'house cat\', \'Matt\');';
+
+  createTable += 'INSERT INTO '+DATABASE+
+     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
+     'VALUES ('+
+     '22.5, 33.5, 0.5,'+
+     '\'2014-05-05\''+
+      ', \'stoat\', \'Matt\');';
+  return createTable;
 }
 
 function validateDate(d){
