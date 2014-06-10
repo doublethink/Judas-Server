@@ -164,7 +164,7 @@ app.post('/pestspotted2', function(req, res) {
 
     query.on('row', function(row, result){
       insertId = row.id;
-    }
+    };
 
     query.on('end', function(row, result){
       console.log('MATT log notes---> data inserted');
