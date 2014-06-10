@@ -62,7 +62,7 @@ app.get('/pestspotteddb/new', function(req,res){
      '(longitude, latitude, accuracy, datestamp, pest, uid) '+
      'VALUES ('+
      '22.5, 33.5, 0.5,'+
-     '\'2014-05-04\''+
+     '\'2014-05-05\''+
       ', \'stoat\', \'Matt\');';
 
 	client = new pg.Client(connectionString);
