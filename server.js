@@ -114,13 +114,14 @@ app.get('/pestspotted/:date', function(req, res){
     console.log("MATT log note---> date = "+ date);
 
     var nextDay = new Date(date);
-    nextDay = nextDay.setDate(nextDay.getDate()+1);
-    console.log("MATT log note---> nextDay = "+ nextDay.toString());
+    nextDay.setDate(nextDay.getDate()+1);
+    var nextDayStr = ""+nextDay.getFullYear()+"-"+nextDay.getMonth()+"-"+nextDay.getDate();
+    console.log("MATT log note---> nextDay = "+ nextDayStr);
 
     var rows = [];
     var query = client.query('SELECT ID, pest, datestamp FROM '+DATABASE+
           ' WHERE datestamp >= \'' + date + '\''+
-              ' AND datestamp < \'2014-05-05\' ;');
+              ' AND datestamp < \''+nextDayStr+'\' ;');
     console.log("MATT log note---> ####### HELLO");
 
     query.on('row', function(row, result){ 
@@ -129,7 +130,7 @@ app.get('/pestspotted/:date', function(req, res){
     });
   
     query.on('end', function(row, result){
-      console.log("size : " + rows.length);
+      console.log("MATT log note---> size : " + rows.length);
 		  var str = "";
       for(i = 0; i < rows.length; i++){
         str += "row : "+i+", value : "+rows[i] + "<br>";
