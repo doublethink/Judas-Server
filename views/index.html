@@ -10,13 +10,13 @@ Your Server-Master (err... aspring novice) Matt brings you stuff...<br>
 <p>
  /pestspotted ... a post request that expects contents to be in a json format. For example;<br>
       {"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "pest" : "rabbit", "auth": {"uid": "Matt"}}}<br>
-<p>This method will fail if items are missing or it is not in json.</p>
+<p>The pestspotted post will fail if items are missing or it is not in json.</p>
 
- /pestspotted/all    ... returns a list of all pests spotted
- /pestspotted/all/json ... returns a json object of all pests spotted
+ /pestspotted/all    ... returns a list of all pests spotted<br>
+ /pestspotted/all/json ... returns a json object of all pests spotted<br><br>
 
- /pestspotted_on/:date ... where :date == DD-MM-YYYY, returns a list of pests spotted on that day
- /pestspotted_on/:date/json ... returns a json object, doing the same
+ /pestspotted_on/:date ... where :date == DD-MM-YYYY, returns a list of pests spotted on that day<br>
+ /pestspotted_on/:date/json ... returns a json object, doing the same<br>
 
 
 

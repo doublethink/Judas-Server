@@ -85,7 +85,8 @@ app.get('/pestspotted/all/:json', function(req, res){
         str += '{"row" : "'+i+'", "value" : '+rows[i] + '}';
         first = false;
       }
-      res.send(str);
+      str += ']}'
+      res.json(str);
     } else {  
     for(i = 0; i < rows.length; i++){
         str += "row : "+i+", value : "+rows[i] + "<br>";
@@ -146,7 +147,8 @@ app.get('/pestspotted_on/:date/:json', function(req, res){
           str += '{"row" : "'+i+'", "value" : '+rows[i] + '}';
           first = false;
         }
-        res.send(str);
+        str += ']}'
+        res.json(str);
       } else {
         for(i = 0; i < rows.length; i++){
           str += "row : "+i+", value : "+rows[i] + "<br>";
