@@ -38,7 +38,7 @@ app.get('/h83vG8k', function(req,res){
   } else {
     // create pest spotted table
     var createTable = ''+
-     'DROP TABLE '+DATABASE+'; '+   // comment the DROP TABLE out if the table does not yet exist
+//     'DROP TABLE '+DATABASE+'; '+   // comment the DROP TABLE out if the table does not yet exist
      'CREATE TABLE '+DATABASE+' ('+
      'ID        SERIAL  PRIMARY KEY, '+
      'longitude real    NOT NULL, '+
