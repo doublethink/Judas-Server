@@ -107,7 +107,7 @@ app.get('/pestspotted/:date', function(req, res){
   var date = req.param('date');
   console.log("MATT log note---> date = "+ date);
   var nextDay = new Date(date);
-  nextDay = nextDay.setDay(nextDay.getDay()+1).toString();
+  nextDay = nextDay.setDate(nextDay.getDate()+1).toString();
   console.log("MATT log note---> nextDay = "+ nextDay);
 
   if(!validateDate(date)){
