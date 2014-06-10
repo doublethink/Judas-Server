@@ -65,8 +65,8 @@ app.get('/pestspotteddb/new', function(req,res){
      '\'2014-05-05\''+
       ', \'stoat\', \'Matt\');';
 
-	client = new pg.Client(connectionString);
-  client.connect();
+//	client = new pg.Client(connectionString);
+//  client.connect();
 
   query = client.query(sql_ct);
 
@@ -79,14 +79,15 @@ app.get('/pestspotteddb/new', function(req,res){
 // test get only, returns list of pests spotted. no details.
 app.get('/pestspotted/all', function(req, res){
   console.log("MATT log note---> get pestspotted/all");
+  // conduct search
   var rows = [];
   var query = client.query('SELECT * FROM '+DATABASE+';');
-
+  // build result
   query.on('row', function(row, result){ 
     rows.push('{pest : '+row.pest+', date : '+row.datestamp+'}');
     console.log("row ID: " + row.ID + " pest: " +row.pest);
   });
-  
+  // send it back to client
   query.on('end', function(row, result){
     console.log("size : " + rows.length);
 		var str = "";
@@ -99,43 +100,42 @@ app.get('/pestspotted/all', function(req, res){
 
 
 
-//=================================
-// app get all results for this day
-//=================================
-app.get('/pestspotted/:date', function(req, res){
+//=======================================================================
+// get all pests loged for this day
+// Day format must equal DD-MM-YYYY for example /pestspotted_on/04-05-2014
+app.get('/pestspotted_on/:date', function(req, res){
   console.log("MATT log note---> get pestspotted/:date");
   if(!validateDate(req.param('date'))){
 		return res.send(400, "Invalid date format. Use DD-MM-YYYY."); // 400 Bad Request, syntax.
   } else {
     console.log("MATT log note---> date validated.");
-
+    // format date to match db format
     var split = req.param('date').split('-').reverse();
     var date = split.toString().replace(",","-").replace(",","-"); // odd, needs replace twice
     console.log("MATT log note---> date = "+ date);
-
+    // calc next day
     var nextDay = new Date(date);
     nextDay.setDate(nextDay.getDate()+1);
     console.log("MATT log note---> nextDay = "+ nextDay);
-
+    // create next day string for db search
     var nextDayStr = ""+nextDay.getFullYear();
     var t = new String(nextDay.getMonth()+1);
     nextDayStr += t.length == 2 ? "-"+t : "-0"+t;
     t = new String(nextDay.getDate());
     nextDayStr += t.length == 2 ? "-"+t : "-0"+t;
-
     console.log("MATT log note---> nextDayStr = "+ nextDayStr);
-
+    // conduct search
     var rows = [];
     var query = client.query('SELECT ID, pest, datestamp FROM '+DATABASE+
           ' WHERE datestamp >= \'' + date + '\''+
               ' AND datestamp < \''+nextDayStr+'\' ;');
     console.log("MATT log note---> ####### HELLO");
-
+    // build result
     query.on('row', function(row, result){ 
       rows.push('{pest : '+row.pest+', date : '+row.datestamp+'}');
       console.log("row ID: " + row.ID + " pest: " +row.pest);
     });
-  
+    // send it back to client
     query.on('end', function(row, result){
       console.log("MATT log note---> size : " + rows.length);
 		  var str = "";
