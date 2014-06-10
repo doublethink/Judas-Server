@@ -123,8 +123,8 @@ app.get('/pestspotted_on/:date/:json', function(req, res){
         str = '{"packet" : [';
         var first = true;
         for(i = 0; i < rows.length; i++){
-          if(!first){ str += ', ';
-          str += '{"row" : "'+i+'", "value" : "'+rows[i] + '"}";
+          if(!first){ str += ', ' };
+          str += '{"row" : "'+i+'", "value" : "'+rows[i] + '"}';
           first = false;
         }
         res.send(str);
