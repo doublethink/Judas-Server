@@ -48,7 +48,7 @@ app.get('/pestspotteddb/new', function(req,res){
      '(longitude, latitude, accuracy, datestamp, pest, uid) '+
      'VALUES ('+
      '22, 33, 0.4,'+
-     new Date('2014-05-04')+
+     '\'2014-05-04\''+
       ', \'possum\', \'Matt\');';
 /*
   sql_ct += 'INSERT INTO '+DATABASE+
