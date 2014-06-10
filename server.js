@@ -119,12 +119,19 @@ app.get('/pestspotted_on/:date/:json', function(req, res){
     query.on('end', function(row, result){
       console.log("MATT log note---> size : " + rows.length);
 		  var str = "";
-      for(i = 0; i < rows.length; i++){
-        str += "row : "+i+", value : "+rows[i] + "<br>";
-      }
       if(req.param('json') == "json"){
-        res.send("json response");
+        str = '{"packet" : [';
+        var first = true;
+        for(i = 0; i < rows.length; i++){
+          if(!first){ str += ', ';
+          str += '{"row" : "'+i+'", "value" : "'+rows[i] + '"}";
+          first = false;
+        }
+        res.send(str);
       } else {
+        for(i = 0; i < rows.length; i++){
+          str += "row : "+i+", value : "+rows[i] + "<br>";
+        }
         res.send("pests on this day :<br>" + str +"There are " + rows.length + " rows.");
       }
     });
