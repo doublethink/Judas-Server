@@ -122,7 +122,7 @@ app.get('/pestspotted_on/:date/:json', function(req, res){
       for(i = 0; i < rows.length; i++){
         str += "row : "+i+", value : "+rows[i] + "<br>";
       }
-      if(json){
+      if(req.param('json') == "json"){
         res.send("json response");
       } else {
         res.send("pests on this day :<br>" + str +"There are " + rows.length + " rows.");
