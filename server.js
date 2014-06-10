@@ -39,7 +39,7 @@ app.get('/pestspotteddb/new', function(req,res){
    'longitude real    NOT NULL, '+
    'latitude  real    NOT NULL, '+
    'accuracy  real, '+
-   'datestamp varchar    NOT NULL, '+  // dates stored as strings
+   'datestamp date    NOT NULL, '+ 
    'pest      varchar NOT NULL, '+
    'uid       varchar NOT NULL '+
    ');';
