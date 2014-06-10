@@ -159,7 +159,7 @@ app.post('/pestspotted2', function(req, res) {
     console.log('MATT log notes---> sql_insert : '+ sql_insert);
     // add to db
     client.query(sql_insert);
-    query = client.query('SELECT count() AS id FROM '+DATABASE);
+    query = client.query('SELECT count(*) AS id FROM '+DATABASE);
 
     query.on('end', function(row, result){
       console.log('MATT log notes---> data inserted');
