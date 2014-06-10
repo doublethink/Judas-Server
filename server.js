@@ -94,7 +94,7 @@ if(authorised(req)){
   // build result
   query.on('row', function(row, result){ 
     // collect pest name and datetime they were spotted
-    rows.push('{pest : '+row.pest+', date : '+row.datestamp+'}');
+    rows.push('{userid : '+row.uid+', pest : '+row.pest+', date : '+row.datestamp+'}');
     console.log("row ID: " + row.ID + " pest: " +row.pest);
   });
 
@@ -158,7 +158,7 @@ if(authorised(req)){
 
   // conduct search
     var rows = [];
-    var query = client.query('SELECT ID, pest, datestamp FROM '+DATABASE+
+    var query = client.query('SELECT uid, pest, datestamp FROM '+DATABASE+
         ' WHERE datestamp >= \'' + date + '\''+
             ' AND datestamp < \''+nextDayStr+'\' ;');
 
