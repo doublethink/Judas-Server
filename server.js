@@ -83,7 +83,7 @@ app.get('/pestspotted/all', function(req, res){
 //=======================================================================
 // get all pests logged for this day
 // Day format must equal DD-MM-YYYY for example /pestspotted_on/04-05-2014
-app.get('/pestspotted_on/:date', function(req, res){
+app.get('/pestspotted_on/:date/:json', function(req, res){
   console.log("MATT log note---> get pestspotted/:date");
   if(!validateDate(req.param('date'))){
 		return res.send(400, "Invalid date format. Use DD-MM-YYYY."); // 400 Bad Request, syntax.
@@ -122,7 +122,11 @@ app.get('/pestspotted_on/:date', function(req, res){
       for(i = 0; i < rows.length; i++){
         str += "row : "+i+", value : "+rows[i] + "<br>";
       }
-      res.send("pests on this day :<br>" + str +"There are " + rows.length + " rows.");
+      if(json){
+        res.send("json response");
+      } else {
+        res.send("pests on this day :<br>" + str +"There are " + rows.length + " rows.");
+      }
     });
   }
 });
