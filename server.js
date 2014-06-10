@@ -104,7 +104,8 @@ app.get('/pestspotted/all', function(req, res){
 //=================================
 app.get('/pestspotted/:date', function(req, res){
   console.log("MATT log note---> get pestspotted/:date");
-  var date = req.param('date');
+  var split = req.param('date').split('-').reverse();
+  var date = split.toString().replace(",","-");
   console.log("MATT log note---> date = "+ date);
   var nextDay = new Date(date);
   nextDay = nextDay.setDate(nextDay.getDate()+1).toString();
