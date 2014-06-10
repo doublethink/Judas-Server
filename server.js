@@ -148,17 +148,25 @@ app.post('/pestspotted2', function(req, res) {
 
     // create sql INSERT
     var sql_insert = 'INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, datestamp, '+
-     'pest, '+
-     'uid) '+
+     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
      'VALUES ( '+
-     packet.position.longitude+', '+
+      packet.position.longitude+', '+
       packet.position.latitude+', '+
       packet.position.accuracy+', '+
       packet.position.datestamp+', '+
       packet.pest+', '+
       packet.auth.uid+
       ')';
+/*
+  createTable += 'INSERT INTO '+DATABASE+
+     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
+     'VALUES ('+
+			'22, 33, 0.4,'+
+     '\'2014-05-04\''+
+      ', \'house cat\', \'Matt\');';
+*/
+
+
 
     console.log('MATT log notes---> sql_insert : '+ sql_insert);
 
