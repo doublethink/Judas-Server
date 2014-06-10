@@ -148,7 +148,7 @@ app.post('/pestspotted2', function(req, res) {
 
     // create sql INSERT
     var sql_insert = 'INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, datestamp, pest, uid) '+
+     '(longitude, latitude, accuracy, datestamp, pest, uid, ID) '+
      'VALUES ( '+
       packet.position.longitude+', '+
       packet.position.latitude+', '+
