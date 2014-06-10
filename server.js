@@ -70,7 +70,7 @@ app.get('/pestspotted/all/:json', function(req, res){
   // build result
   query.on('row', function(row, result){ 
     // collect pest name and datetime they were spotted
-    rows.push('{pest : '+row.pest+', date : '+row.datestamp+'}');
+    rows.push('{"pest" : "'+row.pest+'", "date" : "'+row.datestamp+'"}');
     console.log("row ID: " + row.ID + " pest: " +row.pest);
   });
   // send it back to client
