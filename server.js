@@ -144,7 +144,7 @@ app.post('/pestspotted2', function(req, res) {
     if(!verifyInput_pestspotted(req, res)) return; // 400 error on fail, value missing
    //var newSpot = req.body.packet;
     var packet = req.body.packet;
-    console.log('MATT log notes---> packet : '+ packet);
+    console.log('MATT log notes---> packet : '+ packet.pest);
 
     // create sql INSERT
     var sql_insert = 'INSERT INTO '+DATABASE+
@@ -152,11 +152,10 @@ app.post('/pestspotted2', function(req, res) {
      'VALUES ( '+
       packet.position.longitude+', '+
       packet.position.latitude+', '+
-      packet.position.accuracy+', '+
-      packet.position.datestamp+', '+
-      packet.pest+', '+
-      packet.auth.uid+
-      ')';
+      packet.position.accuracy+', \''+
+      packet.position.datestamp+'\', \''+
+      packet.pest+'\', \''+
+      packet.auth.uid+'\')';
 /*
   createTable += 'INSERT INTO '+DATABASE+
      '(longitude, latitude, accuracy, datestamp, pest, uid) '+
