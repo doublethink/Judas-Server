@@ -202,7 +202,7 @@ if(authorisedAdmin(req)){
   console.log('MATT log notes---> Passed authentication.');
 
   // conduct search
-  var count = 0;
+  var count;
   var query = client.query('SELECT count(*) FROM '+DATABASE+' WHERE uid = \''+ req.param('user') +'\';');
 
   // build result

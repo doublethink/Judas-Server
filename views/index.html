@@ -16,29 +16,32 @@ Your Server-Master (err... aspring novice) Matt brings you stuff...<br>
  /pestspotted/all/json ... returns a json object of all pests spotted<br><br>
 
  /pestspotted_on/:date ... where :date == DD-MM-YYYY, returns a list of pests spotted on that day<br>
- /pestspotted_on/:date/json ... returns a json object, doing the same<br>
+ /pestspotted_on/:date/json ... returns a json object, doing the same<br><br>
 
  /pestspotted/:userid ... where :userid is the registered user, returns a count of pests reported by user
 
 </p>
 <p>
 <b>Dummy data in db</b>
- id | longitude | latitude | accuracy | datestamp  |  pest  | uid  
-----+-----------+----------+----------+------------+--------+------
-  1 |        22 |       33 |      0.4 | 2014-05-03 | possum | Matt
-  2 |        22 |       33 |      0.4 | 2014-05-04 | stoat  | Matt
-  3 |        22 |       33 |      0.4 | 2014-05-05 | rabbit | Matt
+<p>
+&nbsp; id | longitude | latitude | accuracy | datestamp  |  pest  | uid  <br>
+---+----------+--------+--------+----------+------+-----<br>
+&nbsp; 1 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;       22 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      33 | &nbsp;&nbsp;&nbsp;&nbsp;     0.4 | 2014-05-03 | possum | Matt<br>
+&nbsp; 2 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;       22 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      33 | &nbsp;&nbsp;&nbsp;&nbsp;     0.4 | 2014-05-04 | stoat &nbsp; | Matt<br>
+&nbsp; 3 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;       22 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      33 | &nbsp;&nbsp;&nbsp;&nbsp;     0.4 | 2014-05-05 | rabbit | Matt<br>
 (3 rows)
+<p>
 
-Other data will accumulate as it is added.
+Feel free to test against these. Other data will accumulate as it is added.<br>
+<br>
 
-Postgresql data types are;
-longitude \t real
-latitude \t real
-accuracy \t real
-datestamp \t date
-pest \t varchar
-uid \t varchar
+Postgresql data types are;<br>
+longitude ... real<br>
+latitude ... real<br>
+accuracy ... real<br>
+datestamp ... date<br>
+pest ...... varchar<br>
+uid ....... varchar<br>
 
 </p>
 <!--<p>
