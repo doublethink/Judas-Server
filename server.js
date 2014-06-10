@@ -48,23 +48,23 @@ app.get('/pestspotteddb/new', function(req,res){
      '(longitude, latitude, accuracy, datestamp, pest, uid) '+
      'VALUES ('+
      '22, 33, 0.4,'+
-     '\'2014-05-04\''+
+     '\'2014-05-04\''+          // dates must be in single quotes...
       ', \'possum\', \'Matt\');';
-/*
+
   sql_ct += 'INSERT INTO '+DATABASE+
      '(longitude, latitude, accuracy, datestamp, pest, uid) '+
      'VALUES ('+
 			'22, 33, 0.4,'+
-     '"2014-05-04"'+
+     '\'2014-05-04\''+
       ', \'house cat\', \'Matt\');';
 
   sql_ct += 'INSERT INTO '+DATABASE+
      '(longitude, latitude, accuracy, datestamp, pest, uid) '+
      'VALUES ('+
      '22.5, 33.5, 0.5,'+
-     '"2014-05-04"'+
+     '\'2014-05-04\''+
       ', \'stoat\', \'Matt\');';
-*/
+
 	client = new pg.Client(connectionString);
   client.connect();
 
@@ -113,7 +113,7 @@ app.get('/pestspotted/:date', function(req, res){
     console.log("MATT log note---> date validated.");
     var rows = [];
     var query = client.query('SELECT ID, pest, datestamp FROM '+DATABASE+
-          ' WHERE datestamp >= ' + new Date(2014, 6, 4, 0,0,0,0)+' ;');
+          ' WHERE datestamp >= \'' + new Date(2014, 6, 4, 0,0,0,0)+'\' ;');
     console.log("MATT log note---> ####### HELLO");
 
     query.on('row', function(row, result){ 
