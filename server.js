@@ -156,10 +156,10 @@ app.post('/pestspotted2', function(req, res) {
       packet.position.datestamp+'\', \''+
       packet.pest+'\', \''+
       packet.auth.uid+'\')';
+    sql_insert += "RETURNING ID";
     console.log('MATT log notes---> sql_insert : '+ sql_insert);
     // add to db
-    client.query(sql_insert);
-    query = client.query(LASTVAL());
+    query = client.query(sql_insert);
 
     query.on('end', function(row, result){
       console.log('MATT log notes---> data inserted');
