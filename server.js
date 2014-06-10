@@ -211,7 +211,7 @@ if(authorisedAdmin(req)){
 
   // send it back to client
   query.on('end', function(row, result){
-    res.json('{count : ' + result.count +'}');
+    res.json('{count : ' + row.count +'}');
   });
 }
 });
