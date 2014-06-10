@@ -133,14 +133,19 @@ app.get('/pestspotted_on/:date', function(req, res){
 // curl localhost:5000/pestspotted2 -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "auth": {"uid": "Matt", "accessToken": "possum"}}}' -H "Content-Type: application/json"
 
 app.post('/pestspotted2', function(req, res) {
-  if(!verifyInput_pestspotted(req, res)) return; // 400 error on fail, value missing
+  console.log('MATT log notes---> post /pestspotted2');
 
 	if(!authorised(true)){ // TODO replace true with req
     res = setAuthenticateResponse(res);
 		res.send(401, "User ID has not been recognised."); // 401 Unauthorized
   }else{
+
+    console.log('MATT log notes---> Passed authentication.');
+    if(!verifyInput_pestspotted(req, res)) return; // 400 error on fail, value missing
    //var newSpot = req.body.packet;
     var packet = req.body.packet;
+    console.log('MATT log notes---> packet : '+ packet);
+
     // create sql INSERT
     var sql_insert = 'INSERT INTO '+DATABASE+
      '(longitude, latitude, accuracy, datestamp, '+
@@ -155,7 +160,7 @@ app.post('/pestspotted2', function(req, res) {
       packet.auth.uid+
       ')';
 
-    console.log('sql_insert : '+ sql_insert);
+    console.log('MATT log notes---> sql_insert : '+ sql_insert);
 
     // submit DB insert
     query = client.query(sql_insert);
