@@ -104,16 +104,20 @@ app.get('/pestspotted/all', function(req, res){
 //=================================
 app.get('/pestspotted/:date', function(req, res){
   console.log("MATT log note---> get pestspotted/:date");
-  console.log("MATT log note---> date = "+ req.param('date'));
+  var date = req.param('date');
+  console.log("MATT log note---> date = "+ date);
+  var nextDay = new Date(date);
+  nextDay = nextDay.setDay(nextDay.getDay()+1).toString();
+  console.log("MATT log note---> nextDay = "+ nextDay);
 
-  if(!validateDate(req.param('date'))){
+  if(!validateDate(date)){
 		return res.send(400, "Invalid date format. Use DD-MM-YYYY."); // 400 Bad Request, syntax.
 
   } else {
     console.log("MATT log note---> date validated.");
     var rows = [];
     var query = client.query('SELECT ID, pest, datestamp FROM '+DATABASE+
-          ' WHERE datestamp >= \'2014-05-04\''+
+          ' WHERE datestamp >= \'' + date + '\''+
               ' AND datestamp < \'2014-05-05\' ;');
     console.log("MATT log note---> ####### HELLO");
 
