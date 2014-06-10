@@ -202,7 +202,7 @@ if(authorisedAdmin(req)){
 
     // conduct search
   var count = 0;
-  var query = client.query('SELECT pest FROM '+DATABASE+' WHERE uid = "'+ req.param('user') +'";');
+  var query = client.query('SELECT pest FROM '+DATABASE+' WHERE uid = \''+ req.param('user') +'\';');
 
   // build result
   query.on('row', function(row, result){ 
