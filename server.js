@@ -144,6 +144,7 @@ app.post('/pestspotted2', function(req, res) {
     if(!verifyInput_pestspotted(req, res)) return; // 400 error on fail, value missing
    //var newSpot = req.body.packet;
     var packet = req.body.packet;
+    var insertId;
     console.log('MATT log notes---> packet : '+ packet.pest);
 
     // create sql INSERT
@@ -161,10 +162,14 @@ app.post('/pestspotted2', function(req, res) {
     client.query(sql_insert);
     query = client.query('SELECT count(*) AS id FROM '+DATABASE);
 
+    query.on('row', function(row, result){
+      insertId = row.id;
+    }
+
     query.on('end', function(row, result){
       console.log('MATT log notes---> data inserted');
-      console.log('MATT log notes---> result : '+result.id);
-      res.send(201, result.id);                  // 201 is success resource created
+      console.log('MATT log notes---> result : '+insertId);
+      res.send(201, insertId);                  // 201 is success resource created
 		});
   }
 });
