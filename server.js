@@ -55,10 +55,14 @@ app.get('/h83vG8k', function(req,res){
   });
 });
 
+
+app.get('/pestspotted/all', function(req, res){
+  res.redirect('/pestspotted/all/text');
+});
 //=======================================================
 // Returns list of all pests spotted. 
 // Limited details, can expand on request from team
-app.get('/pestspotted/all', function(req, res){
+app.get('/pestspotted/all/:json', function(req, res){
   console.log("MATT log note---> get pestspotted/all");
   // conduct search
   var rows = [];
@@ -73,18 +77,28 @@ app.get('/pestspotted/all', function(req, res){
   query.on('end', function(row, result){
     console.log("size : " + rows.length);
 		var str = "";
+    if(req.param('json') == "json"){
+      str = '{"packet" : [';
+      var first = true;
+      for(i = 0; i < rows.length; i++){
+        if(!first){ str += ', ' };
+        str += '{"row" : "'+i+'", "value" : '+rows[i] + '}';
+        first = false;
+      }
+      res.send(str);
+    } else {  
     for(i = 0; i < rows.length; i++){
-      str += "row : "+i+", value : "+rows[i] + "<br>";
+        str += "row : "+i+", value : "+rows[i] + "<br>";
+      }
+      res.send("List of pests in db :<br>" + str +"There are " + rows.length + " rows.");
     }
-    res.send("List of pests in db :<br>" + str +"There are " + rows.length + " rows.");
   });
 });
+
 
 app.get('/pestspotted_on/:date', function(req, res){
   res.redirect('/pestspotted_on/' + req.param('date')+'/text');
 });
-
-
 //=======================================================================
 // get all pests logged for this day
 // Day format must equal DD-MM-YYYY for example /pestspotted_on/04-05-2014
@@ -144,12 +158,12 @@ app.get('/pestspotted_on/:date/:json', function(req, res){
 });
 
 //============================
-// app post for pestspotted[2]
+// app post for pestspotted
 //============================
-// curl localhost:5000/pestspotted2 -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "auth": {"uid": "Matt", "accessToken": "possum"}}}' -H "Content-Type: application/json"
+// curl localhost:5000/pestspotted2 -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "pest" : "rabbit", "auth": {"uid": "Matt"}}}' -H "Content-Type: application/json"
 
-app.post('/pestspotted2', function(req, res) {
-  console.log('MATT log notes---> post /pestspotted2');
+app.post('/pestspotted', function(req, res) {
+  console.log('MATT log notes---> post /pestspotted');
 
 	if(!authorised(true)){ // TODO replace true with req
     res = setAuthenticateResponse(res);
@@ -224,7 +238,7 @@ var users = [
    ******************************************************************
 curl localhost:5000/pestspotted -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "auth": {"uid": "Matt", "accessToken": "possum"}}}' -H "Content-Type: application/json"
 */
-app.post('/pestspotted', function(req, res) {
+app.post('/pestspotted2', function(req, res) {
   // TODO check for valid json?
   if(!verifyInput_pestspotted(req, res)) return;  // 400 error on fail, value missing
 
@@ -511,10 +525,9 @@ function verifyInput_pestspotted(req, res){
      req.body.packet.position.latitude == undefined ||
      req.body.packet.position.accuracy == undefined ||
      req.body.packet.position.datestamp == undefined ||
-// TODO     req.body.packet.pest == undefined ||
+     req.body.packet.pest == undefined ||
      req.body.packet.auth == undefined ||
-     req.body.packet.auth.uid == undefined ||
-     req.body.packet.auth.accessToken == undefined
+     req.body.packet.auth.uid == undefined
     ){
     // input failed, create & send error message
     res.statusCode = 400;
@@ -525,15 +538,14 @@ function verifyInput_pestspotted(req, res){
       "\n  accuracy: "+req.body.packet.position.accuracy+
       "\n  datestamp: "+req.body.packet.position.datestamp;
 		var authError = req.body.packet == undefined || req.body.packet.auth == undefined ? "undefined" :
-      "\n  uid: "+req.body.packet.auth.uid+
-      "\n  accessToken: "+req.body.packet.auth.accessToken;
+      "\n  uid: "+req.body.packet.auth.uid;
     var pestError = req.body.packet == undefined || req.body.packet.pest == undefined ? "undefined" :
       req.body.packet.pest;
     
     res.send('Error 400: A value is missing.\n' +  // 400 error, value missing
       "\npacket: "   +packetError+
       "\nposition: " +positionError+
-// TODO      "\npest: "     +pestError+
+      "\npest: "     +pestError+
       "\nauth: "     +authError);
     return false;
   }
