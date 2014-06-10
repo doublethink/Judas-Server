@@ -18,10 +18,29 @@ Your Server-Master (err... aspring novice) Matt brings you stuff...<br>
  /pestspotted_on/:date ... where :date == DD-MM-YYYY, returns a list of pests spotted on that day<br>
  /pestspotted_on/:date/json ... returns a json object, doing the same<br>
 
-
+ /pestspotted/:userid ... where :userid is the registered user, returns a count of pests reported by user
 
 </p>
+<p>
+<b>Dummy data in db</b>
+ id | longitude | latitude | accuracy | datestamp  |  pest  | uid  
+----+-----------+----------+----------+------------+--------+------
+  1 |        22 |       33 |      0.4 | 2014-05-03 | possum | Matt
+  2 |        22 |       33 |      0.4 | 2014-05-04 | stoat  | Matt
+  3 |        22 |       33 |      0.4 | 2014-05-05 | rabbit | Matt
+(3 rows)
 
+Other data will accumulate as it is added.
+
+Postgresql data types are;
+longitude \t real
+latitude \t real
+accuracy \t real
+datestamp \t date
+pest \t varchar
+uid \t varchar
+
+</p>
 <!--<p>
  <b>GET</b><br>
  /test     ...returns a string \"Server responds to \"test\".<br>

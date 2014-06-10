@@ -62,7 +62,7 @@ if(authorised(req)){
 
   // get most recent inserts id baed on row count
   query.on('row', function(row, result){
-    insertId = row.count - 1;
+    insertId = row.count;
   });
 
   // reply to client with id
@@ -106,13 +106,13 @@ if(authorised(req)){
       var first = true;
       for(i = 0; i < rows.length; i++){
         if(!first){ str += ', ' };
-        str += '{row : '+i+', value : '+rows[i] + '}';
+        str += '{row : '+(i+1)+', value : '+rows[i] + '}';
         first = false;
       }
       res.json('{packet : [' + str + ']}');
     } else {  
       for(i = 0; i < rows.length; i++){
-        str += "row : "+i+", value : "+rows[i] + "<br>";
+        str += "row : "+(i+1)+", value : "+rows[i] + "<br>";
       }
       res.send("List of pests in db :<br>" + str +"There are " + rows.length + " rows.");
     }
@@ -176,13 +176,13 @@ if(authorised(req)){
         var first = true;
         for(i = 0; i < rows.length; i++){
           if(!first){ str += ', ' };
-          str += '{row : '+i+', value : '+rows[i] + '}';
+          str += '{row : '+(i+1)+', value : '+rows[i] + '}';
           first = false;
         }
         res.json('{packet : [' + str + ']}');
       } else {
         for(i = 0; i < rows.length; i++){
-          str += "row : "+i+", value : "+rows[i] + "<br>";
+          str += "row : "+(i+1)+", value : "+rows[i] + "<br>";
         }
         res.send("pests on this day :<br>" + str +"There are " + rows.length + " rows.");
       }
@@ -193,6 +193,7 @@ if(authorised(req)){
 
 //=======================================================================
 // total noumber of pests logged by this user
+// NB: user is case sensitive
 
 app.get('/pestspotted/:user', function(req, res){
   console.log("MATT log note---> get pestspotted/:user");
@@ -202,11 +203,11 @@ if(authorisedAdmin(req)){
 
   // conduct search
   var count = 0;
-  var query = client.query('SELECT pest FROM '+DATABASE+' WHERE uid = \''+ req.param('user') +'\';');
+  var query = client.query('SELECT count(*) FROM '+DATABASE+' WHERE uid = \''+ req.param('user') +'\';');
 
   // build result
   query.on('row', function(row, result){ 
-    count += 1;
+    count = row.count;
   });
 
   // send it back to client
