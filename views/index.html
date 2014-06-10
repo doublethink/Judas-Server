@@ -11,17 +11,16 @@ Your Server-Master (err... aspring novice) Matt brings you stuff...<br>
  /pestspotted ... a post request that expects contents to be in a json format. For example;<br>
       {"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "pest" : "rabbit", "auth": {"uid": "Matt"}}}<br>
 <p>The pestspotted post will fail if items are missing or it is not in json.</p>
-
- /pestspotted/all    ... returns a list of all pests spotted<br>
- /pestspotted/all/json ... returns a json object of all pests spotted<br><br>
-
- /pestspotted_on/:date ... where :date == DD-MM-YYYY, returns a list of pests spotted on that day<br>
- /pestspotted_on/:date/json ... returns a json object, doing the same<br><br>
-
- /pestspotted/:userid ... where :userid is the registered user, returns a count of pests reported by user
-
-</p>
 <p>
+ /pestspotted/all    ... returns a list of all pests spotted
+ /pestspotted/all/json ... returns a json object of all pests spotted
+</p><p>
+ /pestspotted_on/:date ... where :date == DD-MM-YYYY, returns a list of pests spotted on that day
+ /pestspotted_on/:date/json ... returns a json object, doing the same
+</p><p>
+ /pestspotted/:userid ... where :userid is the registered user, returns a count of pests reported by user
+</p>
+
 <b>Dummy data in db</b>
 <p>
 &nbsp; id | longitude | latitude | accuracy | datestamp  |  pest  | uid  <br>
@@ -30,11 +29,10 @@ Your Server-Master (err... aspring novice) Matt brings you stuff...<br>
 &nbsp; 2 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;       22 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      33 | &nbsp;&nbsp;&nbsp;&nbsp;     0.4 | 2014-05-04 | stoat &nbsp; | Matt<br>
 &nbsp; 3 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;       22 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      33 | &nbsp;&nbsp;&nbsp;&nbsp;     0.4 | 2014-05-05 | rabbit | Matt<br>
 (3 rows)
+</p><p>
+Feel free to test against these. Other data will accumulate as it is added.
+</p>
 <p>
-
-Feel free to test against these. Other data will accumulate as it is added.<br>
-<br>
-
 Postgresql data types are;<br>
 longitude ... real<br>
 latitude ... real<br>
@@ -42,7 +40,6 @@ accuracy ... real<br>
 datestamp ... date<br>
 pest ...... varchar<br>
 uid ....... varchar<br>
-
 </p>
 <!--<p>
  <b>GET</b><br>
