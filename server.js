@@ -32,27 +32,35 @@ app.use(bodyParser());
 // url is obsfucated for security
 // TODO add security to further limit access
 app.get('/h83vG8k', function(req,res){
-  // create pest spotted table
-  var createTable = ''+
-   'DROP TABLE '+DATABASE+'; '+   // comment the DROP TABLE out if the table does not yet exist
-   'CREATE TABLE '+DATABASE+' ('+
-   'ID        SERIAL  PRIMARY KEY, '+
-   'longitude real    NOT NULL, '+
-   'latitude  real    NOT NULL, '+
-   'accuracy  real, '+
-   'datestamp date    NOT NULL, '+ 
-   'pest      varchar NOT NULL, '+
-   'uid       varchar NOT NULL '+
-   ');';
-  // add dummy data
-  createTable += createDummyData(createTable);
-  // build db table
-  query = client.query(createTable);
-  // send confirmation back to client
-  query.on('end', function(err, result){
-	  console.log("db new table query processed.");
-    return res.send("new pestspotted db\n");
-  });
+  if(!authorisedAdmin(req)){
+    res = setAuthenticateResponse(res);
+		res.send(401, "User ID has not been recognised."); // 401 Unauthorized
+  } else {
+    // create pest spotted table
+    var createTable = ''+
+     'DROP TABLE '+DATABASE+'; '+   // comment the DROP TABLE out if the table does not yet exist
+     'CREATE TABLE '+DATABASE+' ('+
+     'ID        SERIAL  PRIMARY KEY, '+
+     'longitude real    NOT NULL, '+
+     'latitude  real    NOT NULL, '+
+     'accuracy  real, '+
+     'datestamp date    NOT NULL, '+ 
+     'pest      varchar NOT NULL, '+
+     'uid       varchar NOT NULL '+
+     ');';
+
+    // add dummy data
+    createTable += createDummyData(createTable);
+
+    // build db table
+    query = client.query(createTable);
+
+    // send confirmation back to client
+    query.on('end', function(err, result){
+	    console.log("db new table query processed.");
+      return res.send("new pestspotted db\n");
+    });
+  }
 });
 
 
@@ -64,29 +72,30 @@ app.get('/pestspotted/all', function(req, res){
 // Limited details, can expand on request from team
 app.get('/pestspotted/all/:json', function(req, res){
   console.log("MATT log note---> get pestspotted/all");
+
   // conduct search
   var rows = [];
   var query = client.query('SELECT * FROM '+DATABASE+';');
+
   // build result
   query.on('row', function(row, result){ 
     // collect pest name and datetime they were spotted
     rows.push('{"pest" : "'+row.pest+'", "date" : "'+row.datestamp+'"}');
     console.log("row ID: " + row.ID + " pest: " +row.pest);
   });
+
   // send it back to client
   query.on('end', function(row, result){
     console.log("size : " + rows.length);
 		var str = "";
     if(req.param('json') == "json"){
-      str = '{"packet" : [';
       var first = true;
       for(i = 0; i < rows.length; i++){
         if(!first){ str += ', ' };
         str += '{"row" : "'+i+'", "value" : '+rows[i] + '}';
         first = false;
       }
-      str += ']}'
-      res.json(str);
+      res.json('{"packet" : [' + str + ']}');
     } else {  
     for(i = 0; i < rows.length; i++){
         str += "row : "+i+", value : "+rows[i] + "<br>";
@@ -105,18 +114,22 @@ app.get('/pestspotted_on/:date', function(req, res){
 // Day format must equal DD-MM-YYYY for example /pestspotted_on/04-05-2014
 app.get('/pestspotted_on/:date/:json', function(req, res){
   console.log("MATT log note---> get pestspotted/:date");
+
   if(!validateDate(req.param('date'))){
 		return res.send(400, "Invalid date format. Use DD-MM-YYYY."); // 400 Bad Request, syntax.
   } else {
     console.log("MATT log note---> date validated.");
+
     // format date to match db format
     var split = req.param('date').split('-').reverse();
     var date = split.toString().replace(",","-").replace(",","-"); // odd, needs replace twice
     console.log("MATT log note---> date = "+ date);
+
     // calc next day
     var nextDay = new Date(date);
     nextDay.setDate(nextDay.getDate()+1);
     console.log("MATT log note---> nextDay = "+ nextDay);
+
     // create next day string for db search
     var nextDayStr = ""+nextDay.getFullYear();
     var t = new String(nextDay.getMonth()+1);
@@ -124,31 +137,31 @@ app.get('/pestspotted_on/:date/:json', function(req, res){
     t = new String(nextDay.getDate());
     nextDayStr += t.length == 2 ? "-"+t : "-0"+t;
     console.log("MATT log note---> nextDayStr = "+ nextDayStr);
+
     // conduct search
     var rows = [];
     var query = client.query('SELECT ID, pest, datestamp FROM '+DATABASE+
           ' WHERE datestamp >= \'' + date + '\''+
               ' AND datestamp < \''+nextDayStr+'\' ;');
-    console.log("MATT log note---> ####### HELLO");
+
     // build result
     query.on('row', function(row, result){ 
       rows.push('{"pest" : "'+row.pest+'", "date" : "'+row.datestamp+'"}');
       console.log('MATT log notes---> added : '+ rows[rows.length-1]);
     });
+
     // send it back to client
     query.on('end', function(row, result){
       console.log("MATT log note---> size : " + rows.length);
 		  var str = "";
       if(req.param('json') == "json"){
-        str = '{"packet" : [';
         var first = true;
         for(i = 0; i < rows.length; i++){
           if(!first){ str += ', ' };
           str += '{"row" : "'+i+'", "value" : '+rows[i] + '}';
           first = false;
         }
-        str += ']}'
-        res.json(str);
+        res.json('{"packet" : [' + str + ']}');
       } else {
         for(i = 0; i < rows.length; i++){
           str += "row : "+i+", value : "+rows[i] + "<br>";
@@ -208,7 +221,7 @@ app.post('/pestspotted', function(req, res) {
 
 //=============================================================================
 //===================== test methods, etc below this point =========================
-// NB: keep helpers & server start at bottom...
+// keep helpers & server start at bottom...
 
 
 //====================================
@@ -241,13 +254,10 @@ var users = [
 curl localhost:5000/pestspotted -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "auth": {"uid": "Matt", "accessToken": "possum"}}}' -H "Content-Type: application/json"
 */
 app.post('/pestspotted2', function(req, res) {
-  // TODO check for valid json?
   if(!verifyInput_pestspotted(req, res)) return;  // 400 error on fail, value missing
 
-  var authorised = true; // TODO check user authentication
-
-	if(authorised){
-    // add to db (TODO just an array for now)
+	if(authorised(req)){
+    // just uses an array
     var newSpot = req.body.packet;
     spots.push(newSpot);
 
@@ -476,8 +486,14 @@ function setAuthenticateResponse(res){
   return res;	
 }
 
+function authorisedAdmin(req){
+  if(true) return true; // TODO
+
+  return false;
+}
+
 function authorised(req){
-  if(req == true) return true; // TODO for testing, remove from production code
+  if(true) return true; // TODO
   
   return false;
 }
