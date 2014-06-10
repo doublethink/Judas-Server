@@ -173,8 +173,8 @@ app.get('/pestspotted_on/:date/:json', function(req, res){
 });
 
 //============================
-// app post for pestspotted
-//============================
+// post /pestspotted
+// add pest to database
 // curl localhost:5000/pestspotted2 -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "pest" : "rabbit", "auth": {"uid": "Matt"}}}' -H "Content-Type: application/json"
 
 app.post('/pestspotted', function(req, res) {
