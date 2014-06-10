@@ -39,7 +39,7 @@ app.get('/pestspotteddb/new', function(req,res){
    'longitude real    NOT NULL, '+
    'latitude  real    NOT NULL, '+
    'accuracy  real, '+
-   'datestamp date    NOT NULL, '+
+   'datestamp varchar    NOT NULL, '+
    'pest      varchar NOT NULL, '+
    'uid       varchar NOT NULL '+
    ');';
@@ -48,21 +48,21 @@ app.get('/pestspotteddb/new', function(req,res){
      '(longitude, latitude, accuracy, datestamp, pest, uid) '+
      'VALUES ('+
      '22, 33, 0.4,'+
-      new Date(2014, 6, 4, 5,5,0,0)+
+      new Date(2014, 5, 4, 5,5,0,0).toString()+
       ', \'possum\', \'Matt\');';
 
   sql_ct += 'INSERT INTO '+DATABASE+
      '(longitude, latitude, accuracy, datestamp, pest, uid) '+
      'VALUES ('+
 			'22, 33, 0.4,'+
-      new Date(2014, 6, 4, 5,10,0,0)+
+      new Date(2014, 5, 4, 5,10,0,0).toString()+
       ', \'house cat\', \'Matt\');';
 
   sql_ct += 'INSERT INTO '+DATABASE+
      '(longitude, latitude, accuracy, datestamp, pest, uid) '+
      'VALUES ('+
      '22.5, 33.5, 0.5,'+
-      new Date(2014, 6, 4, 5,21,0,0)+
+      new Date(2014, 5, 4, 5,21,0,0).toString+
       ', \'stoat\', \'Matt\');';
 
 	client = new pg.Client(connectionString);
