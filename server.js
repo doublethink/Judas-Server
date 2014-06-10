@@ -80,6 +80,11 @@ app.get('/pestspotted/all', function(req, res){
   });
 });
 
+app.get('/pestspotted_on/:date', function(req, res){
+  res.redirect('/pestspotted_on/' + reg.param('date')+'/string');
+}
+
+
 //=======================================================================
 // get all pests logged for this day
 // Day format must equal DD-MM-YYYY for example /pestspotted_on/04-05-2014
@@ -112,8 +117,8 @@ app.get('/pestspotted_on/:date/:json', function(req, res){
     console.log("MATT log note---> ####### HELLO");
     // build result
     query.on('row', function(row, result){ 
-      rows.push('{pest : '+row.pest+', date : '+row.datestamp+'}');
-      console.log("row ID: " + row.ID + " pest: " +row.pest);
+      rows.push('{"pest" : "'+row.pest+'", "date" : "'+row.datestamp+'"}');
+      console.log('MATT log notes---> added : '+ rows[rows.length-1]);
     });
     // send it back to client
     query.on('end', function(row, result){
@@ -124,7 +129,7 @@ app.get('/pestspotted_on/:date/:json', function(req, res){
         var first = true;
         for(i = 0; i < rows.length; i++){
           if(!first){ str += ', ' };
-          str += '{"row" : "'+i+'", "value" : "'+rows[i] + '"}';
+          str += '{"row" : "'+i+'", "value" : '+rows[i] + '}';
           first = false;
         }
         res.send(str);
