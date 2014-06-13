@@ -290,7 +290,7 @@ if(FBuserID == null){
 
   // get most recent inserts id based on row count
   query.on('row', function(row, result){
-    FBtoken = row.FBtoken;
+    FBtoken = row.fbtoken;
     console.log('MATT log notes---> FBtoken : '+ FBtoken);
     // TODO litle point in checking the userID, but sets up conditional for something stronger
     if(FBtoken == undefined){
