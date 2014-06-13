@@ -293,15 +293,17 @@ if(FBuserID == null){
     FBtoken = row.FBtoken;
     console.log('MATT log notes---> FBtoken : '+ FBtoken);
     // TODO litle point in checking the userID, but sets up conditional for something stronger
-    if(FBtoken != undefined && FBtoken.userID != FBuserID){
+    if(FBtoken == undefined){
+      return res.send(401, "UserID does not exist in the db."); // 401 Unauthorized
+    if(FBtoken.userID != FBuserID){
       return res.send(401, "UserID does not match the stored token."); // 401 Unauthorized
-    } else
+    }
   });
 
   // reply to client with id
   query.on('end', function(row, result){
     console.log('MATT log notes---> returning data');
-    res.send(201, FBtoken);                  // 201 is success resource created
+    res.send(202, FBtoken);                  // 202 request accepted
   });
 }
 });
