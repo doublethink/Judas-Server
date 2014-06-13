@@ -86,13 +86,8 @@ CREATE TABLE judasdb(ID SERIAL PRIMARY KEY, longitude real NOT NULL, latitude re
 INSERT INTO judasdb(longitude, latitude, accuracy, datestamp, pest, uid) VALUES (22, 33, 0.4, '2014-05-03', 'possum', 'Matt');
 
 //userdb
-create table userdb(uid varchar PRIMARY KEY, FBtoken JSON);
-insert into userdb (uid, fbtoken) values ('Matt',
-  '{"accessToken": "letMeIn",
-   "expiresIn": "00:01:00",
-   "signedRequest": "signedByMatt",
-   "userID": "Matt"
-   }');
+create table userdb(uid varchar PRIMARY KEY, fbtoken JSON);
+insert into userdb (uid, fbtoken) values ('Matt', '{"accessToken": "letMeIn", "expiresIn": "00:01:00", "signedRequest": "signedByMatt", "userID": "Matt"}');
 
 
 */

@@ -223,6 +223,7 @@ if(authorisedAdmin(req)){
 //=======================================================================
 // accept and store the FB response token
 // NB: not sure this is sufficient to be sure we are communicating with the phone app.
+// tested post content -> {"authResponse" : {"accessToken": "letMeInToo", "expiresIn": "00:01:00", "signedRequest": "signedByMatt", "userID": "Bob"}}
 
 app.post('/login', function(req, res){
   console.log("MATT log note---> post login");
