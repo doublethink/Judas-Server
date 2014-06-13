@@ -282,7 +282,7 @@ if(FBuserID == null){
 
   // create sql SELECT
   var sql = 'SELECT FBtoken FROM '+USERDB+
-       'WHERE uid = '+ FBuserID +';';
+       'WHERE uid = "'+ FBuserID +'";';
   console.log('MATT log notes---> sql : '+ sql);
 
   // retrieve from db
