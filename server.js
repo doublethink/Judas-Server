@@ -281,7 +281,7 @@ if(FBuserID == null){
   var insert;
 
   // create sql SELECT
-  var sql = 'SELECT FBtoken FROM '+USERDB+
+  var sql = 'SELECT * FROM '+USERDB+
        ' WHERE uid = \''+ FBuserID +'\';';
   console.log('MATT log notes---> sql : '+ sql);
 
@@ -295,12 +295,12 @@ if(FBuserID == null){
     // TODO litle point in checking the userID, but sets up conditional for something stronger
     if(FBtoken != undefined && FBtoken.userID != FBuserID){
       return res.send(401, "UserID does not match the stored token."); // 401 Unauthorized
-    }
+    } else
   });
 
   // reply to client with id
   query.on('end', function(row, result){
-    console.log('MATT log notes---> data inserted');
+    console.log('MATT log notes---> returning data');
     res.send(201, FBtoken);                  // 201 is success resource created
   });
 }
