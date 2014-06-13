@@ -268,7 +268,7 @@ if(FBtoken == null){
 // respond with the Facebook authResponse token
 // prerequisite: userID provided matches the userID in the token
 
-app.post('/login', function(req, res){
+app.post('/login2', function(req, res){
   console.log("MATT log note---> post login");
 
   var FBuserID = req.body.userID
