@@ -83,4 +83,15 @@ query.on('end', function(result) { client.end(); });
 heroku pg:psql --app "judas" 
 CREATE TABLE judasdb(ID SERIAL PRIMARY KEY, longitude real NOT NULL, latitude real NOT NULL, accuracy real, datestamp date NOT NULL, pest varchar NOT NULL, uid varchar NOT NULL);
 INSERT INTO judasdb(longitude, latitude, accuracy, datestamp, pest, uid) VALUES (22, 33, 0.4, '2014-05-03', 'possum', 'Matt');
+
+userdb
+create table userdb(uid varchar PRIMARY KEY, FBtoken JSON);
+insert into userdb (uid, fbtoken) values ('Matt',
+  '{"accessToken": "letMeIn",
+   "expiresIn": "00:01:00",
+   "signedRequest": "signedByMatt",
+   "userID": "Matt"
+   }');
+
+
 */

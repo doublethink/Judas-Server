@@ -4,6 +4,7 @@
 
 var mydb = "visits";
 var DATABASE = "judasDB";
+var USERDB = "userDB";
 
 var express = require("express");
 var logfmt = require("logfmt");
@@ -60,7 +61,7 @@ if(authorised(req)){
   client.query(sql_insert);
   query = client.query('SELECT count(*) FROM '+DATABASE);
 
-  // get most recent inserts id baed on row count
+  // get most recent inserts id based on row count
   query.on('row', function(row, result){
     insertId = row.count;
   });
@@ -191,6 +192,7 @@ if(authorised(req)){
 }
 });
 
+
 //=======================================================================
 // total noumber of pests logged by this user
 // NB: user is case sensitive
@@ -216,6 +218,99 @@ if(authorisedAdmin(req)){
   });
 }
 });
+
+
+//=======================================================================
+// accept and store the FB response token
+// NB: not sure this is sufficient to be sure we are communicating with the phone app.
+
+app.post('/login', function(req, res){
+  console.log("MATT log note---> post login");
+
+  // FBtoken is the Facebook authResponse token
+  // https://developers.facebook.com/docs/reference/javascript/FB.getLoginStatus/
+  var FBtoken = req.body.authResponse;
+
+if(FBtoken == null){
+  res.send(401, "User token has not been recieved."); // 401 Unauthorized
+} else {
+
+  var insert;
+
+  // create sql INSERT
+  var sql_insert = 'INSERT INTO '+USERDB+
+       '(uid, FBtoken) '+
+       'VALUES ( '+
+        FBtoken.userID+', '+
+        FBtoken +'\')';
+  console.log('MATT log notes---> sql_insert : '+ sql_insert);
+
+  // add to db
+  client.query(sql_insert);
+  query = client.query('SELECT count(*) FROM '+USERDB);
+
+  // get most recent inserts id based on row count
+  query.on('row', function(row, result){
+    insertId = row.count;
+  });
+
+  // reply to client with id
+  query.on('end', function(row, result){
+    console.log('MATT log notes---> data inserted');
+    console.log('MATT log notes---> result : '+insertId);
+    res.send(201, '{"id" : "'+insertId+'"}');                  // 201 is success resource created
+  });
+}
+});
+
+
+//=====================================================================
+// respond with the Facebook authResponse token
+// prerequisite: userID provided matches the userID in the token
+
+app.post('/login', function(req, res){
+  console.log("MATT log note---> post login");
+
+  var FBuserID = req.body.userID
+    , FBtoken;
+
+if(FBuserID == null){
+  res.send(401, "UserID has not been recieved."); // 401 Unauthorized
+} else {
+
+  var insert;
+
+  // create sql SELECT
+  var sql = 'SELECT FBtoken FROM '+USERDB+
+       'WHERE uid = '+ FBuserID +';';
+  console.log('MATT log notes---> sql : '+ sql);
+
+  // retrieve from db
+  query = client.query(sql);
+
+  // get most recent inserts id based on row count
+  query.on('row', function(row, result){
+    FBtoken = row.FBtoken;
+    // TODO litle point in hecking the userID, but sets up conditional for something stronger
+    if(FBtoken != undefined && FBtoken.userID != FBuserID){
+      return res.send(401, "UserID does not match the stored token."); // 401 Unauthorized
+    }
+  });
+
+  // reply to client with id
+  query.on('end', function(row, result){
+    console.log('MATT log notes---> data inserted');
+    console.log('MATT log notes---> result : '+insertId);
+    res.send(201, FBtoken);                  // 201 is success resource created
+  });
+}
+});
+
+
+
+
+
+
 
 
 //=============================================================================
