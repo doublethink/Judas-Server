@@ -242,7 +242,7 @@ if(FBtoken == null){
        '(uid, FBtoken) '+
        'VALUES ( \''+
         FBtoken.userID+'\', \''+
-        FBtoken +'\')';
+        FBtoken.toString() +'\')';
   console.log('MATT log notes---> sql_insert : '+ sql_insert);
 
   // add to db
