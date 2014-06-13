@@ -300,7 +300,6 @@ if(FBuserID == null){
   // reply to client with id
   query.on('end', function(row, result){
     console.log('MATT log notes---> data inserted');
-    console.log('MATT log notes---> result : '+insertId);
     res.send(201, FBtoken);                  // 201 is success resource created
   });
 }
