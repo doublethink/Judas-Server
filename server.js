@@ -295,6 +295,7 @@ if(FBuserID == null){
     // TODO litle point in checking the userID, but sets up conditional for something stronger
     if(FBtoken == undefined){
       return res.send(401, "UserID does not exist in the db."); // 401 Unauthorized
+    }
     if(FBtoken.userID != FBuserID){
       return res.send(401, "UserID does not match the stored token."); // 401 Unauthorized
     }
