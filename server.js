@@ -291,7 +291,8 @@ if(FBuserID == null){
   // get most recent inserts id based on row count
   query.on('row', function(row, result){
     FBtoken = row.FBtoken;
-    // TODO litle point in hecking the userID, but sets up conditional for something stronger
+    console.log('MATT log notes---> FBtoken : '+ FBtoken);
+    // TODO litle point in checking the userID, but sets up conditional for something stronger
     if(FBtoken != undefined && FBtoken.userID != FBuserID){
       return res.send(401, "UserID does not match the stored token."); // 401 Unauthorized
     }
