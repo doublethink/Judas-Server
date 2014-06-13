@@ -1,27 +1,37 @@
 <html>
-<br><h2>Members of Team Judas - I Greet You !!!</h2>
+<h2>Members of Team Judas - I Greet You !!!</h2>
 <p>
 Your Server-Master (err... aspring novice) Matt brings you stuff...<br>
  Home page, just serves you this text. Intended only as a team aid to exprimenting.<br>
  As more functionality is added, I will add brief notes here.<br><br>
  So far, these URI's exist:<br>
  All based on the prefix... judas.herokuapp.com <br>
-</p>
-<p>
+</p><p>
+<br>
+ /fbtoken_in ... a post request with a body containg a Facebook authResponse token<br>
+ /fbtoken_out ... a post request with a body containing json {"userID": "xxx"}, that returns the saved fbtoken
+</p><p>
+
+In the userdb already is userID "Matt", "Bob" & "Mary", testing against these will return a json authResponse object.<br>
+No security is currently implemented, Stephen & I need to co-ordinate before I lock him out...
+</p><p>
+
  /pestspotted ... a post request that expects contents to be in a json format. For example;<br>
-      {"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "pest" : "rabbit", "auth": {"uid": "Matt"}}}<br>
-<p>The pestspotted post will fail if items are missing or it is not in json.</p>
-<p>
- /pestspotted/all    ... returns a list of all pests spotted
+      {"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "pest" : "rabbit", "auth": {"uid": "Matt"}}}
+</p><p>
+
+ /pestspotted/all    ... returns a list of all pests spotted<br>
  /pestspotted/all/json ... returns a json object of all pests spotted
 </p><p>
- /pestspotted_on/:date ... where :date == DD-MM-YYYY, returns a list of pests spotted on that day
+
+ /pestspotted_on/:date ... where :date == DD-MM-YYYY, returns a list of pests spotted on that day<br>
  /pestspotted_on/:date/json ... returns a json object, doing the same
 </p><p>
+
  /pestspotted/:userid ... where :userid is the registered user, returns a count of pests reported by user
 </p>
 
-<b>Dummy data in db</b>
+<b>Dummy data in pestspotted db</b>
 <p>
 &nbsp; id | longitude | latitude | accuracy | datestamp  |  pest  | uid  <br>
 ---+----------+--------+--------+----------+------+-----<br>

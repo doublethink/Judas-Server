@@ -222,10 +222,11 @@ if(authorisedAdmin(req)){
 
 //=======================================================================
 // accept and store the FB response token
+// pre-requisite: body contains the Facebook authResponse token
 // NB: not sure this is sufficient to be sure we are communicating with the phone app.
 // tested post content -> {"authResponse" : {"accessToken": "letMeInToo", "expiresIn": "00:01:00", "signedRequest": "signedByMatt", "userID": "Bob"}}
 
-app.post('/login', function(req, res){
+app.post('/fbtoken_in', function(req, res){
   console.log("MATT log note---> post login");
 
   // FBtoken is the Facebook authResponse token
@@ -267,10 +268,11 @@ if(FBtoken == null){
 
 //=====================================================================
 // respond with the Facebook authResponse token
-// prerequisite: userID provided matches the userID in the token
+// pre-requisite: Body contains json {"userID": "xxx"}
+// prerequisite: userID value matches the userID in the token
 // tested post content -> {"userID": "Matt"}
 
-app.post('/login2', function(req, res){
+app.post('/fbtoken_out', function(req, res){
   console.log("MATT log note---> post login");
 
   var FBuserID = req.body.userID
@@ -295,7 +297,7 @@ if(FBuserID == null){
     FBtoken = row.fbtoken;  // column name is lowercase out of db
     console.log('MATT log notes---> FBtoken : '+ FBtoken);
 
-    // TODO litle point in checking the userID, but sets up conditional for something stronger
+    // little point in checking the userID, but sets up conditional for something stronger
     if(FBtoken == undefined){
       return res.send(401, "UserID does not exist in the db."); // 401 Unauthorized
     }
