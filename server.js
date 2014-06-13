@@ -240,8 +240,8 @@ if(FBtoken == null){
   // create sql INSERT
   var sql_insert = 'INSERT INTO '+USERDB+
        '(uid, FBtoken) '+
-       'VALUES ( '+
-        FBtoken.userID+', '+
+       'VALUES ( \''+
+        FBtoken.userID+'\', \''+
         FBtoken +'\')';
   console.log('MATT log notes---> sql_insert : '+ sql_insert);
 
