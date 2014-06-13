@@ -267,6 +267,7 @@ if(FBtoken == null){
 //=====================================================================
 // respond with the Facebook authResponse token
 // prerequisite: userID provided matches the userID in the token
+// tested post content -> {"userID": "Matt"}
 
 app.post('/login2', function(req, res){
   console.log("MATT log note---> post login");
@@ -290,8 +291,9 @@ if(FBuserID == null){
 
   // get most recent inserts id based on row count
   query.on('row', function(row, result){
-    FBtoken = row.fbtoken;
+    FBtoken = row.fbtoken;  // column name is lowercase out of db
     console.log('MATT log notes---> FBtoken : '+ FBtoken);
+
     // TODO litle point in checking the userID, but sets up conditional for something stronger
     if(FBtoken == undefined){
       return res.send(401, "UserID does not exist in the db."); // 401 Unauthorized
@@ -304,7 +306,7 @@ if(FBuserID == null){
   // reply to client with id
   query.on('end', function(row, result){
     console.log('MATT log notes---> returning data');
-    res.send(202, FBtoken);                  // 202 request accepted
+    res.json(202, FBtoken);                  // 202 request accepted
   });
 }
 });
