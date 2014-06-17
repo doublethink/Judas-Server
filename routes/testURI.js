@@ -3,7 +3,11 @@
  *
  */
 
-var config = require('../config');
+var config =             require('../config')
+  , pg =                 require('pg')
+  , connectionString =   process.env.DATABASE_URL
+  , client =             new pg.Client(connectionString)
+  , query;
 
 var mydb = "visits";
 
@@ -105,10 +109,9 @@ exports.pestsidfound = function(req, res){
 // a query can accept serial sql instructions.
 exports.dbnew = function(req, res){
   console.log("MATT log note---> get db/new");
-  var date = new Date();
-
-  client = new pg.Client(connectionString);
   client.connect();
+  
+  var date = new Date();
 
   query = client.query('DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date);');
   console.log("MATT log note---> post query");
@@ -127,7 +130,9 @@ exports.dbnew = function(req, res){
 
 exports.dbvisitsi = function(req, res){
   console.log("MATT log note---> get db/visits/i");
-	var date = new Date();
+	client.connect();
+
+  var date = new Date();
 
   client.query('INSERT INTO '+mydb+'(date) VALUES ($1)', [date]);
   var query = client.query('SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = $1', [date]);
@@ -142,11 +147,15 @@ exports.dbvisitsi = function(req, res){
       console.log('MATT !result ---> false');
       return res.send('Visits today : ' + result.count); }
   });
+
+  query.on('end', function(result){ client.end(); });
 };
 
 
 exports.dbvisits = function(req, res){
   console.log("MATT log note---> get db/visits");
+	client.connect();
+
   var rows = [];
   var query = client.query('SELECT * FROM ' + mydb);
 
@@ -165,6 +174,8 @@ exports.dbvisits = function(req, res){
     for(i = 0; i < rows.length; i++){
       str += "row : "+i+", value : "+rows[i] + "<br>";
     }
+
+    client.end();
     console.log("MATT log note---> value i : " + i);
     return res.send("Database holds :<br>" + str +"There are " + rows.length + " rows.");
   });

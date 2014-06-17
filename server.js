@@ -19,9 +19,9 @@ var express = require("express")
 //  , client = new pg.Client(connectionString)
   , query;
 
-var testURI = require('./routes/testURI')
-  , config = require('./config')
-  , pests = require('./routes/pestsdb');
+var testURI =     require('./routes/testURI')
+  , config =      require('./config')
+  , pests =       require('./routes/pestsdb');
 
 //client.connect();
 
