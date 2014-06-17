@@ -21,7 +21,7 @@ var express = require("express")
 
 var testURI = require('./routes/testURI')
   , config = require('./config')
-  , pests = require('./pestsdb');
+  , pests = require('./routes/pestsdb');
 
 //client.connect();
 
@@ -209,86 +209,7 @@ ref RFC2831 Digest SASL Authentication for steps to implement
 });
 // end rest
 
-//======================================
-// helpers
-//======================================
-function setAuthenticateResponse(res){
-  // Challenge Digest scheme is...
-  //   source http://technet.microsoft.com/en-us/library/cc780170%28v=ws.10%29.aspx
-  // Challenge = “Digest” digest-challenge
-  // HTTP Authentication digest-challenge = 1# (
-  //   realm=realm | [domain=“domainname”] |
-  //   nonce=“nonce-value” | [opaque=“opaque-value”] | [stale=(“true” | “false”)] |
-  //   [algorithm=(“MD5” | “MD5-sess” | token] |
-  //   [qop=1#(“auth” | “auth-int” | token)] | [auth-parm]
-  res.set({'WWW-Authenticate' : 'Digest Realm=\"user@judas.heroku.com\"',
-    'qop' : 'auth', // qop Quality Of Protection, auth = authorisation only
-    'nonce' : '12345'}); // nonce, unique encoded value generated for this challenge
-  return res;	
-}
 
-function authorisedAdmin(req){
-  if(true) return true; // TODO
-
-  return false;
-}
-
-function authorised(req){
-  if(true) return true; // TODO
-
-  res = setAuthenticateResponse(res);
-  res.send(401, "User ID has not been recognised."); // 401 Unauthorized
-  return false;
-}
-
-function validateDate(d){
-  var date = new String(d);
-  // sufficient for now, would need upgrading in production. Leap years, variable days in month.
-  var reg = new RegExp('(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.](19|20)[0-9][0-9]');
-
-  var test = reg.test(date);
-    console.log("MATT log note---> date regex result is; " + test);
-  if(test){ return true; }
-  return false;
-}
-
-// Check input for pestspotted
-// return boolean on success/fail
-function verifyInput_pestspotted(req, res){
-  if(
-     req.body.packet == undefined ||
-     req.body.packet.position == undefined ||
-     req.body.packet.position.longitude == undefined ||
-     req.body.packet.position.latitude == undefined ||
-     req.body.packet.position.accuracy == undefined ||
-     req.body.packet.position.datestamp == undefined ||
-     req.body.packet.pest == undefined ||
-     req.body.packet.auth == undefined ||
-     req.body.packet.auth.uid == undefined
-    ){
-    // input failed, create & send error message
-    res.statusCode = 400;
-    var packetError = req.body.packet == undefined ? "undefined, please provide a root element." : "";
-    var positionError = req.body.packet == undefined || req.body.packet.position == undefined ? "undefined" :
-      "\n  longitude: "+req.body.packet.position.longitude+
-      "\n  latitude: "+req.body.packet.position.latitude+
-      "\n  accuracy: "+req.body.packet.position.accuracy+
-      "\n  datestamp: "+req.body.packet.position.datestamp;
-		var authError = req.body.packet == undefined || req.body.packet.auth == undefined ? "undefined" :
-      "\n  uid: "+req.body.packet.auth.uid;
-    var pestError = req.body.packet == undefined || req.body.packet.pest == undefined ? "undefined" :
-      req.body.packet.pest;
-    
-    res.send('Error 400: A value is missing.\n' +  // 400 error, value missing
-      "\npacket: "   +packetError+
-      "\nposition: " +positionError+
-      "\npest: "     +pestError+
-      "\nauth: "     +authError);
-    return false;
-  }
-  return true;
-}
-// end helpers
 
 //======================================
 // server start

@@ -10,19 +10,21 @@
 // This free option requires making regular manual data backups, to save histical data. 
 // A pay for options would give better pgbackups from Heroku, or implement a cloud db, say Cassandra, on Amazon servers. 
 
-var express = require("express")
-  , logfmt = require("logfmt")
-  , bodyParser = require('body-parser')
+var express =           require("express")
+  , logfmt =            require("logfmt")
+  , bodyParser =        require('body-parser')
 //  , http = require('http') // TODO remove?
-  , FB = require('fb')
-  , Step = require('step')
-  , crypto = require('crypto')
-  , pg = require('pg')
+  , FB =                require('fb')
+  , Step =              require('step')
+  , crypto =            require('crypto')
+  , pg =                require('pg')
   , connectionString = process.env.DATABASE_URL
   , client = new pg.Client(connectionString)
   , query;
 
-var config = require('../config');
+var config = require('../config')
+  , auth = require('authenticate')
+  . dbhelp = requires('pestsdbHelpers');
 
 var DATABASE = config.DATABASE
   , USERDB   = config.USERDB;
@@ -41,10 +43,10 @@ app.use(bodyParser());
 exports.pestspotted = function(req, res) {
   console.log('MATT log notes---> post /pestspotted');
 
-if(authorised(req)){
+if(auth.user(req)){
   console.log('MATT log notes---> Passed authentication.');
 
-  if(!verifyInput_pestspotted(req, res)) return; // 400 error on fail, value missing
+  if(!dbhelp.verifyPestInput(req, res)) return; // 400 error on fail, value missing
 
   var packet = req.body.packet
     , insertId;
@@ -90,7 +92,7 @@ exports.pestspottedAllJson = function(req, res){
   console.log("MATT log note---> get pestspotted/all");
 //  res.writeHead(200, "Cache-Control: no-store/no-cache"); // TODO test
 
-if(authorised(req)){
+if(auth.admin(req)){
   console.log('MATT log notes---> Passed authentication.');
 
   // conduct search
@@ -136,10 +138,10 @@ exports.pestspotted_onDate = function(req, res){
 exports.pestspotted_onDateJson = function(req, res){
   console.log("MATT log note---> get pestspotted/:date");
 
-if(authorised(req)){
+if(auth.admin(req)){
   console.log('MATT log notes---> Passed authentication.');
 
-  if(!validateDate(req.param('date'))){
+  if(!dbhelper.validateDate(req.param('date'))){
  	return res.send(400, "Invalid date format. Use DD-MM-YYYY."); // 400 Bad Request, syntax.
   } else {
     console.log("MATT log note---> date validated.");
@@ -202,7 +204,7 @@ if(authorised(req)){
 exports.pestspottedUserPest = function(req, res){
   console.log("MATT log note---> get pestspotted/:user/:pest");
 
-if(authorisedAdmin(req)){
+if(auth.user(req)){
   console.log('MATT log notes---> Passed authentication.');
 
   // conduct search
@@ -228,7 +230,7 @@ if(authorisedAdmin(req)){
 exports.pestspottedUser = function(req, res){
   console.log("MATT log note---> get pestspotted/:user");
 
-if(authorisedAdmin(req)){
+if(auth.user(req)){
   console.log('MATT log notes---> Passed authentication.');
 
   // conduct search
