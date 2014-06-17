@@ -6,9 +6,10 @@
 var config =             require('../config')
   , pg =                 require('pg')
   , connectionString =   process.env.DATABASE_URL
-  , client =             new pg.Client(connectionString)
+//  , client =             new pg.Client(connectionString)
   , query;
 
+//client.connect();
 var mydb = "visits";
 
 
@@ -149,6 +150,15 @@ exports.dbvisitsi = function(req, res){
 
 exports.dbvisits = function(req, res){
   console.log("MATT log note---> get db/visits");
+
+  pg.connect(connectionString, function(err, client, done) {
+//        client.query('SELECT name FROM users WHERE email = $1', ['brian@example.com'], function(err, result) {
+//          assert.equal('brianc', result.rows[0].name);
+//          done();
+//        });
+//    });
+
+
   var rows = []
     , query = client.query('SELECT * FROM ' + mydb);
 
@@ -170,7 +180,9 @@ exports.dbvisits = function(req, res){
     }
 
     console.log("MATT log note---> value i : " + i);
-    return res.send(200, "Database holds :<br>" + str +"There are " + rows.length + " rows.");
+    res.send(200, "Database holds :<br>" + str +"There are " + rows.length + " rows.");
+    done();
+  });
   });
 }; // end test Postgresql database
 
