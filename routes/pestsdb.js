@@ -22,12 +22,12 @@ var express =           require("express")
   , client = new pg.Client(connectionString)
   , query;
 
-var config = require('../config')
-  , auth = require('./authenticate')
-  . dbhelp = requires('./pestsdbHelpers');
+var config =            require('../config')
+  , auth   =            require('./authenticate')
+  . dbhelp =            require('./pestsdbHelpers');
 
-var DATABASE = config.DATABASE
-  , USERDB   = config.USERDB;
+var DATABASE =          config.DATABASE
+  , USERDB   =          config.USERDB;
 
 
 var app = express();
