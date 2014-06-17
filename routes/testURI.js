@@ -176,9 +176,9 @@ exports.dbvisits = function(req, res){
       str += "row : "+i+", value : "+rows[i] + "<br>";
     }
 
-    client.end();
     console.log("MATT log note---> value i : " + i);
-    return res.send(200, "Database holds :<br>" + str +"There are " + rows.length + " rows.");
+    res.send(200, "Database holds :<br>" + str +"There are " + rows.length + " rows.");
+    client.end();
   });
 }; // end test Postgresql database
 
