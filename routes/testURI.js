@@ -140,11 +140,11 @@ exports.dbvisitsi = function(req, res){
 
   query.on('row', function(row){
     console.log('MATT log ---> result : '+row.count);
-    if(!result){ 
-      console.log('MATT !result ---> true');
+    if(!row){ 
+      console.log('MATT !row ---> true');
       return res.send('No data found.'); }
     else { 
-      console.log('MATT !result ---> false');
+      console.log('MATT !row ---> false');
       return res.send('Visits today : ' + row.count); }
   });
 
