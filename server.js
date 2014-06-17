@@ -6,26 +6,24 @@
 // increase data returned by get requests, think park managers.
 
 
-var mydb = "visits"
-  , DATABASE = "judasDB"
-  , USERDB = "userDB";
 
 var express = require("express")
   , logfmt = require("logfmt")
   , bodyParser = require('body-parser')
   , http = require('http') // TODO remove?
-  , FB = require('fb')
-  , Step = require('step')
-  , crypto = require('crypto')
-  , pg = require('pg')
-  , connectionString = process.env.DATABASE_URL
-  , client = new pg.Client(connectionString)
+//  , FB = require('fb')
+//  , Step = require('step')
+//  , crypto = require('crypto')
+//  , pg = require('pg')
+//  , connectionString = process.env.DATABASE_URL
+//  , client = new pg.Client(connectionString)
   , query;
 
 var testURI = require('./routes/testURI')
   , config = require('./config');
+  , pests = require('./pestsdb');
 
-client.connect();
+//client.connect();
 
 
 var app = express();
@@ -40,242 +38,34 @@ app.use(express.static(__dirname + '/views'));
 
 //=============================
 // routing
-
-// tests
-app.get('/test',          testURI.test);
-app.get('/error/:id',     testURI.errorid);
-app.get('/matt',          testURI.testMatt);
-app.get('/test/:id',      testURI.testid);
-// tests using dummy data in arrays
-app.get('/pests/spotted', testURI.pestsspotted);
-app.get('/pests/:id',     testURI.pestsid);
-app.get('/pests/:id/:s',  testURI.pestsidfound);
-
-
-
-
-
-//============================
-// DB backups
-// Heroku PG Backups (Free option, daily backup, retained for a month)
-// This free option requires making regular manual data backups, to save histical data. 
-// A pay for options would give better pgbackups from Heroku, or implement a cloud db, say Cassandra, on Amazon servers. 
-
-//============================
-// post /pestspotted
 // add pest to database, returns the id
-
-// curl localhost:5000/pestspotted2 -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "pest" : "rabbit", "auth": {"uid": "Matt"}}}' -H "Content-Type: application/json"
-
-app.post('/pestspotted', function(req, res) {
-  console.log('MATT log notes---> post /pestspotted');
-
-if(authorised(req)){
-  console.log('MATT log notes---> Passed authentication.');
-
-  if(!verifyInput_pestspotted(req, res)) return; // 400 error on fail, value missing
-
-  var packet = req.body.packet
-    , insertId;
-
-  // create sql INSERT
-  var sql_insert = 'INSERT INTO '+DATABASE+
-       '(longitude, latitude, accuracy, datestamp, pest, uid) '+
-       'VALUES ( '+
-        packet.position.longitude+', '+
-        packet.position.latitude+', '+
-        packet.position.accuracy+', \''+
-        packet.position.datestamp+'\', \''+
-        packet.pest+'\', \''+
-        packet.auth.uid+'\')';
-  console.log('MATT log notes---> sql_insert : '+ sql_insert);
-
-  // add to db
-  client.query(sql_insert);
-  query = client.query('SELECT count(*) FROM '+DATABASE);
-
-  // get most recent inserts id based on row count
-  query.on('row', function(row, result){
-    insertId = row.count;
-  });
-
-  // reply to client with id
-  query.on('end', function(row, result){
-    console.log('MATT log notes---> result : '+insertId);
-//    res.writeHead(200, "Cache-Control: no-store/no-cache"); // TODO test
-    res.send(201, '{"id" : "'+insertId+'"}');                  // 201 is success resource created
-  });
-}
-});
-
-
-app.get('/pestspotted/all', function(req, res){
-  res.redirect('/pestspotted/all/text');
-});
-//=======================================================
-// Returns list of all pests spotted. 
-// Limited details, can expand on request from team
-app.get('/pestspotted/all/:json', function(req, res){
-  console.log("MATT log note---> get pestspotted/all");
-//  res.writeHead(200, "Cache-Control: no-store/no-cache"); // TODO test
-
-if(authorised(req)){
-  console.log('MATT log notes---> Passed authentication.');
-
-  // conduct search
-  var rows = [];
-  var query = client.query('SELECT * FROM '+DATABASE+';');
-
-  // build result
-  query.on('row', function(row, result){ 
-    // collect pest name and datetime they were spotted
-    rows.push('{userid : '+row.uid+', pest : '+row.pest+', date : '+row.datestamp+'}');
-    console.log("row ID: " + row.ID + " pest: " +row.pest);
-  });
-
-  // send it back to client
-  query.on('end', function(row, result){
-    console.log("size : " + rows.length);
-		var str = "";
-    if(req.param('json') == "json"){
-      var first = true;
-      for(i = 0; i < rows.length; i++){
-        if(!first){ str += ', ' };
-        str += '{row : '+(i+1)+', value : '+rows[i] + '}';
-        first = false;
-      }
-      res.json('{packet : [' + str + ']}');
-    } else {  
-      for(i = 0; i < rows.length; i++){
-        str += "row : "+(i+1)+", value : "+rows[i] + "<br>";
-      }
-      res.send("List of pests in db :<br>" + str +"There are " + rows.length + " rows.");
-    }
-  });
-}
-});
-
-
-app.get('/pestspotted_on/:date', function(req, res){
-  res.redirect('/pestspotted_on/' + req.param('date')+'/text');
-});
-//=======================================================================
+app.post('/pestspotted',                    pests.pestspotted);
+// Return list of all pests spotted.
+app.get('/pestspotted/all',                 pests.pestspottedAll);
+app.get('/pestspotted/all/:json',           pests.pestspottedAllJson);
 // get all pests logged for this day
 // Day format must equal DD-MM-YYYY for example /pestspotted_on/04-05-2014
-app.get('/pestspotted_on/:date/:json', function(req, res){
-  console.log("MATT log note---> get pestspotted/:date");
-
-if(authorised(req)){
-  console.log('MATT log notes---> Passed authentication.');
-
-  if(!validateDate(req.param('date'))){
- 	return res.send(400, "Invalid date format. Use DD-MM-YYYY."); // 400 Bad Request, syntax.
-  } else {
-    console.log("MATT log note---> date validated.");
-
-  // format date to match db format
-    var split = req.param('date').split('-').reverse();
-    var date = split.toString().replace(",","-").replace(",","-"); // odd, needs replace twice
-    console.log("MATT log note---> date = "+ date);
-
-  // calc next day
-    var nextDay = new Date(date);
-    nextDay.setDate(nextDay.getDate()+1);
-    console.log("MATT log note---> nextDay = "+ nextDay);
-
-  // create next day string for db search
-    var nextDayStr = ""+nextDay.getFullYear();
-    var t = new String(nextDay.getMonth()+1);
-    nextDayStr += t.length == 2 ? "-"+t : "-0"+t;
-    t = new String(nextDay.getDate());
-    nextDayStr += t.length == 2 ? "-"+t : "-0"+t;
-    console.log("MATT log note---> nextDayStr = "+ nextDayStr);
-
-  // conduct search
-    var rows = [];
-    var query = client.query('SELECT uid, pest, datestamp FROM '+DATABASE+
-        ' WHERE datestamp >= \'' + date + '\''+
-            ' AND datestamp < \''+nextDayStr+'\' ;');
-
-  // build result
-    query.on('row', function(row, result){ 
-      rows.push('{userid : '+row.uid+', pest : '+row.pest+', date : '+row.datestamp+'}');
-      console.log('MATT log notes---> added : '+ rows[rows.length-1]);
-    });
-
-  // send it back to client
-    query.on('end', function(row, result){
-      console.log("MATT log note---> size : " + rows.length);
-      var str = "";
-      if(req.param('json') == "json"){
-        var first = true;
-        for(i = 0; i < rows.length; i++){
-          if(!first){ str += ', ' };
-          str += '{row : '+(i+1)+', value : '+rows[i] + '}';
-          first = false;
-        }
-        res.json('{packet : [' + str + ']}');
-      } else {
-        for(i = 0; i < rows.length; i++){
-          str += "row : "+(i+1)+", value : "+rows[i] + "<br>";
-        }
-        res.send("pests on this day :<br>" + str +"There are " + rows.length + " rows.");
-      }
-    });
-  }
-}
-});
-//======================================================================
+app.get('/pestspotted_on/:date',            pests.pestspotted_onDate);
+app.get('/pestspotted_on/:date/:json',      pests.pestspotted_onDateJson);
 // total of a specific pest type logged by this user
-
-app.get('/pestspotted/:user/:pest', function(req, res){
-  console.log("MATT log note---> get pestspotted/:user/:pest");
-
-if(authorisedAdmin(req)){
-  console.log('MATT log notes---> Passed authentication.');
-
-  // conduct search
-  var count;
-  var query = client.query('SELECT count(*) FROM '+DATABASE+
-      ' WHERE uid = \''+ req.param('user') +'\' AND pest = \''+ req.param('pest') +'\';');
-
-  // build result
-  query.on('row', function(row, result){ 
-    count = row.count;
-  });
-
-  // send it back to client
-  query.on('end', function(row, result){
-    res.json('{count : ' + count +', request: \'get pestspotted/:user/:pest\'}');
-  });
-}
-});
-//=======================================================================
+app.get('/pestspotted/:user/:pest',         pests.pestspottedUserPest);
 // total noumber of pests logged by this user
-// NB: user is case sensitive
+app.get('/pestspotted/:user',               pests.pestspottedUser);
 
-app.get('/pestspotted/:user', function(req, res){
-  console.log("MATT log note---> get pestspotted/:user");
-
-if(authorisedAdmin(req)){
-  console.log('MATT log notes---> Passed authentication.');
-
-  // conduct search
-  var count;
-  var query = client.query('SELECT count(*) FROM '+DATABASE+
-      ' WHERE uid = \''+ req.param('user') +'\';');
-
-  // build result
-  query.on('row', function(row, result){ 
-    count = row.count;
-  });
-
-  // send it back to client
-  query.on('end', function(row, result){
-    res.json('{count : ' + count +', reqest: \'get pestspotted/:user\'}');
-  });
-}
-});
+//=============================
+// tests
+app.get('/test',                        testURI.test);
+app.get('/error/:id',                   testURI.errorid);
+app.get('/matt',                        testURI.testMatt);
+app.get('/test/:id',                    testURI.testid);
+// tests using dummy data in arrays
+app.get('/pests/spotted',               testURI.pestsspotted);
+app.get('/pests/:id',                   testURI.pestsid);
+app.get('/pests/:id/:s',                testURI.pestsidfound);
+// tests setting up a Postgresql database
+app.get('/db/new',                      testURI.dbnew);
+app.get('/db/visits/i',                 testURI.dbvisitsi);
+app.get('/db/visits',                   testURI.dbvisists);
 
 
 //=======================================================================
@@ -378,122 +168,6 @@ if(FBuserID == null){
 
 
 
-
-//=============================================================================
-//===================== test methods, etc below this point =========================
-// keep helpers & server start at bottom...
-
-
-
-//======================================
-// original test post for pestspotted
-//======================================
-/* ****************************************************************** 
-   test curl, nested jason format -> matches client side post request, hopefully...
-   ******************************************************************
-curl localhost:5000/pestspotted -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "auth": {"uid": "Matt", "accessToken": "possum"}}}' -H "Content-Type: application/json"
-*/
-app.post('/pestspotted2', function(req, res) {
-  if(!verifyInput_pestspotted(req, res)) return;  // 400 error on fail, value missing
-
-	if(authorised(req)){
-    // just uses an array
-    var newSpot = req.body.packet;
-    spots.push(newSpot);
-
-    // create log message
-    var record = spots[spots.length-1];
-    var resourceId = spots.length-1;
-    var text1 = "The user is "+record.auth.uid+", the access token is "+record.auth.accessToken+".";
-		var text2 = "Longitude/Latitude/Accuracy is " + record.position.longitude+"/"+record.position.latitude+"/"+record.position.accuracy;
-
-    var result = {"resourceId": resourceId, "text1": text1, "text2": text2 }; 
-
-    console.log(result);
-
-    // feedback to client
-    res.send(201, result); // 201 is success resource created
-  }else{
-    res = setAuthenticateResponse(res);
-		res.send(401, "ID has not been recognised."); // 401 Unauthorized
-  }
-});
-
-
-
-//=====================================
-// database
-// everything happens inside a query.on listener for {row, end, err}.
-// outside that, its just variable assignment.
-// a query can accept serial sql instructions.
-//=====================================
-app.get('/db/new', function(req, res){
-  console.log("MATT log note---> get db/new");
-  var date = new Date();
-
-  client = new pg.Client(connectionString);
-  client.connect();
-
-  query = client.query('DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date);');
-  console.log("MATT log note---> post query");
-
-  query.on('err', function(err){
-    res.send("error : "+err);
-  });
-
-  query.on('end', function(result){ client.end(); });
-
-  console.log("db new table query processed.");
-
-  res.send("new db\n");
-});
-
-
-app.get('/db/visits/i', function(req, res){
-  console.log("MATT log note---> get db/visits/i");
-	var date = new Date();
-
-  client.query('INSERT INTO '+mydb+'(date) VALUES ($1)', [date]);
-  var query = client.query('SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = $1', [date]);
-  console.log("MATT log note---> post query");
-
-  query.on('row', function(result){
-    console.log('MATT log ---> result : '+result.count);
-    if(!result){ 
-      console.log('MATT !result ---> true');
-      return res.send('No data found.'); }
-    else { 
-      console.log('MATT !result ---> false');
-      return res.send('Visits today : ' + result.count); }
-  });
-});
-
-
-app.get('/db/visits', function(req, res){
-  console.log("MATT log note---> get db/visits");
-  var rows = [];
-  var query = client.query('SELECT * FROM ' + mydb);
-
-  query.on('row', function(row, result){ 
-    rows.push(row.date);
-    console.log("MATT log row : " + row.date);
-  });
-
-  query.on('err', function(err){
-    return res.send("error : "+err);
-  });
-
-  query.on('end', function(row, result){ 
-    console.log("MATT log note---> size : " + rows.length);
-		var str = "";
-    for(i = 0; i < rows.length; i++){
-      str += "row : "+i+", value : "+rows[i] + "<br>";
-    }
-    console.log("MATT log note---> value i : " + i);
-    return res.send("Database holds :<br>" + str +"There are " + rows.length + " rows.");
-  });
-});
-// end database
 
 //======================================
 // restful interfaces

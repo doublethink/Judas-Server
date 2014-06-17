@@ -5,6 +5,9 @@
 
 var config = require('../config');
 
+var mydb = "visits";
+
+
 // NB: have cut n pasted code here, pulled export test functions to the top.
 // rest of file is commented out but kept as a personal node.js reference
 
@@ -95,17 +98,12 @@ exports.pestsidfound = function(req, res){
   }
 };
 
-
-
-
-/*
 //=====================================
-// database
+// test Postgresql database
 // everything happens inside a query.on listener for {row, end, err}.
 // outside that, its just variable assignment.
 // a query can accept serial sql instructions.
-//=====================================
-app.get('/db/new', function(req, res){
+exports.dbnew = function(req, res){
   console.log("MATT log note---> get db/new");
   var date = new Date();
 
@@ -124,10 +122,10 @@ app.get('/db/new', function(req, res){
   console.log("db new table query processed.");
 
   res.send("new db\n");
-});
+};
 
 
-app.get('/db/visits/i', function(req, res){
+exports.dbvisitsi = function(req, res){
   console.log("MATT log note---> get db/visits/i");
 	var date = new Date();
 
@@ -144,10 +142,10 @@ app.get('/db/visits/i', function(req, res){
       console.log('MATT !result ---> false');
       return res.send('Visits today : ' + result.count); }
   });
-});
+};
 
 
-app.get('/db/visits', function(req, res){
+exports.dbvisits = function(req, res){
   console.log("MATT log note---> get db/visits");
   var rows = [];
   var query = client.query('SELECT * FROM ' + mydb);
@@ -170,7 +168,7 @@ app.get('/db/visits', function(req, res){
     console.log("MATT log note---> value i : " + i);
     return res.send("Database holds :<br>" + str +"There are " + rows.length + " rows.");
   });
-});
+};
 // end database
 
 //======================================

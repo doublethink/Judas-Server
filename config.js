@@ -2,6 +2,9 @@
 // config
 var config = { };
 
+config.DATABASE = "judasDB"
+config.USERDB = "userDB";
+
 // should end in /
 config.rootUrl = process.env.ROOT_URL || 'http://localhost:5000/';
 
