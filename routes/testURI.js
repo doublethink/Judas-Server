@@ -116,14 +116,12 @@ exports.dbnew = function(req, res){
   query = client.query('DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date);');
   console.log("MATT log note---> post query");
 
-  query.on('err', function(err){
-    res.send("error : "+err);
-  });
+  query.on('error', function(err){
+      console.log('MATT error noted --->', err); });
 
   query.on('end', function(result){ client.end(); });
 
   console.log("db new table query processed.");
-
   res.send("new db\n");
 };
 
