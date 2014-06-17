@@ -109,8 +109,6 @@ exports.pestsidfound = function(req, res){
 // a query can accept serial sql instructions.
 exports.dbnew = function(req, res){
   console.log("MATT log note---> get db/new");
-  client.connect();
-  
   var date = new Date();
 
   query = client.query('DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date);');
@@ -119,17 +117,15 @@ exports.dbnew = function(req, res){
   query.on('error', function(err){
       console.log('MATT error noted --->', err); });
 
-  query.on('end', function(result){ client.end(); });
-
-  console.log("db new table query processed.");
-  res.send("new db\n");
+  query.on('end', function(result){ 
+    console.log("db new table query processed.");
+    res.send("new db\n");
+  });
 };
 
 
 exports.dbvisitsi = function(req, res){
   console.log("MATT log note---> get db/visits/i");
-	client.connect();
-
   var date = new Date();
 
   client.query('INSERT INTO '+mydb+'(date) VALUES ($1)', [date]);
@@ -148,17 +144,13 @@ exports.dbvisitsi = function(req, res){
 
   query.on('error', function(err){
       console.log('MATT error noted --->', err); });
-
-  query.on('end', function(result){ client.end(); });
 };
 
 
 exports.dbvisits = function(req, res){
   console.log("MATT log note---> get db/visits");
-	client.connect();
-
-  var rows = [];
-  var query = client.query('SELECT * FROM ' + mydb);
+  var rows = []
+    , query = client.query('SELECT * FROM ' + mydb);
 
   query.on('row', function(row, result){
     if(!row){ return res.send(200, "Database is empty.");}
@@ -178,7 +170,6 @@ exports.dbvisits = function(req, res){
 
     console.log("MATT log note---> value i : " + i);
     res.send(200, "Database holds :<br>" + str +"There are " + rows.length + " rows.");
-    client.end();
   });
 }; // end test Postgresql database
 
