@@ -24,7 +24,7 @@ var express =           require("express")
 
 var config =            require('../config')
   , auth   =            require('./authenticate')
-  , dbhelp =            require('./pestsdbHelpers');
+  , dbhelper =          require('./pestsdbHelpers');
 
 var DATABASE =          config.DATABASE
   , USERDB   =          config.USERDB;
