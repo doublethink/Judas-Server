@@ -168,15 +168,10 @@ exports.dbvisits = function(req, res){
     console.log("MATT log note---> value i : " + i);
     return res.send("Database holds :<br>" + str +"There are " + rows.length + " rows.");
   });
-};
-// end database
-
-//======================================
-// restful interfaces
-//======================================
+}; // end test Postgresql database
 
 
-
+/*
 // test curl for authenticating user
 // curl --request POST "localhost:5000/user" --data "userId=Matt&password=stuff"
 app.post('/user', function(req,res){
