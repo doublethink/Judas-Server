@@ -13,14 +13,11 @@
 var express =           require("express")
   , logfmt =            require("logfmt")
   , bodyParser =        require('body-parser')
-//  , http = require('http') // TODO remove?
 //  , FB =                require('fb')
 //  , Step =              require('step')
 //  , crypto =            require('crypto')
   , pg =                require('pg')
   , connectionString =  process.env.DATABASE_URL;
-//  , client = new pg.Client(connectionString)
-//  , query;
 
 var config =            require('../config')
   , auth   =            require('./authenticate')
@@ -38,7 +35,7 @@ app.use(bodyParser());
 // post /pestspotted
 // add pest to database, returns the id
 
-// curl localhost:5000/pestspotted2 -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "pest" : "rabbit", "auth": {"uid": "Matt"}}}' -H "Content-Type: application/json"
+// curl localhost:5000/pestspotted2 -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May 2014"}, "pest" : "rabbit", "auth": {"uid": "Matt"}}}' -H "Content-Type: application/json"
 
 exports.pestspotted = function(req, res) {
   console.log('MATT log notes---> post /pestspotted');
@@ -109,7 +106,7 @@ pg.connect(connectionString, function(err, client, done) {
   // send it back to client
   query.on('end', function(row, result){
     console.log("size : " + rows.length);
-//  res.writeHead(200, "Cache-Control: no-store/no-cache"); // TODO test
+    res.writeHead("Cache-Control: no-store"); // TODO test
 		var str = "";
     if(req.param('json') == "json"){
       var first = true;
@@ -118,12 +115,12 @@ pg.connect(connectionString, function(err, client, done) {
         str += '{row : '+(i+1)+', value : '+rows[i] + '}';
         first = false;
       }
-      res.json('{packet : [' + str + ']}');
+      res.json(200, '{packet : [' + str + ']}');
     } else {  
       for(i = 0; i < rows.length; i++){
         str += "row : "+(i+1)+", value : "+rows[i] + "<br>";
       }
-      res.send("List of pests in db :<br>" + str +"There are " + rows.length + " rows.");
+      res.send(200,"List of pests in db :<br>" + str +"There are " + rows.length + " rows.");
     }
     done();
   });
