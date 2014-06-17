@@ -148,7 +148,7 @@ exports.dbvisitsi = function(req, res){
       return res.send('Visits today : ' + result.count); }
   });
 
-  query.on('end', function(result){ client.end(); });
+//  query.on('end', function(result){ client.end(); });
 };
 
 
