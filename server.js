@@ -1,9 +1,14 @@
 // NWEN304 Project
 //===================================
 
+// Facebook security
+// switch off caching cache-control //res.writeHead(200, "Cache-Control: no-store/no-cache")
+// increase data returned by get requests, think park managers.
+
 
 var mydb = "visits";
 var DATABASE = "judasDB";
+var USERDB = "userDB";
 
 var express = require("express");
 var logfmt = require("logfmt");
@@ -28,135 +33,308 @@ app.use(logfmt.requestLogger());
 app.use(bodyParser());
 
 //============================
-// set up db for pests spotted
+// DB backups
+// Heroku PG Backups (Free option, daily backup, retained for a month)
+// This free option requires making regular manual data backups, to save histical data. 
+// A pay for options would give better pgbackups from Heroku, or implement a cloud db, say Cassandra, on Amazon servers. 
+
 //============================
-app.get('/pestspotteddb/new', function(req,res){
-  // create pest spotted table
-  var sql_ct = 'DROP TABLE '+DATABASE+';'+
-   'CREATE TABLE '+DATABASE+' ('+
-   'ID        SERIAL  PRIMARY KEY,'+
-   'longitude real    NOT NULL,'+
-   'latitude  real    NOT NULL,'+
-   'accuracy  real,'+
-   'timestamp date    NOT NULL,'+
-   'uid       varchar NOT NULL,'+
-   'pest      varchar NOT NULL );';
-  // create initial dummy data
-  sql_ct += String.format('INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, timestamp, uid, pest) '+
-     'VALUES ($1, $2, $3, $4, $5, $6)',
-     [22,
-      33,
-      0.4,
-      '4 June 2014',
-      'Matt',
-      'possum'
-     ]);
-  sql_ct += String.format('INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, timestamp, uid, pest) '+
-     'VALUES ($1, $2, $3, $4, $5, $6)',
-     [22,
-      33,
-      0.4,
-      '4 June 2014',
-      'Matt',
-      'house cat'
-     ]);
-  sql_ct += String.format('INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, timestamp, uid, pest) '+
-     'VALUES ($1, $2, $3, $4, $5, $6)',
-     [22.5,
-      33.5,
-      0.5,
-      '5 June 2014',
-      'Matt',
-      'Stoat'
-     ]);
+// post /pestspotted
+// add pest to database, returns the id
 
-	client = new pg.Client(connectionString);
-  client.connect();
+// curl localhost:5000/pestspotted2 -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "pest" : "rabbit", "auth": {"uid": "Matt"}}}' -H "Content-Type: application/json"
 
-  query = client.query(sql_ct);
-  query.on('end', function(result){ client.end(); });
+app.post('/pestspotted', function(req, res) {
+  console.log('MATT log notes---> post /pestspotted');
 
-	console.log("db new table query processed.");
+if(authorised(req)){
+  console.log('MATT log notes---> Passed authentication.');
 
-  res.send("new pestspotted db\n");
-});
+  if(!verifyInput_pestspotted(req, res)) return; // 400 error on fail, value missing
 
-//=================================
-// app get all results for this day
-//=================================
-app.get('/pestspotted/:date'){
-  var rows = [];
-//  var query = client.query('SELECT pest FROM '+DATABASE+' WHERE timestamp == '+req.param('date')+';');
-// test query
-  var query = client.query('SELECT ID, pest FROM '+DATABASE+' WHERE timestamp == "4 June 2014" ;');
+  var packet = req.body.packet
+    , insertId;
 
-  query.on('row', function(row, result){ 
-    rows.push(row.pest);
-    console.log("row ID: " + row.ID + " pest: " +row.pest);
+  // create sql INSERT
+  var sql_insert = 'INSERT INTO '+DATABASE+
+       '(longitude, latitude, accuracy, datestamp, pest, uid) '+
+       'VALUES ( '+
+        packet.position.longitude+', '+
+        packet.position.latitude+', '+
+        packet.position.accuracy+', \''+
+        packet.position.datestamp+'\', \''+
+        packet.pest+'\', \''+
+        packet.auth.uid+'\')';
+  console.log('MATT log notes---> sql_insert : '+ sql_insert);
+
+  // add to db
+  client.query(sql_insert);
+  query = client.query('SELECT count(*) FROM '+DATABASE);
+
+  // get most recent inserts id based on row count
+  query.on('row', function(row, result){
+    insertId = row.count;
   });
-  
-  query.on('end', function(row, result){ // TODO tidy reply to client
-    console.log("size : " + rows.length);
-		var str = "";
-    for(i = 0; i < rows.length; i++){
-      str += "row : "+i+", value : "+rows[i] + "<br>";
-    }
-    res.send("pests on this day :<br>" + str +"There are " + rows.length + " rows.");
+
+  // reply to client with id
+  query.on('end', function(row, result){
+    console.log('MATT log notes---> result : '+insertId);
+    res.writeHead(200, "Cache-Control: no-store/no-cache");
+    res.send(201, '{"id" : "'+insertId+'"}');                  // 201 is success resource created
   });
 }
+});
 
-//============================
-// app post for pestspotted[2]
-//============================
-app.post('/pestspotted2', function(req, res) {
-  if(!verifyInput_pestspotted(req, res)) return;
 
-	if(!authorised(true)){ // TODO replace true with req
-    res = setAuthenticateResponse(res);
-		res.send(401, "User ID has not been recognised."); // 401 Unauthorized
-  }else{
-    var packet = req.body.packet;
-    // create sql INSERT
-    var sql_insert = String.format('INSERT INTO '+DATABASE+
-     '(longitude, latitude, accuracy, timestamp, uid, pest) '+
-     'VALUES ($1, $2, $3, $4, $5, $6)',
-     [packet.position.longitude,
-      packet.position.latitude,
-      packet.position.accuracy,
-      packet.position.timestamp,
-      packet.auth.uid,
-      packet.pest
-     ]);
+app.get('/pestspotted/all', function(req, res){
+  res.redirect('/pestspotted/all/text');
+});
+//=======================================================
+// Returns list of all pests spotted. 
+// Limited details, can expand on request from team
+app.get('/pestspotted/all/:json', function(req, res){
+  console.log("MATT log note---> get pestspotted/all");
+  res.writeHead(200, "Cache-Control: no-store/no-cache"); // 
 
-    // submit DB insert
-    client.query(sql_insert);
-    query = client.query(SCOPE_IDENTITY());
+if(authorised(req)){
+  console.log('MATT log notes---> Passed authentication.');
 
-    query.on('row', function(result){ // result should == _id
-      console.log('result : '+result); // TODO revise the 2 log thing
-      // create log note
-      var resourceId = result;
-      var text1 = "The user is "+packet.auth.uid+", reporting a "+packet.pest+".";
-		  var text2 = "Longitude/Latitude/Accuracy is " + packet.position.longitude+"/"+packet.position.latitude+"/"+packet.position.accuracy;
+  // conduct search
+  var rows = [];
+  var query = client.query('SELECT * FROM '+DATABASE+';');
 
-      var response = {"resourceId": resourceId, "text1": text1, "text2": text2 }; 
-      console.log(response + "\n"+sql_insert);
+  // build result
+  query.on('row', function(row, result){ 
+    // collect pest name and datetime they were spotted
+    rows.push('{userid : '+row.uid+', pest : '+row.pest+', date : '+row.datestamp+'}');
+    console.log("row ID: " + row.ID + " pest: " +row.pest);
+  });
 
-      if(!result){ 
-        return res.send('No data found.'); }
-      else { 
-        // feedback to client
-        res.send(201, result); // 201 is success resource created
+  // send it back to client
+  query.on('end', function(row, result){
+    console.log("size : " + rows.length);
+		var str = "";
+    if(req.param('json') == "json"){
+      var first = true;
+      for(i = 0; i < rows.length; i++){
+        if(!first){ str += ', ' };
+        str += '{row : '+(i+1)+', value : '+rows[i] + '}';
+        first = false;
+      }
+      res.json('{packet : [' + str + ']}');
+    } else {  
+      for(i = 0; i < rows.length; i++){
+        str += "row : "+(i+1)+", value : "+rows[i] + "<br>";
+      }
+      res.send("List of pests in db :<br>" + str +"There are " + rows.length + " rows.");
+    }
+  });
+}
+});
+
+
+app.get('/pestspotted_on/:date', function(req, res){
+  res.redirect('/pestspotted_on/' + req.param('date')+'/text');
+});
+//=======================================================================
+// get all pests logged for this day
+// Day format must equal DD-MM-YYYY for example /pestspotted_on/04-05-2014
+app.get('/pestspotted_on/:date/:json', function(req, res){
+  console.log("MATT log note---> get pestspotted/:date");
+
+if(authorised(req)){
+  console.log('MATT log notes---> Passed authentication.');
+
+  if(!validateDate(req.param('date'))){
+ 	return res.send(400, "Invalid date format. Use DD-MM-YYYY."); // 400 Bad Request, syntax.
+  } else {
+    console.log("MATT log note---> date validated.");
+
+  // format date to match db format
+    var split = req.param('date').split('-').reverse();
+    var date = split.toString().replace(",","-").replace(",","-"); // odd, needs replace twice
+    console.log("MATT log note---> date = "+ date);
+
+  // calc next day
+    var nextDay = new Date(date);
+    nextDay.setDate(nextDay.getDate()+1);
+    console.log("MATT log note---> nextDay = "+ nextDay);
+
+  // create next day string for db search
+    var nextDayStr = ""+nextDay.getFullYear();
+    var t = new String(nextDay.getMonth()+1);
+    nextDayStr += t.length == 2 ? "-"+t : "-0"+t;
+    t = new String(nextDay.getDate());
+    nextDayStr += t.length == 2 ? "-"+t : "-0"+t;
+    console.log("MATT log note---> nextDayStr = "+ nextDayStr);
+
+  // conduct search
+    var rows = [];
+    var query = client.query('SELECT uid, pest, datestamp FROM '+DATABASE+
+        ' WHERE datestamp >= \'' + date + '\''+
+            ' AND datestamp < \''+nextDayStr+'\' ;');
+
+  // build result
+    query.on('row', function(row, result){ 
+      rows.push('{userid : '+row.uid+', pest : '+row.pest+', date : '+row.datestamp+'}');
+      console.log('MATT log notes---> added : '+ rows[rows.length-1]);
+    });
+
+  // send it back to client
+    query.on('end', function(row, result){
+      console.log("MATT log note---> size : " + rows.length);
+      var str = "";
+      if(req.param('json') == "json"){
+        var first = true;
+        for(i = 0; i < rows.length; i++){
+          if(!first){ str += ', ' };
+          str += '{row : '+(i+1)+', value : '+rows[i] + '}';
+          first = false;
+        }
+        res.json('{packet : [' + str + ']}');
+      } else {
+        for(i = 0; i < rows.length; i++){
+          str += "row : "+(i+1)+", value : "+rows[i] + "<br>";
+        }
+        res.send("pests on this day :<br>" + str +"There are " + rows.length + " rows.");
+      }
     });
   }
+}
 });
+
+
+//=======================================================================
+// total noumber of pests logged by this user
+// NB: user is case sensitive
+
+app.get('/pestspotted/:user', function(req, res){
+  console.log("MATT log note---> get pestspotted/:user");
+
+if(authorisedAdmin(req)){
+  console.log('MATT log notes---> Passed authentication.');
+
+  // conduct search
+  var count;
+  var query = client.query('SELECT count(*) FROM '+DATABASE+' WHERE uid = \''+ req.param('user') +'\';');
+
+  // build result
+  query.on('row', function(row, result){ 
+    count = row.count;
+  });
+
+  // send it back to client
+  query.on('end', function(row, result){
+    res.json('{count : ' + count +'}');
+  });
+}
+});
+
+
+//=======================================================================
+// accept and store the FB response token
+// pre-requisite: body contains the Facebook authResponse token
+// NB: not sure this is sufficient to be sure we are communicating with the phone app.
+// tested post content -> {"authResponse" : {"accessToken": "letMeInToo", "expiresIn": "00:01:00", "signedRequest": "signedByMatt", "userID": "Bob"}}
+
+app.post('/fbtoken_in', function(req, res){
+  console.log("MATT log note---> post login");
+
+  // FBtoken is the Facebook authResponse token
+  // https://developers.facebook.com/docs/reference/javascript/FB.getLoginStatus/
+  var FBtoken = req.body.authResponse;
+
+if(FBtoken == null){
+  res.send(401, "User token has not been recieved."); // 401 Unauthorized
+} else {
+
+  var insert;
+
+  // create sql INSERT
+  var sql_insert = 'INSERT INTO '+USERDB+
+       '(uid, FBtoken) '+
+       'VALUES ( \''+
+        FBtoken.userID+'\', \''+
+        JSON.stringify(FBtoken) +'\')';
+  console.log('MATT log notes---> sql_insert : '+ sql_insert);
+
+  // add to db
+  client.query(sql_insert);
+  query = client.query('SELECT count(*) FROM '+USERDB);
+
+  // get most recent inserts id based on row count
+  query.on('row', function(row, result){
+    insertId = row.count;
+  });
+
+  // reply to client with id
+  query.on('end', function(row, result){
+    console.log('MATT log notes---> data inserted');
+    console.log('MATT log notes---> result : '+insertId);
+    res.send(201, '{"id" : "'+insertId+'"}');                  // 201 is success resource created
+  });
+}
+});
+
+
+//=====================================================================
+// respond with the Facebook authResponse token
+// pre-requisite: Body contains json {"userID": "xxx"}
+// prerequisite: userID value matches the userID in the token
+// tested post content -> {"userID": "Matt"}
+
+app.post('/fbtoken_out', function(req, res){
+  console.log("MATT log note---> post login");
+
+  var FBuserID = req.body.userID
+    , FBtoken;
+
+if(FBuserID == null){
+  res.send(401, "UserID has not been recieved."); // 401 Unauthorized
+} else {
+
+  var insert;
+
+  // create sql SELECT
+  var sql = 'SELECT * FROM '+USERDB+
+       ' WHERE uid = \''+ FBuserID +'\';';
+  console.log('MATT log notes---> sql : '+ sql);
+
+  // retrieve from db
+  query = client.query(sql);
+
+  // get most recent inserts id based on row count
+  query.on('row', function(row, result){
+    FBtoken = row.fbtoken;  // column name is lowercase out of db
+    console.log('MATT log notes---> FBtoken : '+ FBtoken);
+
+    // little point in checking the userID, but sets up conditional for something stronger
+    if(FBtoken == undefined){
+      return res.send(401, "UserID does not exist in the db."); // 401 Unauthorized
+    }
+    if(FBtoken.userID != FBuserID){
+      return res.send(401, "UserID does not match the stored token."); // 401 Unauthorized
+    }
+  });
+
+  // reply to client with id
+  query.on('end', function(row, result){
+    console.log('MATT log notes---> returning data');
+    res.json(202, FBtoken);                  // 202 request accepted
+  });
+}
+});
+
+
+
+
+
+
+
 
 //=============================================================================
 //===================== test methods, etc below this point =========================
-// NB: keep helpers & server start at bottom...
+// keep helpers & server start at bottom...
 
 
 //====================================
@@ -164,8 +342,8 @@ app.post('/pestspotted2', function(req, res) {
 //====================================
 
 var spots = [
-  { position: { longitude : 174.7777222, latitude : -41.288889, accuracy: 0.0005, timestamp : '2014-04-20 1300'}, auth: {uid: 'Matt', accessToken : 'Possum'}},
-  { position: { longitude : 174.7777222, latitude : -41.288889, accuracy: 0.0005, timestamp : '2014-04-20 1300'}, auth: {uid: 'Fred', accessToken : 'Stoat'}},
+  { position: { longitude : 174.7777222, latitude : -41.288889, accuracy: 0.0005, datestamp : '2014-04-20 1300'}, auth: {uid: 'Matt', accessToken : 'Possum'}},
+  { position: { longitude : 174.7777222, latitude : -41.288889, accuracy: 0.0005, datestamp : '2014-04-20 1300'}, auth: {uid: 'Fred', accessToken : 'Stoat'}},
 ];
 
 var pests = [
@@ -186,16 +364,13 @@ var users = [
 /* ****************************************************************** 
    test curl, nested jason format -> matches client side post request, hopefully...
    ******************************************************************
-curl localhost:5000/pestspotted -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "timestamp": "15 May"}, "auth": {"uid": "Matt", "accessToken": "possum"}}}' -H "Content-Type: application/json"
+curl localhost:5000/pestspotted -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "auth": {"uid": "Matt", "accessToken": "possum"}}}' -H "Content-Type: application/json"
 */
-app.post('/pestspotted', function(req, res) {
-  // TODO check for valid json?
-  if(!verifyInput_pestspotted(req, res)) return;
+app.post('/pestspotted2', function(req, res) {
+  if(!verifyInput_pestspotted(req, res)) return;  // 400 error on fail, value missing
 
-  var authorised = true; // TODO check user authentication
-
-	if(authorised){
-    // add to db (TODO just an array for now)
+	if(authorised(req)){
+    // just uses an array
     var newSpot = req.body.packet;
     spots.push(newSpot);
 
@@ -225,54 +400,70 @@ app.post('/pestspotted', function(req, res) {
 // outside that, its just variable assignment.
 // a query can accept serial sql instructions.
 //=====================================
-app.get('/db/new', function(req,res){
+app.get('/db/new', function(req, res){
+  console.log("MATT log note---> get db/new");
+  var date = new Date();
 
-  var myQuery = 'DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date)';
-
-	client = new pg.Client(connectionString);
+  client = new pg.Client(connectionString);
   client.connect();
 
-  query = client.query(myQuery);
+  query = client.query('DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date);');
+  console.log("MATT log note---> post query");
+
+  query.on('err', function(err){
+    res.send("error : "+err);
+  });
+
   query.on('end', function(result){ client.end(); });
 
-	console.log("db new table query processed.");
+  console.log("db new table query processed.");
 
   res.send("new db\n");
 });
 
 
-app.get('/db/visits/i', function(req,res){
+app.get('/db/visits/i', function(req, res){
+  console.log("MATT log note---> get db/visits/i");
 	var date = new Date();
 
   client.query('INSERT INTO '+mydb+'(date) VALUES ($1)', [date]);
-  query = client.query('SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = $1', [date]);
+  var query = client.query('SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = $1', [date]);
+  console.log("MATT log note---> post query");
 
-  query.on('row', function(result){ 
-    console.log('result : '+result);
+  query.on('row', function(result){
+    console.log('MATT log ---> result : '+result.count);
     if(!result){ 
+      console.log('MATT !result ---> true');
       return res.send('No data found.'); }
     else { 
-      res.send('Visits today : ' + result.count); }
+      console.log('MATT !result ---> false');
+      return res.send('Visits today : ' + result.count); }
   });
 });
 
 
 app.get('/db/visits', function(req, res){
+  console.log("MATT log note---> get db/visits");
   var rows = [];
-  var query = client.query('SELECT * FROM ' +mydb);//', [mydb]);
+  var query = client.query('SELECT * FROM ' + mydb);
 
   query.on('row', function(row, result){ 
     rows.push(row.date);
-    console.log("row : " + row.date);
+    console.log("MATT log row : " + row.date);
+  });
+
+  query.on('err', function(err){
+    return res.send("error : "+err);
   });
 
   query.on('end', function(row, result){ 
-    console.log("size : " + rows.length);
+    console.log("MATT log note---> size : " + rows.length);
 		var str = "";
     for(i = 0; i < rows.length; i++){
       str += "row : "+i+", value : "+rows[i] + "<br>";
     }
-    res.send("Datebase holds :<br>" + str +"There are " + rows.length + " rows.");
+    console.log("MATT log note---> value i : " + i);
+    return res.send("Database holds :<br>" + str +"There are " + rows.length + " rows.");
   });
 });
 // end database
@@ -408,9 +599,28 @@ function setAuthenticateResponse(res){
   return res;	
 }
 
+function authorisedAdmin(req){
+  if(true) return true; // TODO
+
+  return false;
+}
+
 function authorised(req){
-  if(req == true) return true; // TODO for testing, remove from production code
-  
+  if(true) return true; // TODO
+
+  res = setAuthenticateResponse(res);
+  res.send(401, "User ID has not been recognised."); // 401 Unauthorized
+  return false;
+}
+
+function validateDate(d){
+  var date = new String(d);
+  // sufficient for now, would need upgrading in production. Leap years, variable days in month.
+  var reg = new RegExp('(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.](19|20)[0-9][0-9]');
+
+  var test = reg.test(date);
+    console.log("MATT log note---> date regex result is; " + test);
+  if(test){ return true; }
   return false;
 }
 
@@ -423,11 +633,10 @@ function verifyInput_pestspotted(req, res){
      req.body.packet.position.longitude == undefined ||
      req.body.packet.position.latitude == undefined ||
      req.body.packet.position.accuracy == undefined ||
-     req.body.packet.position.timestamp == undefined ||
-// TODO     req.body.packet.pest == undefined ||
+     req.body.packet.position.datestamp == undefined ||
+     req.body.packet.pest == undefined ||
      req.body.packet.auth == undefined ||
-     req.body.packet.auth.uid == undefined ||
-     req.body.packet.auth.accessToken == undefined
+     req.body.packet.auth.uid == undefined
     ){
     // input failed, create & send error message
     res.statusCode = 400;
@@ -436,17 +645,16 @@ function verifyInput_pestspotted(req, res){
       "\n  longitude: "+req.body.packet.position.longitude+
       "\n  latitude: "+req.body.packet.position.latitude+
       "\n  accuracy: "+req.body.packet.position.accuracy+
-      "\n  timestamp: "+req.body.packet.position.timestamp;
+      "\n  datestamp: "+req.body.packet.position.datestamp;
 		var authError = req.body.packet == undefined || req.body.packet.auth == undefined ? "undefined" :
-      "\n  uid: "+req.body.packet.auth.uid+
-      "\n  accessToken: "+req.body.packet.auth.accessToken;
+      "\n  uid: "+req.body.packet.auth.uid;
     var pestError = req.body.packet == undefined || req.body.packet.pest == undefined ? "undefined" :
       req.body.packet.pest;
     
-    res.send('Error 400: A value is missing.\n' +
+    res.send('Error 400: A value is missing.\n' +  // 400 error, value missing
       "\npacket: "   +packetError+
       "\nposition: " +positionError+
-// TODO      "\npest: "     +pestError+
+      "\npest: "     +pestError+
       "\nauth: "     +authError);
     return false;
   }
@@ -462,3 +670,4 @@ app.listen(port, function() {
   console.log("Listening on " + port);
 });
 // end server
+
