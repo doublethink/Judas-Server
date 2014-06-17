@@ -23,8 +23,8 @@ var express =           require("express")
   , query;
 
 var config = require('../config')
-  , auth = require('authenticate')
-  . dbhelp = requires('pestsdbHelpers');
+  , auth = require('./authenticate')
+  . dbhelp = requires('./pestsdbHelpers');
 
 var DATABASE = config.DATABASE
   , USERDB   = config.USERDB;
