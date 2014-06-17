@@ -12,7 +12,11 @@ var USERDB = "userDB";
 
 var express = require("express");
 var logfmt = require("logfmt");
-var fb = require('fb');
+var FB = require('fb');
+var Step = require('step');
+var crypto = require('crypto');
+var testURI = require('./routes/testURI');
+
 var pg = require('pg')
   , connectionString = process.env.DATABASE_URL
   , client
@@ -48,6 +52,17 @@ config.facebook = {
 };
 
 module.exports = config;
+
+//=============================
+// routing
+
+/* this appears to serve index.html from /views, without a get... */
+app.use(express.static(__dirname + '/views'));
+
+app.get('/matt', testURI.testMatt);
+app.get('/test', testURI.test);
+
+
 
 //============================
 // DB backups
@@ -513,48 +528,6 @@ app.get('/db/visits', function(req, res){
 // restful interfaces
 //======================================
   /*==== GET ====*/
-/* this appears to serve index.html from /views, without a get... */
-app.use(express.static(__dirname + '/views'));
-
-app.get('/matt', function(req, res) {
-  res.statusCode = 502;
-  res.setHeader("Set-Cookie", ["type=ninja", "language=javascript"]);
-
-  ////...node.js method, write, write then end.
-  ////...is not parsed as html text (set Content-Type = text/html)
-  //res.setHeader("Content-Type", "text/html");
-  //res.write('Matt testing...<br>');
-  //res.end('Last testing text.');
-
-  ////...sends files. Filepath, relative is ./views or views, absolute is /views
-  ////...parses at html (set Content-Type = text/html)
-  res.sendfile('./views/test.html');
-
-  ////...not working, hangs up
-  //res.render('./views/test.html', function(err, html){ 'I am a render.' });
-  
-  //res.send("Matt was here... bwahahaha");
-});
-
-app.get('/test', function(req, res){
-  //...sends text
-  //...parses as html (Content-Type = text/html)
-  res.send('Server responds to \"test\".<br>');
-});
-
-app.get('/test/:id', function(req, res){
-  if(req.param('id') == 'test'){
-    res.sendfile('./views/test.html');
-  }else if(req.param('id') == 'page' ||
-           req.param('id') == 'testpage' ||
-           req.param('id') == 'testpage.html'
-      ){
-    res.sendfile('./views/testpage.html');
-  }else{
-    res.send('Sorry, don\'t recognise that command.<br>');
-  }
-});
-
 app.get('/pests/spotted', function(req, res) {
   res.send(spots);
 });
