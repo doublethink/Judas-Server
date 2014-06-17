@@ -3,6 +3,8 @@
  *
  */
 
+var config = requires('../config');
+
 // NB: have cut n pasted code here, pulled export test functions to the top.
 // rest of file is commented out but kept as a personal node.js reference
 
@@ -64,10 +66,12 @@ var users = config.users;
 //===================================
 // using dummy data
 
+// ~/pests/spotted
 exports.pestsspotted = function(req, res) {
   res.send(spots);
 };
 
+// ~/pests/:id
 exports.pestsid = function(req, res){
   if(req.param('id') == 'possum'){
   	res.send(pests[0].name + ", fur is " + pests[0].colour);
@@ -79,6 +83,7 @@ exports.pestsid = function(req, res){
   }
 };
 
+// ~/pests/:id/:s
 exports.pestsidfound = function(req, res){
   if(req.param('id') == 'possum' && req.param('s') == 'found'){
   	res.send(pests[0].found);
