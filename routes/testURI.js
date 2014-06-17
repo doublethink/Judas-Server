@@ -115,7 +115,7 @@ exports.dbnew = function(req, res){
   console.log("MATT log note---> post query");
 
   query.on('error', function(err){
-      console.log('MATT error noted --->', err); });
+    console.log('MATT error noted --->', err); });
 
   query.on('end', function(result){ 
     console.log("db new table query processed.");
@@ -136,14 +136,14 @@ exports.dbvisitsi = function(req, res){
     console.log('MATT log ---> result : '+row.count);
     if(!row){ 
       console.log('MATT !row ---> true');
-      return res.send('No data found.'); }
+      res.send('No data found.'); }
     else { 
       console.log('MATT !row ---> false');
-      return res.send(200, 'Visits today : ' + row.count); }
+      res.send(200, 'Visits today : ' + row.count); }
   });
 
   query.on('error', function(err){
-      console.log('MATT error noted --->', err); });
+    console.log('MATT error noted --->', err); });
 };
 
 
@@ -152,16 +152,16 @@ exports.dbvisits = function(req, res){
   var rows = []
     , query = client.query('SELECT * FROM ' + mydb);
 
-  query.on('row', function(row, result){
+  query.on('row', function(row){
     if(!row){ return res.send(200, "Database is empty.");}
     rows.push(row.date);
     console.log("MATT log row : " + row.date);
   });
 
   query.on('error', function(err){
-      console.log('MATT error noted --->', err); });
+    console.log('MATT error noted --->', err); });
 
-  query.on('end', function(row, result){ 
+  query.on('end', function(result){ 
     console.log("MATT log note---> size : " + rows.length);
 		var str = "";
     for(i = 0; i < rows.length; i++){
