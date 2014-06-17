@@ -149,7 +149,7 @@ exports.dbvisitsi = function(req, res){
   });
 
   query.on('error', function(err){
-      console.error('error noted', err);
+      console.log('MATT error noted --->', err);
   });
 
   query.on('end', function(result){ client.end(); });
