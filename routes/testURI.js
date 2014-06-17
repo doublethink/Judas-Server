@@ -153,7 +153,8 @@ exports.dbvisits = function(req, res){
     , query = client.query('SELECT * FROM ' + mydb);
 
   query.on('row', function(row){
-    if(!row){ return res.send(200, "Database is empty.");}
+    console.log("MATT log note---> query.on row");
+ //   if(!row){ return res.send(200, "Database is empty.");}
     rows.push(row.date);
     console.log("MATT log row : " + row.date);
   });
@@ -169,7 +170,7 @@ exports.dbvisits = function(req, res){
     }
 
     console.log("MATT log note---> value i : " + i);
-    res.send(200, "Database holds :<br>" + str +"There are " + rows.length + " rows.");
+    return res.send(200, "Database holds :<br>" + str +"There are " + rows.length + " rows.");
   });
 }; // end test Postgresql database
 
