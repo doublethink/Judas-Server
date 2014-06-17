@@ -14,9 +14,9 @@ var express =           require("express")
   , logfmt =            require("logfmt")
   , bodyParser =        require('body-parser')
 //  , http = require('http') // TODO remove?
-  , FB =                require('fb')
-  , Step =              require('step')
-  , crypto =            require('crypto')
+//  , FB =                require('fb')
+//  , Step =              require('step')
+//  , crypto =            require('crypto')
   , pg =                require('pg')
   , connectionString = process.env.DATABASE_URL;
 //  , client = new pg.Client(connectionString)
@@ -24,7 +24,7 @@ var express =           require("express")
 
 var config =            require('../config')
   , auth   =            require('./authenticate')
-  . dbhelp =            require('./pestsdbHelpers');
+  , dbhelp =            require('./pestsdbHelpers');
 
 var DATABASE =          config.DATABASE
   , USERDB   =          config.USERDB;
