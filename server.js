@@ -79,7 +79,7 @@ if(authorised(req)){
   // reply to client with id
   query.on('end', function(row, result){
     console.log('MATT log notes---> result : '+insertId);
-    res.writeHead(200, "Cache-Control: no-store/no-cache");
+//    res.writeHead(200, "Cache-Control: no-store/no-cache"); // TODO test
     res.send(201, '{"id" : "'+insertId+'"}');                  // 201 is success resource created
   });
 }
@@ -94,7 +94,7 @@ app.get('/pestspotted/all', function(req, res){
 // Limited details, can expand on request from team
 app.get('/pestspotted/all/:json', function(req, res){
   console.log("MATT log note---> get pestspotted/all");
-  res.writeHead(200, "Cache-Control: no-store/no-cache"); // 
+//  res.writeHead(200, "Cache-Control: no-store/no-cache"); // TODO test
 
 if(authorised(req)){
   console.log('MATT log notes---> Passed authentication.');
