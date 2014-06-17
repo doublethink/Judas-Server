@@ -12,6 +12,7 @@ var USERDB = "userDB";
 
 var express = require("express");
 var logfmt = require("logfmt");
+var fb = require('fb');
 var pg = require('pg')
   , connectionString = process.env.DATABASE_URL
   , client
@@ -31,6 +32,22 @@ app.engine('html', require('ejs').renderFile);
 
 app.use(logfmt.requestLogger());
 app.use(bodyParser());
+
+//=============================
+// config
+var config = { };
+
+// should end in /
+config.rootUrl = process.env.ROOT_URL || 'http://localhost:5000/';
+
+config.facebook = {
+    appId: process.env.FACEBOOK_APPID || '130243393811111',
+    appSecret: process.env.FACEBOOK_APPSECRET || 'c82696768ae4ad8b63db874cb64e6789',
+    appNamespace: process.env.FACEBOOK_APPNAMESPACE || 'snappest',
+    redirectUri: process.env.FACEBOOK_REDIRECTURI || config.rootUrl + 'login/callback'
+};
+
+module.exports = config;
 
 //============================
 // DB backups
