@@ -18,9 +18,9 @@ var express =           require("express")
   , Step =              require('step')
   , crypto =            require('crypto')
   , pg =                require('pg')
-  , connectionString = process.env.DATABASE_URL
-  , client = new pg.Client(connectionString)
-  , query;
+  , connectionString = process.env.DATABASE_URL;
+//  , client = new pg.Client(connectionString)
+//  , query;
 
 var config =            require('../config')
   , auth   =            require('./authenticate')
@@ -42,9 +42,9 @@ app.use(bodyParser());
 
 exports.pestspotted = function(req, res) {
   console.log('MATT log notes---> post /pestspotted');
-
 if(auth.user(req)){
   console.log('MATT log notes---> Passed authentication.');
+pg.connect(connectionString, function(err, client, done) {
 
   if(!dbhelp.verifyPestInput(req, res)) return; // 400 error on fail, value missing
 
@@ -77,8 +77,9 @@ if(auth.user(req)){
     console.log('MATT log notes---> result : '+insertId);
 //    res.writeHead(200, "Cache-Control: no-store/no-cache"); // TODO test
     res.send(201, '{"id" : "'+insertId+'"}');                  // 201 is success resource created
+    done();
   });
-}
+});}
 };
 
 
@@ -90,10 +91,9 @@ exports.pestspottedAll= function(req, res){
 // Limited details, can expand on request from team
 exports.pestspottedAllJson = function(req, res){
   console.log("MATT log note---> get pestspotted/all");
-//  res.writeHead(200, "Cache-Control: no-store/no-cache"); // TODO test
-
 if(auth.admin(req)){
   console.log('MATT log notes---> Passed authentication.');
+pg.connect(connectionString, function(err, client, done) {
 
   // conduct search
   var rows = [];
@@ -109,6 +109,7 @@ if(auth.admin(req)){
   // send it back to client
   query.on('end', function(row, result){
     console.log("size : " + rows.length);
+//  res.writeHead(200, "Cache-Control: no-store/no-cache"); // TODO test
 		var str = "";
     if(req.param('json') == "json"){
       var first = true;
@@ -124,8 +125,9 @@ if(auth.admin(req)){
       }
       res.send("List of pests in db :<br>" + str +"There are " + rows.length + " rows.");
     }
+    done();
   });
-}
+});}
 };
 
 
@@ -137,9 +139,9 @@ exports.pestspotted_onDate = function(req, res){
 // Day format must equal DD-MM-YYYY for example /pestspotted_on/04-05-2014
 exports.pestspotted_onDateJson = function(req, res){
   console.log("MATT log note---> get pestspotted/:date");
-
 if(auth.admin(req)){
   console.log('MATT log notes---> Passed authentication.');
+pg.connect(connectionString, function(err, client, done) {
 
   if(!dbhelper.validateDate(req.param('date'))){
  	return res.send(400, "Invalid date format. Use DD-MM-YYYY."); // 400 Bad Request, syntax.
@@ -194,18 +196,19 @@ if(auth.admin(req)){
         }
         res.send("pests on this day :<br>" + str +"There are " + rows.length + " rows.");
       }
+      done();
     });
   }
-}
+});}
 };
 
 //======================================================================
 // total of a specific pest type logged by this user
 exports.pestspottedUserPest = function(req, res){
   console.log("MATT log note---> get pestspotted/:user/:pest");
-
 if(auth.user(req)){
   console.log('MATT log notes---> Passed authentication.');
+pg.connect(connectionString, function(err, client, done) {
 
   // conduct search
   var count;
@@ -220,8 +223,9 @@ if(auth.user(req)){
   // send it back to client
   query.on('end', function(row, result){
     res.json('{count : ' + count +', request: \'get pestspotted/:user/:pest\'}');
+    done();
   });
-}
+});}
 };
 
 //=======================================================================
@@ -232,6 +236,7 @@ exports.pestspottedUser = function(req, res){
 
 if(auth.user(req)){
   console.log('MATT log notes---> Passed authentication.');
+pg.connect(connectionString, function(err, client, done) {
 
   // conduct search
   var count;
@@ -246,6 +251,7 @@ if(auth.user(req)){
   // send it back to client
   query.on('end', function(row, result){
     res.json('{count : ' + count +', reqest: \'get pestspotted/:user\'}');
+    done();
   });
-}
+});}
 };
