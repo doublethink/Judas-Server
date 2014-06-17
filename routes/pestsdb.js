@@ -88,6 +88,7 @@ exports.pestspottedAll= function(req, res){
 // Limited details, can expand on request from team
 exports.pestspottedAllJson = function(req, res){
   console.log("MATT log note---> get pestspotted/all");
+  res.writeHead("Cache-Control: no-store"); // TODO test
 if(auth.admin(req)){
   console.log('MATT log notes---> Passed authentication.');
 pg.connect(connectionString, function(err, client, done) {
@@ -106,7 +107,6 @@ pg.connect(connectionString, function(err, client, done) {
   // send it back to client
   query.on('end', function(row, result){
     console.log("size : " + rows.length);
-    res.writeHead("Cache-Control: no-store"); // TODO test
 		var str = "";
     if(req.param('json') == "json"){
       var first = true;
