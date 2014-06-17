@@ -239,7 +239,8 @@ if(authorisedAdmin(req)){
 
   // conduct search
   var count;
-  var query = client.query('SELECT count(*) FROM '+DATABASE+' WHERE uid = \''+ req.param('user') +'\';');
+  var query = client.query('SELECT count(*) FROM '+DATABASE+
+      ' WHERE uid = \''+ req.param('user') +'\';');
 
   // build result
   query.on('row', function(row, result){ 
@@ -248,7 +249,7 @@ if(authorisedAdmin(req)){
 
   // send it back to client
   query.on('end', function(row, result){
-    res.json('{count : ' + count +', reqest: get pestspotted/:user}');
+    res.json('{count : ' + count +', reqest: \'get pestspotted/:user\'}');
   });
 }
 });
