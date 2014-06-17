@@ -72,8 +72,8 @@ pg.connect(connectionString, function(err, client, done) {
   // reply to client with id
   query.on('end', function(row, result){
     console.log('MATT log notes---> result : '+insertId);
-//    res.writeHead(200, "Cache-Control: no-store/no-cache"); // TODO test
-    res.send(201, '{"id" : "'+insertId+'"}');                  // 201 is success resource created
+    res.set({"Cache-Control": "no-store"});
+    res.send(201, '{"id" : "'+insertId+'"}');    // 201 is success resource created
     done();
   });
 });}
@@ -88,7 +88,6 @@ exports.pestspottedAll= function(req, res){
 // Limited details, can expand on request from team
 exports.pestspottedAllJson = function(req, res){
   console.log("MATT log note---> get pestspotted/all");
-  res.set({"Cache-Control": "no-store"}); // TODO test
 if(auth.admin(req)){
   console.log('MATT log notes---> Passed authentication.');
 pg.connect(connectionString, function(err, client, done) {
@@ -107,6 +106,7 @@ pg.connect(connectionString, function(err, client, done) {
   // send it back to client
   query.on('end', function(row, result){
     console.log("size : " + rows.length);
+    res.set({"Cache-Control": "no-store"});
 		var str = "";
     if(req.param('json') == "json"){
       var first = true;
@@ -178,6 +178,7 @@ pg.connect(connectionString, function(err, client, done) {
   // send it back to client
     query.on('end', function(row, result){
       console.log("MATT log note---> size : " + rows.length);
+      res.set({"Cache-Control": "no-store"});
       var str = "";
       if(req.param('json') == "json"){
         var first = true;
@@ -219,6 +220,7 @@ pg.connect(connectionString, function(err, client, done) {
 
   // send it back to client
   query.on('end', function(row, result){
+    res.set({"Cache-Control": "no-store"});
     res.json('{count : ' + count +', request: \'get pestspotted/:user/:pest\'}');
     done();
   });
@@ -247,6 +249,7 @@ pg.connect(connectionString, function(err, client, done) {
 
   // send it back to client
   query.on('end', function(row, result){
+    res.set({"Cache-Control": "no-store"});
     res.json('{count : ' + count +', reqest: \'get pestspotted/:user\'}');
     done();
   });
