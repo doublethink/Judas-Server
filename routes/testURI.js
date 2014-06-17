@@ -5,9 +5,9 @@
 
 var config =             require('../config')
   , pg =                 require('pg')
-  , connectionString =   process.env.DATABASE_URL
+  , connectionString =   process.env.DATABASE_URL;
 //  , client =             new pg.Client(connectionString)
-  , query;
+//  , query;
 
 //client.connect();
 var mydb = "visits";
@@ -110,79 +110,78 @@ exports.pestsidfound = function(req, res){
 // a query can accept serial sql instructions.
 exports.dbnew = function(req, res){
   console.log("MATT log note---> get db/new");
-  var date = new Date();
+  pg.connect(connectionString, function(err, client, done) {
+    var date = new Date();
 
-  query = client.query('DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date);');
-  console.log("MATT log note---> post query");
+    query = client.query('DROP TABLE '+mydb+'; CREATE TABLE '+mydb+'(date date);');
+    console.log("MATT log note---> post query");
 
-  query.on('error', function(err){
-    console.log('MATT error noted --->', err); });
+    query.on('error', function(err){
+      console.log('MATT error noted --->', err); });
 
-  query.on('end', function(result){ 
-    console.log("db new table query processed.");
-    res.send("new db\n");
+    query.on('end', function(result){ 
+      console.log("db new table query processed.");
+      res.send("new db\n");
+      done();
+    });
   });
 };
 
 
 exports.dbvisitsi = function(req, res){
   console.log("MATT log note---> get db/visits/i");
-  var date = new Date();
+  pg.connect(connectionString, function(err, client, done) {
+    var date = new Date();
 
-  client.query('INSERT INTO '+mydb+'(date) VALUES ($1)', [date]);
-  var query = client.query('SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = $1', [date]);
-  console.log("MATT log note---> post query");
+    client.query('INSERT INTO '+mydb+'(date) VALUES ($1)', [date]);
+    var query = client.query('SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = $1', [date]);
+    console.log("MATT log note---> post query");
 
-  query.on('row', function(row){
-    console.log('MATT log ---> result : '+row.count);
-    if(!row){ 
-      console.log('MATT !row ---> true');
-      res.send('No data found.'); }
-    else { 
-      console.log('MATT !row ---> false');
-      res.send(200, 'Visits today : ' + row.count); }
+    query.on('row', function(row){
+      console.log('MATT log ---> result : '+row.count);
+      if(!row){ 
+        console.log('MATT !row ---> true');
+        res.send('No data found.'); }
+      else { 
+        console.log('MATT !row ---> false');
+        res.send(200, 'Visits today : ' + row.count); }
+    });
+
+    query.on('error', function(err){
+      console.log('MATT error noted --->', err); });
+
+    query.on('end', function(result){ done(); });
   });
-
-  query.on('error', function(err){
-    console.log('MATT error noted --->', err); });
 };
 
 
 exports.dbvisits = function(req, res){
   console.log("MATT log note---> get db/visits");
-
   pg.connect(connectionString, function(err, client, done) {
-//        client.query('SELECT name FROM users WHERE email = $1', ['brian@example.com'], function(err, result) {
-//          assert.equal('brianc', result.rows[0].name);
-//          done();
-//        });
-//    });
+    var rows = []
+      , query = client.query('SELECT * FROM ' + mydb);
 
-
-  var rows = []
-    , query = client.query('SELECT * FROM ' + mydb);
-
-  query.on('row', function(row){
-    console.log("MATT log note---> query.on row");
+    query.on('row', function(row){
+      console.log("MATT log note---> query.on row");
  //   if(!row){ return res.send(200, "Database is empty.");}
-    rows.push(row.date);
-    console.log("MATT log row : " + row.date);
-  });
+      rows.push(row.date);
+      console.log("MATT log row : " + row.date);
+    });
 
-  query.on('error', function(err){
-    console.log('MATT error noted --->', err); });
+    query.on('error', function(err){
+      console.log('MATT error noted --->', err); });
 
-  query.on('end', function(result){ 
-    console.log("MATT log note---> size : " + rows.length);
-		var str = "";
-    for(i = 0; i < rows.length; i++){
-      str += "row : "+i+", value : "+rows[i] + "<br>";
-    }
+    query.on('end', function(result){ 
+      console.log("MATT log note---> size : " + rows.length);
+		  var str = "";
+      for(i = 0; i < rows.length; i++){
+        str += "row : "+i+", value : "+rows[i] + "<br>";
+      }
 
-    console.log("MATT log note---> value i : " + i);
-    res.send(200, "Database holds :<br>" + str +"There are " + rows.length + " rows.");
-    done();
-  });
+      console.log("MATT log note---> value i : " + i);
+      res.send(200, "Database holds :<br>" + str +"There are " + rows.length + " rows.");
+      done();
+    });
   });
 }; // end test Postgresql database
 
