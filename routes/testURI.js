@@ -143,7 +143,7 @@ exports.dbvisitsi = function(req, res){
       return res.send('No data found.'); }
     else { 
       console.log('MATT !row ---> false');
-      return res.send('Visits today : ' + row.count); }
+      return res.send(200, 'Visits today : ' + row.count); }
   });
 
   query.on('error', function(err){
@@ -160,7 +160,8 @@ exports.dbvisits = function(req, res){
   var rows = [];
   var query = client.query('SELECT * FROM ' + mydb);
 
-  query.on('row', function(row, result){ 
+  query.on('row', function(row, result){
+    if(!row){ return res.send(200, "Database is empty.");}
     rows.push(row.date);
     console.log("MATT log row : " + row.date);
   });
@@ -177,7 +178,7 @@ exports.dbvisits = function(req, res){
 
     client.end();
     console.log("MATT log note---> value i : " + i);
-    return res.send("Database holds :<br>" + str +"There are " + rows.length + " rows.");
+    return res.send(200, "Database holds :<br>" + str +"There are " + rows.length + " rows.");
   });
 }; // end test Postgresql database
 
