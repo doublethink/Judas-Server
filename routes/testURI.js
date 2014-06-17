@@ -149,8 +149,7 @@ exports.dbvisitsi = function(req, res){
   });
 
   query.on('error', function(err){
-      console.log('MATT error noted --->', err);
-  });
+      console.log('MATT error noted --->', err); });
 
   query.on('end', function(result){ client.end(); });
 };
@@ -168,9 +167,8 @@ exports.dbvisits = function(req, res){
     console.log("MATT log row : " + row.date);
   });
 
-  query.on('err', function(err){
-    return res.send("error : "+err);
-  });
+  query.on('error', function(err){
+      console.log('MATT error noted --->', err); });
 
   query.on('end', function(row, result){ 
     console.log("MATT log note---> size : " + rows.length);
