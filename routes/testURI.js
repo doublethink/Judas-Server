@@ -138,18 +138,19 @@ exports.dbvisitsi = function(req, res){
   var query = client.query('SELECT COUNT(date) AS count FROM '+mydb+' WHERE date = $1', [date]);
   console.log("MATT log note---> post query");
 
-  query.on('row', function(err, result){
-    if(err) {
-      return console.error('error fetching client from pool', err);
-    }
-    console.log('MATT log ---> result : '+result.count);
+  query.on('row', function(row){
+    console.log('MATT log ---> result : '+row.count);
     if(!result){ 
       console.log('MATT !result ---> true');
       return res.send('No data found.'); }
     else { 
       console.log('MATT !result ---> false');
-      return res.send('Visits today : ' + result.count); }
+      return res.send('Visits today : ' + row.count); }
   });
+
+  query.on('error'), function(err){
+      console.error('error noted', err);
+    }
 
   query.on('end', function(result){ client.end(); });
 };
