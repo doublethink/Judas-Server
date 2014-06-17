@@ -6,29 +6,27 @@
 // increase data returned by get requests, think park managers.
 
 
-var mydb = "visits";
-var DATABASE = "judasDB";
-var USERDB = "userDB";
+var mydb = "visits"
+  , DATABASE = "judasDB"
+  , USERDB = "userDB";
 
-var express = require("express");
-var logfmt = require("logfmt");
-var FB = require('fb');
-var Step = require('step');
-var crypto = require('crypto');
-var testURI = require('./routes/testURI');
-
-var pg = require('pg')
+var express = require("express")
+  , logfmt = require("logfmt")
+  , bodyParser = require('body-parser')
+  , http = require('http') // TODO remove?
+  , FB = require('fb')
+  , Step = require('step')
+  , crypto = require('crypto')
+  , pg = require('pg')
   , connectionString = process.env.DATABASE_URL
-  , client
+  , client = new pg.Client(connectionString)
   , query;
 
-client = new pg.Client(connectionString);
+var testURI = require('./routes/testURI')
+  , config = requires('./config');
+
 client.connect();
 
-
-// npm install body-parser
-var bodyParser = require('body-parser');
-var http = require('http'); // TODO remove?
 
 var app = express();
 app.set('views', __dirname + '/views'); // TODO I think this is a default - remove?
@@ -36,31 +34,24 @@ app.engine('html', require('ejs').renderFile);
 
 app.use(logfmt.requestLogger());
 app.use(bodyParser());
+app.use(express.static(__dirname + '/views'));
 
-//=============================
-// config
-var config = { };
 
-// should end in /
-config.rootUrl = process.env.ROOT_URL || 'http://localhost:5000/';
-
-config.facebook = {
-    appId: process.env.FACEBOOK_APPID || '130243393811111',
-    appSecret: process.env.FACEBOOK_APPSECRET || 'c82696768ae4ad8b63db874cb64e6789',
-    appNamespace: process.env.FACEBOOK_APPNAMESPACE || 'snappest',
-    redirectUri: process.env.FACEBOOK_REDIRECTURI || config.rootUrl + 'login/callback'
-};
-
-module.exports = config;
 
 //=============================
 // routing
 
-/* this appears to serve index.html from /views, without a get... */
-app.use(express.static(__dirname + '/views'));
+// tests
+app.get('/test',          testURI.test);
+app.get('/error/:id',     testURI.errorid);
+app.get('/matt',          testURI.testMatt);
+app.get('/test/:id',      testURI.testid);
+// tests using dummy data in arrays
+app.get('/pests/spotted', testURI.pestsspotted);
+app.get('/pests/:id',     testURI.pestsid);
+app.get('/pests/:id/:s',  testURI.pestsidfound);
 
-app.get('/matt', testURI.testMatt);
-app.get('/test', testURI.test);
+
 
 
 
@@ -393,26 +384,6 @@ if(FBuserID == null){
 // keep helpers & server start at bottom...
 
 
-//====================================
-// dummy data
-//====================================
-
-var spots = [
-  { position: { longitude : 174.7777222, latitude : -41.288889, accuracy: 0.0005, datestamp : '2014-04-20 1300'}, auth: {uid: 'Matt', accessToken : 'Possum'}},
-  { position: { longitude : 174.7777222, latitude : -41.288889, accuracy: 0.0005, datestamp : '2014-04-20 1300'}, auth: {uid: 'Fred', accessToken : 'Stoat'}},
-];
-
-var pests = [
-  {name : 'Possum', colour : 'grey', danger : 'eats trees', found : 'look in trees'},
-  {name : 'Stoat', colour : 'black and white', danger : 'eats eggs', found : 'around tree bottoms'}
-];
-
-var users = [ 
-	{userId : 'Matt', name : 'Matt Stevens', password : 'stuff'},
-	{userId : 'Fred', name : 'Freddy Mercury', password : 'f'},
-	{userId : 'Mike', name : 'Mike the Plumber', password : '56tygh'}
-];
-// end dummy data
 
 //======================================
 // original test post for pestspotted
@@ -527,37 +498,6 @@ app.get('/db/visits', function(req, res){
 //======================================
 // restful interfaces
 //======================================
-  /*==== GET ====*/
-app.get('/pests/spotted', function(req, res) {
-  res.send(spots);
-});
-
-app.get('/pests/:id', function(req, res){
-  if(req.param('id') == 'possum'){
-  	res.send(pests[0].name + ", fur is " + pests[0].colour);
-  }else
-  if(req.param('id') == 'stoat'){
-  	res.send(pests[1].name + ", fur is " + pests[1].colour);
-  }else {
-  	res.send("Did not recognise that.");
-  }
-});
-
-app.get('/pests/:id/:s', function(req, res){
-  if(req.param('id') == 'possum' && req.param('s') == 'found'){
-  	res.send(pests[0].found);
-  }else
-  if(req.param('id') == 'stoat' && req.param('s') == 'found'){
-  	res.send(pests[1].found);
-  }else {
-  	res.send("Did not recognise that.");
-  }
-});
-
-app.get('/error/:id', function(req, res) {
-  res.send(req.param('id'), "Error : "+req.param('id'));
-});
-
 
   /*====== POST ======*/
 

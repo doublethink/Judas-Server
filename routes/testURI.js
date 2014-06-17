@@ -4,33 +4,43 @@
  */
 
 // NB: have cut n pasted code here, pulled export test functions to the top.
+// rest of file is commented out but kept as a personal node.js reference
 
-exports.testMatt = function(req, res) {
-  res.statusCode = 502;
-  res.setHeader("Set-Cookie", ["type=ninja", "language=javascript"]);
-
-  ////...node.js method, write, write then end.
-  ////...is not parsed as html text (set Content-Type = text/html)
-  //res.setHeader("Content-Type", "text/html");
-  //res.write('Matt testing...<br>');
-  //res.end('Last testing text.');
-
-  ////...sends files. Filepath, relative is ./views or views, absolute is /views
-  ////...parses at html (set Content-Type = text/html)
-  res.sendfile('./views/test.html');
-
-  ////...not working, hangs up
-  //res.render('./views/test.html', function(err, html){ 'I am a render.' });
-  
-  //res.send("Matt was here... bwahahaha");
-};
-
+// ~/test
 exports.test = function(req, res){
   //...sends text
   //...parses as html (Content-Type = text/html)
   res.send('Server responds to \"test\".<br>');
 };
 
+// ~/error/:id
+// tests http error code response
+exports.errorid = function(req, res) {
+  res.send(req.param('id'), "Error : "+req.param('id'));
+};
+
+// ~/matt
+exports.testMatt = function(req, res) {
+  res.statusCode = 502;
+  res.setHeader("Set-Cookie", ["type=ninja", "language=javascript"]);
+
+  //...node.js method, write, write then end.
+  //...is not parsed as html text (set Content-Type = text/html)
+  //res.setHeader("Content-Type", "text/html");
+  //res.write('Matt testing...<br>');
+  //res.end('Last testing text.');
+
+  //...sends files. Filepath, relative is ./views or views, absolute is /views
+  //...parses at html (set Content-Type = text/html)
+  res.sendfile('./views/test.html');
+
+  //...not working, hangs up
+  //res.render('./views/test.html', function(err, html){ 'I am a render.' });
+  
+  //res.send("Matt was here... bwahahaha");
+};
+
+// ~/test/:id
 exports.testid = function(req, res){
   if(req.param('id') == 'test'){
     res.sendfile('./views/test.html');
@@ -41,6 +51,42 @@ exports.testid = function(req, res){
     res.sendfile('./views/testpage.html');
   }else{
     res.send('Sorry, don\'t recognise that command.<br>');
+  }
+};
+
+
+
+//====================================
+// dummy data
+var spots = config.spots;
+var pests = config.pests;
+var users = config.users;
+//===================================
+// using dummy data
+
+exports.pestsspotted = function(req, res) {
+  res.send(spots);
+};
+
+exports.pestsid = function(req, res){
+  if(req.param('id') == 'possum'){
+  	res.send(pests[0].name + ", fur is " + pests[0].colour);
+  }else
+  if(req.param('id') == 'stoat'){
+  	res.send(pests[1].name + ", fur is " + pests[1].colour);
+  }else {
+  	res.send("Did not recognise that.");
+  }
+};
+
+exports.pestsidfound = function(req, res){
+  if(req.param('id') == 'possum' && req.param('s') == 'found'){
+  	res.send(pests[0].found);
+  }else
+  if(req.param('id') == 'stoat' && req.param('s') == 'found'){
+  	res.send(pests[1].found);
+  }else {
+  	res.send("Did not recognise that.");
   }
 };
 
@@ -125,36 +171,6 @@ app.get('/db/visits', function(req, res){
 //======================================
 // restful interfaces
 //======================================
-
-app.get('/pests/spotted', function(req, res) {
-  res.send(spots);
-});
-
-app.get('/pests/:id', function(req, res){
-  if(req.param('id') == 'possum'){
-  	res.send(pests[0].name + ", fur is " + pests[0].colour);
-  }else
-  if(req.param('id') == 'stoat'){
-  	res.send(pests[1].name + ", fur is " + pests[1].colour);
-  }else {
-  	res.send("Did not recognise that.");
-  }
-});
-
-app.get('/pests/:id/:s', function(req, res){
-  if(req.param('id') == 'possum' && req.param('s') == 'found'){
-  	res.send(pests[0].found);
-  }else
-  if(req.param('id') == 'stoat' && req.param('s') == 'found'){
-  	res.send(pests[1].found);
-  }else {
-  	res.send("Did not recognise that.");
-  }
-});
-
-app.get('/error/:id', function(req, res) {
-  res.send(req.param('id'), "Error : "+req.param('id'));
-});
 
 
 
