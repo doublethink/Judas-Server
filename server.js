@@ -65,7 +65,7 @@ app.get('/pests/:id/:s',                testURI.pestsidfound);
 // tests setting up a Postgresql database
 app.get('/db/new',                      testURI.dbnew);
 app.get('/db/visits/i',                 testURI.dbvisitsi);
-app.get('/db/visits',                   testURI.dbvisists);
+app.get('/db/visits',                   testURI.dbvisits);
 
 
 //=======================================================================
