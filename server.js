@@ -20,7 +20,7 @@ var express = require("express")
   , query;
 
 var testURI = require('./routes/testURI')
-  , config = require('./config');
+  , config = require('./config')
   , pests = require('./pestsdb');
 
 //client.connect();
