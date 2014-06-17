@@ -248,7 +248,7 @@ if(authorisedAdmin(req)){
 
   // send it back to client
   query.on('end', function(row, result){
-    res.json('{count : ' + count +', reqest: \'get pestspotted/:user/:pest\'}');
+    res.json('{count : ' + count +', reqest: get pestspotted/:user}');
   });
 }
 });
