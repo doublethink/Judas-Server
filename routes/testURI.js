@@ -148,9 +148,9 @@ exports.dbvisitsi = function(req, res){
       return res.send('Visits today : ' + row.count); }
   });
 
-  query.on('error'), function(err){
+  query.on('error', function(err){
       console.error('error noted', err);
-    }
+  });
 
   query.on('end', function(result){ client.end(); });
 };
