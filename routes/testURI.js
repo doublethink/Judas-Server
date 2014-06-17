@@ -47,7 +47,7 @@ exports.testid = function(req, res){
 
 
 
-
+/*
 //=====================================
 // database
 // everything happens inside a query.on listener for {row, end, err}.
@@ -125,7 +125,6 @@ app.get('/db/visits', function(req, res){
 //======================================
 // restful interfaces
 //======================================
-  /*==== GET ====*/
 
 app.get('/pests/spotted', function(req, res) {
   res.send(spots);
@@ -158,18 +157,17 @@ app.get('/error/:id', function(req, res) {
 });
 
 
-  /*====== POST ======*/
 
 // test curl for authenticating user
 // curl --request POST "localhost:5000/user" --data "userId=Matt&password=stuff"
 app.post('/user', function(req,res){
-/* 
-ref RFC2831 Digest SASL Authentication for steps to implement
-  NB: not a great security protocol, but gets basic securtity in place that can be upgraded later.
-  using qop = 'auth'
-  1. User has not recently authenticated
-  2. User has already authenticated and knows {userId, realm, qop and nonce}
-*/
+ 
+//ref RFC2831 Digest SASL Authentication for steps to implement
+//  NB: not a great security protocol, but gets basic securtity in place that can be upgraded later.
+//  using qop = 'auth'
+//  1. User has not recently authenticated
+//  2. User has already authenticated and knows {userId, realm, qop and nonce}
+
   var error;
   console.log("Authenticating user.")
   if(req.body.userId == null || req.body.password == null){
@@ -192,3 +190,4 @@ ref RFC2831 Digest SASL Authentication for steps to implement
   res = setAuthenticateResponse(res)
   res.send(401, error); // 401 Unauthorized
 });
+*/
