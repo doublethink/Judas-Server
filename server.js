@@ -23,7 +23,7 @@ var express = require("express")
   , query;
 
 var testURI = require('./routes/testURI')
-  , config = requires('./config');
+  , config = require('./config');
 
 client.connect();
 

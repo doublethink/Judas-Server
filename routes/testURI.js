@@ -3,7 +3,7 @@
  *
  */
 
-var config = requires('../config');
+var config = require('../config');
 
 // NB: have cut n pasted code here, pulled export test functions to the top.
 // rest of file is commented out but kept as a personal node.js reference
