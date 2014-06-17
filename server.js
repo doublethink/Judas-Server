@@ -32,7 +32,6 @@ app.engine('html', require('ejs').renderFile);
 app.use(logfmt.requestLogger());
 app.use(bodyParser());
 
-
 //============================
 // DB backups
 // Heroku PG Backups (Free option, daily backup, retained for a month)
@@ -85,7 +84,6 @@ if(authorised(req)){
   });
 }
 });
-
 
 
 app.get('/pestspotted/all', function(req, res){
@@ -204,8 +202,31 @@ if(authorised(req)){
   }
 }
 });
+//======================================================================
+// total of a specific pest type logged by this user
 
+app.get('/pestspotted/:user/:pest', function(req, res){
+  console.log("MATT log note---> get pestspotted/:user/:pest");
 
+if(authorisedAdmin(req)){
+  console.log('MATT log notes---> Passed authentication.');
+
+  // conduct search
+  var count;
+  var query = client.query('SELECT count(*) FROM '+DATABASE+
+      ' WHERE uid = \''+ req.param('user') +'\' AND pest = \''+ req.param('pest') +'\';');
+
+  // build result
+  query.on('row', function(row, result){ 
+    count = row.count;
+  });
+
+  // send it back to client
+  query.on('end', function(row, result){
+    res.json('{count : ' + count +'}');
+  });
+}
+});
 //=======================================================================
 // total noumber of pests logged by this user
 // NB: user is case sensitive
