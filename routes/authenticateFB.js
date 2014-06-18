@@ -4,7 +4,7 @@
  */
 
 
-var FB = require('../fb'),
+var FB = require('fb'),
     Step = require('step'),
 
     config = require('../config');
