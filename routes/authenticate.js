@@ -32,7 +32,7 @@ FB.options({
     redirectUri: config.facebook.redirectUri
 });
 
-/*
+
 
 //=======================================================================
 // accept and store the FB response token
@@ -80,7 +80,7 @@ pg.connect(connectionString, function(err, client, done) {
 });
 }};
 
-
+/*
 //===============================================
 // Get FB application access token
 // php version $appsecret_proof= hash_hmac('sha256', $access_token, $app_secret); 
@@ -97,7 +97,7 @@ FB.api('oauth/access_token', {
 
     var accessToken = res.access_token;
 });
-
+*/
 
 
 
