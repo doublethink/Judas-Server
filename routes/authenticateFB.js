@@ -28,6 +28,7 @@ exports.index = function(req, res) {
 };
 
 exports.loginCallback = function (req, res, next) {
+    if(!req.session){ req.session = {"access_token": ""};}
     var code = req.query.code;
 
     if(req.query.error) {
