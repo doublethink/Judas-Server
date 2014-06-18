@@ -23,7 +23,7 @@ var config =            require('../config')
 
 var USERDB   =          config.USERDB;
 
-var APPID = config.facebook.appId;
+var APPID = config.facebook.appId
   , APPSECRET = config.facebook.appSecret;
 
 FB.options({
