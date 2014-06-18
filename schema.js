@@ -82,12 +82,17 @@ query.on('end', function(result) { client.end(); });
 /* gives access to pg sql interface
 heroku pg:psql --app "judas" 
 // pestspotted db
+// recreate table with uid as Foriegn key
 CREATE TABLE judasdb(ID SERIAL PRIMARY KEY, longitude real NOT NULL, latitude real NOT NULL, accuracy real, datestamp date NOT NULL, pest varchar NOT NULL, uid varchar NOT NULL);
 INSERT INTO judasdb(longitude, latitude, accuracy, datestamp, pest, uid) VALUES (22, 33, 0.4, '2014-05-03', 'possum', 'Matt');
 
 //userdb
-create table userdb(uid varchar PRIMARY KEY, fbtoken JSON);
-insert into userdb (uid, fbtoken) values ('Matt', '{"accessToken": "letMeIn", "expiresIn": "00:01:00", "signedRequest": "signedByMatt", "userID": "Matt"}');
+create table userdb(uid varchar PRIMARY KEY, email varchar, details JSON, fbtoken JSON);
+insert into userdb (uid, fbtoken) values ('Matt', 'matt@test.com', '{"first": "Matt", "second": "Citizen"}', '{"accessToken": "letMeIn", "expiresIn": "00:01:00", "signedRequest": "signedByMatt", "userID": "Matt"}');
+
+//FB app-secret
+create table fbconfig(appid varchar PRIMARY KEY, appsecret varchar);
+insert into fbconfig (appid, appsecret) VALUES ('724664727600591', '68914e65743a43fae4fae9a258920c0e');
 
 
 */

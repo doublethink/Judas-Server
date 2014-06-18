@@ -2,29 +2,18 @@
 //===================================
 
 // Facebook security
-// switch off caching cache-control //res.writeHead(200, "Cache-Control: no-store/no-cache")
 // increase data returned by get requests, think park managers.
 
 
 
 var express = require("express")
   , logfmt = require("logfmt")
-  , bodyParser = require('body-parser')
-  , http = require('http') // TODO remove?
-//  , FB = require('fb')
-//  , Step = require('step')
-//  , crypto = require('crypto')
-//  , pg = require('pg')
-//  , connectionString = process.env.DATABASE_URL
-//  , client = new pg.Client(connectionString)
-  , query;
+  , bodyParser = require('body-parser');
+//  , http = require('http') // TODO remove?
 
 var testURI =     require('./routes/testURI')
   , config =      require('./config')
   , pests =       require('./routes/pestsdb');
-
-//client.connect();
-
 
 var app = express();
 app.set('views', __dirname + '/views'); // TODO I think this is a default - remove?
@@ -34,7 +23,9 @@ app.use(logfmt.requestLogger());
 app.use(bodyParser());
 app.use(express.static(__dirname + '/views'));
 
-
+if(!config.facebook.appId || !config.facebook.appSecret) {
+    throw new Error('facebook appId and appSecret required in config.js');
+}
 
 //=============================
 // routing
@@ -43,14 +34,18 @@ app.post('/pestspotted',                    pests.pestspotted);
 // Return list of all pests spotted.
 app.get('/pestspotted/all',                 pests.pestspottedAll);
 app.get('/pestspotted/all/:json',           pests.pestspottedAllJson);
-// get all pests logged for this day
-// Day format must equal DD-MM-YYYY for example /pestspotted_on/04-05-2014
+// get all pests logged for this day, day format 24-05-2014
 app.get('/pestspotted_on/:date',            pests.pestspotted_onDate);
 app.get('/pestspotted_on/:date/:json',      pests.pestspotted_onDateJson);
 // total of a specific pest type logged by this user
 app.get('/pestspotted/:user/:pest',         pests.pestspottedUserPest);
 // total noumber of pests logged by this user
 app.get('/pestspotted/:user',               pests.pestspottedUser);
+
+// Facebook stuff
+app.get( '/login', home.index);
+app.get( '/login/callback', home.loginCallback);
+app.get( '/logout', home.logout);
 
 //=============================
 // tests

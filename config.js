@@ -9,8 +9,8 @@ config.USERDB = "userDB";
 config.rootUrl = process.env.ROOT_URL || 'http://localhost:5000/';
 
 config.facebook = {
-    appId: process.env.FACEBOOK_APPID || '130243393811111',
-    appSecret: process.env.FACEBOOK_APPSECRET || 'c82696768ae4ad8b63db874cb64e6789',
+    appId: process.env.FACEBOOK_APPID || '724664727600591',
+    appSecret: process.env.FACEBOOK_APPSECRET || '68914e65743a43fae4fae9a258920c0e',
     appNamespace: process.env.FACEBOOK_APPNAMESPACE || 'snappest',
     redirectUri: process.env.FACEBOOK_REDIRECTURI || config.rootUrl + 'login/callback'
 };
