@@ -2,7 +2,7 @@
  * Sample code from Node.js github repository
  * https://github.com/Thuzi/facebook-node-sdk/blob/master/samples/scrumptious/routes/home.js
  */
-
+/*
 
 var FB = require('fb'),
     Step = require('step'),
@@ -87,4 +87,4 @@ exports.logout = function (req, res) {
     req.session = null; // clear session
     res.redirect('/');
 };
-
+*/
