@@ -10,7 +10,7 @@
  */
 
 
-/*
+
 var pg =                require('pg')
   , FB =                require('fb')
 //  , Step =              require('step')
@@ -32,7 +32,7 @@ FB.options({
     redirectUri: config.facebook.redirectUri
 });
 
-
+/*
 
 //=======================================================================
 // accept and store the FB response token
