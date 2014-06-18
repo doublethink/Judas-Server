@@ -6,7 +6,6 @@
 
 var FB = require('fb'),
     Step = require('step'),
-
     config = require('../config');
 
 FB.options({
@@ -15,7 +14,7 @@ FB.options({
     redirectUri: config.facebook.redirectUri
 });
 
-exports.index2 = function(req, res) {
+exports.index = function(req, res) {
     var accessToken;
     if(req.session){ accessToken = req.session.access_token; }
     if(!accessToken) {

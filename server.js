@@ -22,14 +22,15 @@ app.engine('html', require('ejs').renderFile);
 
 app.use(logfmt.requestLogger());
 app.use(bodyParser());
-app.use(express.static(__dirname + '/views'));
+//app.use(express.static(__dirname + '/views'));
 
-if(!config.facebook.appId || !config.facebook.appSecret) {
-    throw new Error('facebook appId and appSecret required in config.js');
-}
+//if(!config.facebook.appId || !config.facebook.appSecret) {
+//    throw new Error('facebook appId and appSecret required in config.js');
+//}
 
 //=============================
 // routing
+app.get('/',                               './views/index');
 // add pest to database, returns the id
 app.post('/pestspotted',                    pests.pestspotted);
 // Return list of all pests spotted.
