@@ -15,7 +15,7 @@ FB.options({
     redirectUri: config.facebook.redirectUri
 });
 
-exports.index = function(req, res) {
+exports.index2 = function(req, res) {
     var accessToken;
     if(req.session){ accessToken = req.session.access_token; }
     if(!accessToken) {
