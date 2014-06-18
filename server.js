@@ -13,7 +13,7 @@ var express = require("express")
 
 var testURI =     require('./routes/testURI')
   , config =      require('./config')
-  , pests =       require('./routes/authenticateFB')
+  , authenticateFB = require('./routes/authenticateFB')
   , pests =       require('./routes/pestsdb');
 
 var app = express();
