@@ -16,7 +16,7 @@ var pg =                require('pg')
   , connectionString =  process.env.DATABASE_URL;
 
 var config =            require('../config')
-  , auth   =            require('./authenticate')
+//  , auth   =            require('./authenticate')
   , dbhelp =          require('./pestsdbHelpers');
 
 var USERDB   =          config.USERDB;

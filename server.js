@@ -13,6 +13,7 @@ var express = require("express")
 
 var testURI =     require('./routes/testURI')
   , config =      require('./config')
+  , auth   =            require('./authenticate')
   , authenticateFB = require('./routes/authenticateFB')
   , pests =       require('./routes/pestsdb');
 
@@ -49,8 +50,8 @@ app.get( '/login',                          authenticateFB.index);
 app.get( '/login/callback',                 authenticateFB.loginCallback);
 app.get( '/logout',                         authenticateFB.logout);
 
-app.post('/fbtoken_in',                   authenticate.fbtoken_in);
-app.post('/fbtoken_out',                  authenticate.fbtoken_out);
+app.post('/fbtoken_in',                   auth.fbtoken_in);
+app.post('/fbtoken_out',                  auth.fbtoken_out);
 
 //=============================
 // tests
