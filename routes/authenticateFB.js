@@ -16,7 +16,8 @@ FB.options({
 });
 
 exports.index = function(req, res) {
-    var accessToken = req.session.access_token;
+    var accessToken;
+    if(req.session){ accessToken = req.session.access_token; }
     if(!accessToken) {
         res.render('index', {
             title: 'Express',
