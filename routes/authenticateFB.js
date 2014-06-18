@@ -19,12 +19,12 @@ exports.index = function(req, res) {
     var accessToken;
     if(req.session){ accessToken = req.session.access_token; }
     if(!accessToken) {
-        res.render('../views/test', {
+        res.render('index', {
             title: 'Express',
             loginUrl: FB.getLoginUrl({ scope: 'user_about_me' })
         });
     } else {
-        res.render('../views/index');
+        res.render('menu');
     }
 };
 
