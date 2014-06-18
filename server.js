@@ -13,6 +13,7 @@ var express = require("express")
 
 var testURI =     require('./routes/testURI')
   , config =      require('./config')
+  , pests =       require('./routes/authenticateFB')
   , pests =       require('./routes/pestsdb');
 
 var app = express();
@@ -43,9 +44,9 @@ app.get('/pestspotted/:user/:pest',         pests.pestspottedUserPest);
 app.get('/pestspotted/:user',               pests.pestspottedUser);
 
 // Facebook stuff
-app.get( '/login', home.index);
-app.get( '/login/callback', home.loginCallback);
-app.get( '/logout', home.logout);
+app.get( '/login',                          authenticateFB.index);
+app.get( '/login/callback',                 authenticateFB.loginCallback);
+app.get( '/logout',                         authenticateFB.logout);
 
 //=============================
 // tests
