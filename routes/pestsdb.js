@@ -9,13 +9,13 @@
 // This free option requires making regular manual data backups, to save histical data. 
 // A pay for options would give better pgbackups from Heroku, or implement a cloud db, say Cassandra, on Amazon servers. 
 
-var express =           require("express")
-  , logfmt =            require("logfmt")
-  , bodyParser =        require('body-parser')
+//var express =           require("express")
+//  , logfmt =            require("logfmt")
+//  , bodyParser =        require('body-parser')
 //  , FB =                require('fb')
 //  , Step =              require('step')
 //  , crypto =            require('crypto')
-  , pg =                require('pg')
+var pg =                require('pg')
   , connectionString =  process.env.DATABASE_URL;
 
 var config =            require('../config')
@@ -26,9 +26,9 @@ var DATABASE =          config.DATABASE
   , USERDB   =          config.USERDB;
 
 
-var app = express();
-app.use(logfmt.requestLogger());
-app.use(bodyParser());
+//var app = express();
+//app.use(logfmt.requestLogger());
+//app.use(bodyParser());
 
 //============================
 // post /pestspotted
