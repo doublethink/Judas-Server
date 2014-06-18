@@ -77,7 +77,7 @@ pg.connect(connectionString, function(err, client, done) {
     console.log('MATT log notes---> result : '+insertId);
     res.send(201, '{"id" : "'+insertId+'"}');                  // 201 is success resource created
   });
-)};
+});
 }};
 
 
@@ -157,7 +157,7 @@ pg.connect(connectionString, function(err, client, done) {
     console.log('MATT log notes---> returning data');
     res.json(202, FBtoken);                  // 202 request accepted
   });
-)};
+});
 }};
 
 
