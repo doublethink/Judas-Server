@@ -30,7 +30,7 @@ app.use(bodyParser());
 
 //=============================
 // routing
-app.get('/',                               './views/index');
+//app.get('/',                               './views/index');
 // add pest to database, returns the id
 app.post('/pestspotted',                    pests.pestspotted);
 // Return list of all pests spotted.
@@ -45,9 +45,9 @@ app.get('/pestspotted/:user/:pest',         pests.pestspottedUserPest);
 app.get('/pestspotted/:user',               pests.pestspottedUser);
 
 // Facebook stuff
-//app.get( '/login',                          authenticateFB.index);
-//app.get( '/login/callback',                 authenticateFB.loginCallback);
-//app.get( '/logout',                         authenticateFB.logout);
+app.get( '/login',                          authenticateFB.index);
+app.get( '/login/callback',                 authenticateFB.loginCallback);
+app.get( '/logout',                         authenticateFB.logout);
 
 //=============================
 // tests
