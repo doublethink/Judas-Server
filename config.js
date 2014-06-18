@@ -6,7 +6,7 @@ config.DATABASE = "judasDB"
 config.USERDB = "userDB";
 
 // should end in /
-config.rootUrl = process.env.ROOT_URL || 'http://localhost:5000/';
+config.rootUrl = process.env.ROOT_URL || 'http://polar-forest-2324/';
 
 config.facebook = {
     appId: process.env.FACEBOOK_APPID || '724664727600591',
