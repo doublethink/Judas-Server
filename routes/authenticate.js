@@ -9,8 +9,6 @@
  * From here server can access FB on behalf of user (assuming permissions)
  */
 
-
-
 var pg =                require('pg')
   , FB =                require('fb')
 //  , Step =              require('step')
@@ -84,6 +82,7 @@ pg.connect(connectionString, function(err, client, done) {
 //===============================================
 // Get FB application access token
 // php version $appsecret_proof= hash_hmac('sha256', $access_token, $app_secret); 
+// ### This launched straight away...
 
 FB.api('oauth/access_token', {
     client_id: 'app_id',
@@ -98,18 +97,6 @@ FB.api('oauth/access_token', {
     var accessToken = res.access_token;
 });
 */
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //=====================================================================
@@ -160,43 +147,6 @@ pg.connect(connectionString, function(err, client, done) {
 });
 }};
 
-
-
-/*
-// test curl for authenticating user
-// curl --request POST "localhost:5000/user" --data "userId=Matt&password=stuff"
-app.post('/user', function(req,res){
- 
-//ref RFC2831 Digest SASL Authentication for steps to implement
-//  NB: not a great security protocol, but gets basic securtity in place that can be upgraded later.
-//  using qop = 'auth'
-//  1. User has not recently authenticated
-//  2. User has already authenticated and knows {userId, realm, qop and nonce}
-
-  var error;
-  console.log("Authenticating user.")
-  if(req.body.userId == null || req.body.password == null){
-    error = "No user or password supplied.";
-  }else{
-    for (i in users){
-      //console.log("userId : " + users[i].userId);
-      //console.log("password : " + users[i].password);
-      if(req.body.userId == users[i].userId && req.body.password == users[i].password){
-        var success = "Supplied user and password match.";
-        console.log(success);
-        res.send(200, success);
-			  return;
-      }
-    }
-  }
-
-  var error = error || "Supplied user and password failed.";
-  console.log(error);
-  res = setAuthenticateResponse(res)
-  res.send(401, error); // 401 Unauthorized
-});
-*/
-/*
 exports.setResponse = function(res){
   // Challenge Digest scheme is...
   //   source http://technet.microsoft.com/en-us/library/cc780170%28v=ws.10%29.aspx
@@ -236,8 +186,8 @@ ref RFC2831 Digest SASL Authentication for steps to implement
   using qop = 'auth'
   1. User has not recently authenticated
   2. User has already authenticated and knows {userId, realm, qop and nonce}
-*/
-/*
+
+
   var error;
   console.log("Authenticating user.")
   if(req.body.userId == null || req.body.password == null){
