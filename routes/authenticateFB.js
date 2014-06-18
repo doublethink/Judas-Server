@@ -78,7 +78,8 @@ exports.loginCallback = function (req, res, next) {
                     return res.redirect('/');
                 });
             } else {
-                console.log('MATT log access_token---> '+result.acess_token);
+                console.log('MATT log access_token---> '+req.session.access_token);
+                console.log('MATT log expires---> '+req.session.expires);
                 return res.redirect('/');
             }
         }
