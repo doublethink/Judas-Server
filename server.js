@@ -22,11 +22,11 @@ app.engine('html', require('ejs').renderFile);
 
 app.use(logfmt.requestLogger());
 app.use(bodyParser());
-//app.use(express.static(__dirname + '/views'));
+app.use(express.static(__dirname + '/views'));
 
-//if(!config.facebook.appId || !config.facebook.appSecret) {
-//    throw new Error('facebook appId and appSecret required in config.js');
-//}
+if(!config.facebook.appId || !config.facebook.appSecret) {
+    throw new Error('facebook appId and appSecret required in config.js');
+}
 
 //=============================
 // routing
