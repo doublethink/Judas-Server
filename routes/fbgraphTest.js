@@ -4,7 +4,7 @@
 
 var express   = require('express')
   , graph     = require('fbgraph')
-  , app       = module.exports = express.createServer()
+//  , app       = module.exports = express.createServer()
   , config = require('../config');
 
 // this should really be in a config file!
