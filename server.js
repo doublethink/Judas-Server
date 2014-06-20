@@ -54,6 +54,24 @@ app.get( '/logout',                         authenticateFB.logout);
 app.post('/fbtoken_in',                   auth.fbtoken_in);
 app.post('/fbtoken_out',                  auth.fbtoken_out);
 
+var graph     = require('fbgraph');
+// this should really be in a config file!
+var conf = {
+    client_id:      config.facebook.appId
+  , client_secret:  config.facebook.appSecret
+  , scope:          config.facebook.scope
+  , redirect_uri:   config.facebook.redirectUri
+};
+
+var wallPost = {
+  message: "I'm gonna come at you like a spider monkey, chip!"
+};
+
+graph.post("/feed", wallPost, function(err, res) {
+  // returns the post id
+  console.log(res); // { id: xxxxx}
+});
+
 //=============================
 // tests
 app.get('/test',                        testURI.test);

@@ -70,14 +70,6 @@ exports.login = function(req, res) {
     res.redirect('matt.html');
   });
 
-var wallPost = {
-  message: "I'm gonna come at you like a spider monkey, chip!"
-};
-
-graph.post("/feed", wallPost, function(err, res) {
-  // returns the post id
-  console.log(res); // { id: xxxxx}
-});
 
 };
 
