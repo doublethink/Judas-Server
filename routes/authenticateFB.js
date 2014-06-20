@@ -72,9 +72,8 @@ exports.loginCallback = function (req, res, next) {
                 console.log('MATT log parameters---> '+parameters);
                 parameters.access_token = req.session.access_token;
 
-                console.log(parameters);
-
-                FB.api('/me/' + config.facebook.appNamespace +':eat', 'post', parameters , function (result) {
+                  FB.api('/me/feed', post, { "message" : "Hello world"}, function(result){
+//                FB.api('/me/' + config.facebook.appNamespace +':eat', 'post', parameters , function (result) {
                     console.log(result);
                     if(!result || result.error) {
                         return res.send(500, result || 'error');
@@ -86,6 +85,9 @@ exports.loginCallback = function (req, res, next) {
             } else {
                 console.log('MATT log access_token---> '+req.session.access_token);
                 console.log('MATT log expires---> '+req.session.expires);
+                // save the access_token
+                res.json({authResponse : req.session.access_token});
+
                 return res.redirect('/');
             }
         }
@@ -93,6 +95,7 @@ exports.loginCallback = function (req, res, next) {
 };
 
 exports.logout = function (req, res) {
+    console.log('MATT log note---> logout');
     req.session = null; // clear session
     res.redirect('/');
 };

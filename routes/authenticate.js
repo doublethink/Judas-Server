@@ -64,7 +64,7 @@ pg.connect(connectionString, function(err, client, done) {
   client.query(sql_insert);
   query = client.query('SELECT count(*) FROM '+USERDB);
 
-  // get most recent inserts id based on row count
+  // get most the id based on count
   query.on('row', function(row, result){
     insertId = row.count;
   });
