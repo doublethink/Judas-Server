@@ -67,7 +67,7 @@ exports.login = function(req, res) {
     , "client_secret":  conf.client_secret
     , "code":           req.query.code
   }, function (err, facebookRes) {
-    res.redirect('/UserHasLoggedIn');
+    res.redirect('matt.html');
   });
 
 
@@ -76,7 +76,7 @@ exports.login = function(req, res) {
 
 // user gets sent here after being authorized
 exports.loginCallback = function(req, res) {
-  res.render("index", { title: "Logged In" });
+  res.render("index.html", { title: "Logged In" });
 };
 
 
