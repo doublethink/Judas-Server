@@ -69,7 +69,7 @@ exports.loginCallback = function (req, res, next) {
 
             if(req.query.state) {
                 var parameters = JSON.parse(req.query.state);
-                console.log('MATT log parameters---> 'parameters);
+                console.log('MATT log parameters---> '+parameters);
                 parameters.access_token = req.session.access_token;
 
                 console.log(parameters);
