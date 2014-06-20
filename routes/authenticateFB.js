@@ -18,11 +18,13 @@ exports.index = function(req, res) {
     if(!req.session){ req.session = {"access_token": ""};}
     var accessToken = req.session.access_token;
     if(!accessToken) {
+        console.log('MATT log note---> need access_token');
         res.render('../views/testFBlogin.html', {
             title: 'Express',
             loginUrl: FB.getLoginUrl({ scope: 'user_about_me' })
         });
     } else {
+        console.log('MATT log note---> got an access_token');
         res.render('../views/index.html');
     }
 };
@@ -30,6 +32,7 @@ exports.index = function(req, res) {
 exports.loginCallback = function (req, res, next) {
     if(!req.session){ req.session = {"access_token": ""};}
     var code = req.query.code;
+    console.log('MATT log loginCallBack code ---> '+code);
 
     if(req.query.error) {
         // user might have disallowed the app
@@ -40,6 +43,7 @@ exports.loginCallback = function (req, res, next) {
 
     Step(
         function exchangeCodeForAccessToken() {
+            console.log('MATT log note---> exchangeCodeForAccessToken');
             FB.napi('oauth/access_token', {
                 client_id: FB.options('appId'),
                 client_secret: FB.options('appSecret'),
@@ -49,6 +53,7 @@ exports.loginCallback = function (req, res, next) {
         },
         function extendAccessToken(err, result) {
             if(err) throw(err);
+            console.log('MATT log note---> extendAccessToken');
             FB.napi('oauth/access_token', {
                 client_id: FB.options('appId'),
                 client_secret: FB.options('appSecret'),
@@ -64,6 +69,7 @@ exports.loginCallback = function (req, res, next) {
 
             if(req.query.state) {
                 var parameters = JSON.parse(req.query.state);
+                console.log('MATT log parameters---> 'parameters);
                 parameters.access_token = req.session.access_token;
 
                 console.log(parameters);
