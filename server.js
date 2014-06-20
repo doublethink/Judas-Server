@@ -15,7 +15,8 @@ var testURI =     require('./routes/testURI')
   , config =      require('./config')
   , auth   =            require('./routes/authenticate')
   , authenticateFB = require('./routes/authenticateFB')
-  , pests =       require('./routes/pestsdb');
+  , pests =       require('./routes/pestsdb')
+  , graph =       require('./routes/fbgraphTest');
 
 var app = express();
 app.set('views', __dirname + '/views'); // TODO I think this is a default - remove?
@@ -46,8 +47,8 @@ app.get('/pestspotted/:user/:pest',         pests.pestspottedUserPest);
 app.get('/pestspotted/:user',               pests.pestspottedUser);
 
 // Facebook stuff
-app.get( '/login',                          fbgraph.login);
-app.get( '/login/callback',                 fbgraph.loginCallback);
+app.get( '/login',                          graph.login);
+app.get( '/login/callback',                 graph.loginCallback);
 app.get( '/logout',                         authenticateFB.logout);
 
 app.post('/fbtoken_in',                   auth.fbtoken_in);
