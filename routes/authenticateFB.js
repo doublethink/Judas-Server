@@ -72,8 +72,8 @@ exports.loginCallback = function (req, res, next) {
                 console.log('MATT log parameters---> '+parameters);
                 parameters.access_token = req.session.access_token;
 
-                  FB.api('/me/feed', 'post', { message : 'Hello Megan'}, function(result){
-//                FB.api('/me/' + config.facebook.appNamespace +':eat', 'post', parameters , function (result) {
+//                FB.api('/me/feed', 'post', { message : 'Hello Megan'}, function(result){
+                FB.api('/me/' + config.facebook.appNamespace +':eat', 'post', parameters , function (result) {
                     console.log(result);
                     if(!result || result.error) {
                         return res.send(500, result || 'error');
@@ -85,6 +85,10 @@ exports.loginCallback = function (req, res, next) {
             } else {
                 console.log('MATT log access_token---> '+req.session.access_token);
                 console.log('MATT log expires---> '+req.session.expires);
+FB.ui({
+  method: 'share',
+  href: 'https://developers.facebook.com/docs/',
+}, function(response){});
                 // save the access_token
                 //res.json({authResponse : req.session.access_token});
 
