@@ -75,7 +75,7 @@ exports.login = function(req, res) {
 
 
 // user gets sent here after being authorized
-exports.loginCallback, function(req, res) {
+exports.loginCallback = function(req, res) {
   res.render("index", { title: "Logged In" });
 };
 
