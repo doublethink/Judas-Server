@@ -46,8 +46,8 @@ app.get('/pestspotted/:user/:pest',         pests.pestspottedUserPest);
 app.get('/pestspotted/:user',               pests.pestspottedUser);
 
 // Facebook stuff
-app.get( '/login',                          authenticateFB.index);
-app.get( '/login/callback',                 authenticateFB.loginCallback);
+app.get( '/login',                          fbgraph.login);
+app.get( '/login/callback',                 fbgraph.loginCallback);
 app.get( '/logout',                         authenticateFB.logout);
 
 app.post('/fbtoken_in',                   auth.fbtoken_in);

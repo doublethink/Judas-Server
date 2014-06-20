@@ -12,6 +12,7 @@ config.facebook = {
     appId: process.env.FACEBOOK_APPID || '724664727600591',
     appSecret: process.env.FACEBOOK_APPSECRET || '68914e65743a43fae4fae9a258920c0e',
     appNamespace: process.env.FACEBOOK_APPNAMESPACE || 'snappest',
+    scope: 'email, user_about_me, user_birthday, user_location, publish_stream',
     redirectUri: process.env.FACEBOOK_REDIRECTURI || config.rootUrl + 'login/callback'
 };
 
