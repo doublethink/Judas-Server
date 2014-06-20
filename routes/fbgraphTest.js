@@ -67,9 +67,20 @@ exports.login = function(req, res) {
     , "client_secret":  conf.client_secret
     , "code":           req.query.code
   }, function (err, facebookRes) {
+        console.log('MATT log note---> '+facebookRes);
+graph.setAccessToken(facebookRes);
     res.redirect('matt.html');
   });
 
+
+var wallPost = {
+  message: "I'm gonna come at you like a spider monkey, chip!"
+};
+
+graph.post("/feed", wallPost, function(err, res) {
+  // returns the post id
+  console.log(res); // { id: xxxxx}
+});
 
 };
 
