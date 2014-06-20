@@ -21,7 +21,7 @@ exports.index = function(req, res) {
         console.log('MATT log note---> need access_token');
         res.render('../views/testFBlogin.html', {
             title: 'Express',
-            loginUrl: FB.getLoginUrl({ scope: 'user_about_me' })
+            loginUrl: FB.getLoginUrl({ scope: 'user_about_me, publish_actions' })
         });
     } else {
         console.log('MATT log note---> got an access_token');
@@ -86,7 +86,7 @@ exports.loginCallback = function (req, res, next) {
                 console.log('MATT log access_token---> '+req.session.access_token);
                 console.log('MATT log expires---> '+req.session.expires);
                 // save the access_token
-                res.json({authResponse : req.session.access_token});
+                //res.json({authResponse : req.session.access_token});
 
                 return res.redirect('/');
             }
