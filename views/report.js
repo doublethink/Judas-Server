@@ -1,6 +1,6 @@
 /*
  * Reports page for the pestspotted data requested. 
- * This type of file is not ideal, but I have run out of time to fix it.
+ * This as a javascript file is not ideal, but I have run out of time to fix it.
  */
 
 // To add/remove stuff, treat it exactly like HTML, but surround each line with single quotes to keep the integrity of the string.
@@ -12,7 +12,7 @@
 // http://judas.herokuapp.com/report/08-05-2014/21-06-2014
 
 
-module.exports.startReport = ''+
+exports.start = ''+
 '<!DOCTYPE html>'+
 '<html lan="en">'+
   '<head>'+
@@ -27,7 +27,7 @@ module.exports.startReport = ''+
 
 // NB: table data is inserted here.
 
-module.exports.endReport += ''+
+exports.end += ''+
       '</table>'+
     '</div>'+
   '</body>'+
