@@ -18,7 +18,8 @@ var pg =                require('pg')
 
 var config =            require('../config')
   , auth   =            require('./authenticate')
-  , dbhelp =          require('./pestsdbHelpers');
+  , dbhelp =          require('./pestsdbHelpers')
+  , report =          require('../views/report');
 
 var DATABASE =          config.DATABASE;
 
@@ -126,6 +127,7 @@ function formatDate(date){
     return date;
 }
 
+
 exports.report = function(req, res){
   console.log("MATT log note---> get pestspotted/:date");
 if(auth.admin(req)){
@@ -170,33 +172,17 @@ pg.connect(connectionString, function(err, client, done) {
     query.on('end', function(row, result){
       console.log("MATT log note---> size : " + rows.length);
       res.set({"Cache-Control": "no-store"});
-      var str = ''+
-        '<!DOCTYPE html>'+
-        '<html lan="en">'+
-          '<head>'+
-            '<meta charset="utf-8" />'+
-            '<title>snap.pest Pest Repost</title>'+
-          '</head><body>'+
-            '<p>Report of pest sightings over the period selected.</P>'+
-            '<div class="container">'+
-              '<table>'+
-                '<tr><th>Date</th><th>Pest</th><th>Latitude</th><th>Longitude</th></tr>';
 
-        for(i = 0; i < rows.length; i++){
-          var json = JSON.parse(rows[i]);
-          str += '<tr><td>'+
-              json.date.substr(0, 15)+'</td><td>'+
-              json.pest+'</td><td>'+
-              json.latitude.substr(0, 7)+'</td><td>'+
-              json.longitude.substr(0, 7)+'</td></tr>';
-
-        }
-
-      str += '</table></div></body></html>';
-//      res.send(200, str);
-      res.render('report.html', function(err, html){
-        // ...
-      });
+      var tableContents = "";
+      for(i = 0; i < rows.length; i++){
+        var json = JSON.parse(rows[i]);
+        tableContents += '<tr><td>'+
+          json.date.substr(0, 15)+'</td><td>'+
+          json.pest+'</td><td>'+
+          json.latitude.substr(0, 7)+'</td><td>'+
+          json.longitude.substr(0, 7)+'</td></tr>';
+      }
+      res.send(200, startReport + tableContents + endReport);
       done();
     });
   }
