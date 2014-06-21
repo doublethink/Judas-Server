@@ -20,9 +20,9 @@
 
     <form id="frm1" action="report_builder" onKeyPress="return checkSubmit(event)">
       <table row=1><tr>
-        <td>From date: </td><td><input type="text" onfocus="if(this.value == 'value') { this.value = ''; }" name="from" value="1-5-2014" ></td>
+        <td>From date: </td><td><input type="text" onfocus="if(this.value == '1-5-2014') { this.value = ''; }" name="from" value="1-5-2014" ></td>
         </tr><tr>
-        <td>Last date: </td><td><input type="text" onfocus="if(this.value == 'value') { this.value = ''; }" name="to" value="30-6-2014"></td>
+        <td>Last date: </td><td><input type="text" onfocus="if(this.value == '30-6-2014') { this.value = ''; }" name="to" value="30-6-2014"></td>
         </tr><tr>
         <td /><td><input type="button" onclick="submitMe()" value="Submit"></td>
       </table>
