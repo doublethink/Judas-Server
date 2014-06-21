@@ -23,7 +23,7 @@ exports.test = function(req, res){
 exports.fbFeed = function(req, res){
   console.log('MATT log notes---> ~/fbFeed');
   var body = 'My first post using facebook-node-sdk';
-  FB.api('me/feed', 'post', { message: body}, function (res) {
+  FB.api('me/feed', 'post', { "message": body}, function (res) {
     if(!res || res.error) {
       console.log(!res ? 'error occurred' : res.error);
       return;
