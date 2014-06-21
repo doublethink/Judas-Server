@@ -186,11 +186,12 @@ pg.connect(connectionString, function(err, client, done) {
 //    if(!first){ str += ', ' };
 
         for(i = 0; i < rows.length; i++){
+          var json = JSON.parse(rows[i]);
           str += '<tr><td>'+
-                 rows[i]+'</td><td>'+
-                 JSON.stringify(rows[i].pest)+'</td><td>'+
-                 rows[i].latitude+'</td><td>'+
-                 rows[i].longitude+'</td></tr>';
+                 json.date+'</td><td>'+
+                 json.pest+'</td><td>'+
+                 json.latitude+'</td><td>'+
+                 json.longitude+'</td></tr>';
 
 //          str += '{row : '+(i+1)+', value : '+rows[i] + '}';
 //          first = false;
