@@ -1,15 +1,14 @@
 // NWEN304 Project
 //===================================
 
+// todo list
 // Facebook security
-// increase data returned by get requests, think park managers.
-
-
+// park manager security
+// remove dodgy data from park manager results
 
 var express = require("express")
   , logfmt = require("logfmt")
   , bodyParser = require('body-parser');
-//  , http = require('http') // TODO remove?
 
 var testURI =     require('./routes/testURI')
   , config =      require('./config')
@@ -19,7 +18,7 @@ var testURI =     require('./routes/testURI')
   , graph =       require('./routes/fbgraphTest');
 
 var app = express();
-app.set('views', __dirname + '/views'); // TODO I think this is a default - remove?
+app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
 
 app.use(logfmt.requestLogger());
@@ -34,12 +33,6 @@ if(!config.facebook.appId || !config.facebook.appSecret) {
 // routing
 // add pest to database, returns the id
 app.post('/pestspotted',                    pests.pestspotted);
-// Return list of all pests spotted.
-app.get('/pestspotted/all',                 pests.pestspottedAll);
-app.get('/pestspotted/all/:json',           pests.pestspottedAllJson);
-// get all pests logged for this day, day format 24-05-2014
-app.get('/pestspotted_on/:date',            pests.pestspotted_onDate);
-app.get('/pestspotted_on/:date/:json',      pests.pestspotted_onDateJson);
 // total of a specific pest type logged by this user
 app.get('/pestspotted/:user/:pest',         pests.pestspottedUserPest);
 // total noumber of pests logged by this user
@@ -50,17 +43,16 @@ app.get('/report',                          pests.report);
 // get Park Management report
 app.get('/report_builder',                  pests.report_builder);
 
-
 // Facebook stuff
 app.get( '/login',                          graph.login);
 app.get( '/login/callback',                 graph.loginCallback);
 app.get( '/logout',                         authenticateFB.logout);
-
+// getting token from the phone app
 app.post('/fbtoken_in',                   auth.fbtoken_in);
-app.post('/fbtoken_out',                  auth.fbtoken_out);
+//app.post('/fbtoken_out',                  auth.fbtoken_out);
 
-var graph     = require('fbgraph');
-// this should really be in a config file!
+// testing to get fb working... TODO remove once done
+var graph2     = require('fbgraph');
 var conf = {
     client_id:      config.facebook.appId
   , client_secret:  config.facebook.appSecret
@@ -72,7 +64,7 @@ var wallPost = {
   message: "I'm gonna come at you like a spider monkey, chip!"
 };
 
-graph.post("/feed", wallPost, function(err, res) {
+graph2.post("/feed", wallPost, function(err, res) {
   // returns the post id
   console.log(res); // { id: xxxxx}
 });
@@ -91,6 +83,12 @@ app.get('/pests/:id/:s',                testURI.pestsidfound);
 app.get('/db/new',                      testURI.dbnew);
 app.get('/db/visits/i',                 testURI.dbvisitsi);
 app.get('/db/visits',                   testURI.dbvisits);
+// Return list of all pests spotted.
+app.get('/pestspotted/all',                 pests.pestspottedAll);
+app.get('/pestspotted/all/:json',           pests.pestspottedAllJson);
+// get all pests logged for this day, day format 24-05-2014
+app.get('/pestspotted_on/:date',            pests.pestspotted_onDate);
+app.get('/pestspotted_on/:date/:json',      pests.pestspotted_onDateJson);
 
 //======================================
 // server start

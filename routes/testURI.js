@@ -6,8 +6,6 @@
 var config =             require('../config')
   , pg =                 require('pg')
   , connectionString =   process.env.DATABASE_URL;
-//  , client =             new pg.Client(connectionString)
-//  , query;
 
 //client.connect();
 var mydb = "visits";
@@ -163,7 +161,6 @@ exports.dbvisits = function(req, res){
 
     query.on('row', function(row){
       console.log("MATT log note---> query.on row");
- //   if(!row){ return res.send(200, "Database is empty.");}
       rows.push(row.date);
       console.log("MATT log row : " + row.date);
     });

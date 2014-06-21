@@ -11,15 +11,12 @@
 
 
 var pg =                require('pg')
-//  , FB =                require('fb')
-//  , Step =              require('step')
-//  , crypto =            require('crypto')
   , connectionString =  process.env.DATABASE_URL;
 
 var config =            require('../config')
   , auth   =            require('./authenticate')
-  , dbhelp =          require('./pestsdbHelpers')
-  , report =          require('../views/report');
+  , dbhelp =            require('./pestsdbHelpers')
+  , report_builder =    require('../views/report_builder');
 
 var DATABASE =          config.DATABASE;
 
@@ -127,6 +124,8 @@ function formatDate(date){
     return date;
 }
 
+//=================================================
+// Generate park management reports
 exports.report = function(req, res){
   res.sendfile('./views/report.html');
 };
@@ -160,14 +159,19 @@ pg.connect(connectionString, function(err, client, done) {
     console.log("MATT log note---> to's nextday = "+ to);
 
   // conduct search
+    var sql = ''+
+      'SELECT * FROM '+DATABASE+
+      ' WHERE datestamp >= \''+ from +'\''+
+         ' AND datestamp < \''+ to   +'\' ;';
     var rows = [];
-    var query = client.query('SELECT * FROM '+DATABASE+
-        ' WHERE datestamp >= \'' + from + '\''+
-            ' AND datestamp < \''+ to   +'\' ;');
+    var query = client.query(sql);
 
   // build result
     query.on('row', function(row, result){ 
-      rows.push('{\"latitude\" : \"'+row.latitude+'\", \"longitude\" : \"'+row.longitude+'\", \"pest\" : \"'+row.pest+'\", \"date\" : \"'+row.datestamp+'\"}');
+      rows.push('{\"latitude\" : \"'+row.latitude+
+             '\", \"longitude\" : \"'+row.longitude+
+             '\", \"pest\" : \"'+row.pest+
+             '\", \"date\" : \"'+row.datestamp+'\"}');
       console.log('MATT log notes---> added : '+ rows[rows.length-1]);
     });
 
@@ -186,11 +190,9 @@ pg.connect(connectionString, function(err, client, done) {
           json.longitude.substr(0, 7)+'</td></tr>';
       }
       done();
-      res.send(200, report.start + tableContents + report.end);
+      res.send(200, report_builder.start + tableContents + report_builder.end);
     });
   }
-
-
 });}
 };
 
