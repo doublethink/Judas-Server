@@ -45,7 +45,9 @@ app.get('/pestspotted/:user/:pest',         pests.pestspottedUserPest);
 // total noumber of pests logged by this user
 app.get('/pestspotted/:user',               pests.pestspottedUser);
 // get Park Management report
-app.get('/report/:from/:to',                pests.report);
+app.get('/report_builder',                  pests.report);
+// get park management report date selector
+app.get('/report',                           'report');
 
 
 // Facebook stuff
