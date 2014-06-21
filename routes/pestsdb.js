@@ -128,7 +128,7 @@ function formatDate(date){
 }
 
 exports.report = function(req, res){
-  res.sendfile('../views/report.html');
+  res.sendfile('./views/report.html');
 };
 
 exports.report_builder = function(req, res){
