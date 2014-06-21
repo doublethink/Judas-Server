@@ -7,6 +7,9 @@
       function submitMe() {
         document.getElementById("frm1").submit();
       }
+      function checkSubmit(e){
+        if(e && e.keyCode == 13) { document.forms[0].submit(); }
+      }
     </script>
   </head>
   <body>
@@ -15,9 +18,9 @@
 
     <p>Enter dates in the fields, then click "Submit" to submit the form:</p>
 
-    <form id="frm1" action="report_builder">
+    <form id="frm1" action="report_builder" onKeyPress="return checkSubmit(event)">
       <table row=1><tr>
-        <td>From date: </td><td><input type="text" name="from" value="1-5-2014"></td>
+        <td>From date: </td><td><input type="text" name="from" value="1-5-2014" autofocus></td>
         </tr><tr>
         <td>Last date: </td><td><input type="text" name="to" value="30-6-2014"></td>
         </tr><tr>
