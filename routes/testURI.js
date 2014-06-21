@@ -33,12 +33,12 @@ exports.fbToken = function(req, res){
       }
 
     accessToken = res.access_token;
+    FB.setAccessToken(access_token);
 });
 };
 
 // ~/fbFeed
 // testing facebook posts.
-FB.setAccessToken('access_token');
 
 exports.fbFeed = function(req, res){
   console.log('MATT log notes---> ~/fbFeed');
