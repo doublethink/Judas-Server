@@ -189,10 +189,10 @@ pg.connect(connectionString, function(err, client, done) {
 str += rows[i];
           var json = JSON.parse(rows[i]);
           str += '<tr><td>'+
-                 json.date+'</td><td>'+
+                 json.date.substr(0, 15)+'</td><td>'+
                  json.pest+'</td><td>'+
-                 json.latitude+'</td><td>'+
-                 json.longitude+'</td></tr>';
+                 json.latitude.substr(0, 7)+'</td><td>'+
+                 json.longitude.substr(0, 7)+'</td></tr>';
 
 //          str += '{row : '+(i+1)+', value : '+rows[i] + '}';
 //          first = false;
