@@ -162,7 +162,7 @@ pg.connect(connectionString, function(err, client, done) {
 
   // build result
     query.on('row', function(row, result){ 
-      rows.push('{"userid" : "'+row.uid+'", "pest" : "'+row.pest+'", "date" : "'+row.datestamp+'"}');
+      rows.push('{\"userid\" : \"'+row.uid+'\", \"pest\" : \"'+row.pest+'\", \"date\" : \"'+row.datestamp+'\"}');
       console.log('MATT log notes---> added : '+ rows[rows.length-1]);
     });
 
