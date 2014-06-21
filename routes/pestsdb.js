@@ -170,22 +170,34 @@ pg.connect(connectionString, function(err, client, done) {
     query.on('end', function(row, result){
       console.log("MATT log note---> size : " + rows.length);
       res.set({"Cache-Control": "no-store"});
-      var str = "";
-      if(req.param('json') == "json"){
+      var str = ''+
+        '<!DOCTYPE html>'+
+        '<html lan="en">'+
+          '<head>'+
+            '<meta charset="utf-8" />'+
+            '<title>snap.pest Pest Repost</title>'+
+          '</head><body>'+
+            '<p>Report of pest sightings over the period selected.</P>'+
+            '<div class="container">'+
+              '<table>'+
+                '<tr><th>Date</th><th>Pest</th><th>Latitude</th><th>Longitude</th></tr>;
 
-        var first = true;
+//        var first = true;
+//    if(!first){ str += ', ' };
+
         for(i = 0; i < rows.length; i++){
-          if(!first){ str += ', ' };
-          str += '{row : '+(i+1)+', value : '+rows[i] + '}';
-          first = false;
+          str += '<tr><td>'+
+                 rows[i].datestamp+'</td><td>'+
+                 rows[i].pest+'</td><td>'+
+                 rows[i].latitude+'</td><td>'+
+                 rows[i].longitude+'</td></tr>';
+
+//          str += '{row : '+(i+1)+', value : '+rows[i] + '}';
+//          first = false;
         }
-        res.json('{packet : [' + str + ']}');
-      } else {
-        for(i = 0; i < rows.length; i++){
-          str += "row : "+(i+1)+", value : "+rows[i] + "<br>";
-        }
-        res.send("pests on this day :<br>" + str +"There are " + rows.length + " rows.");
-      }
+
+      str += '</table></div></body></html>';
+      res.send(200, str);
       done();
     });
   }
