@@ -20,11 +20,11 @@
 
     <form id="frm1" action="report_builder" onKeyPress="return checkSubmit(event)">
       <table row=1><tr>
-        <td>From date: </td><td><input id="txt1" type="text" name="from" value="1-5-2014" onfocus="if(this.value == 'value') { this.value = ''; }"></td>
+        <td>From date: </td><td><input type="text" onfocus="if(this.value == 'value') { this.value = ''; }" name="from" value="1-5-2014" ></td>
         </tr><tr>
-        <td>Last date: </td><td><input id="txt2" type="text" name="to" value="30-6-2014" onfocus="if(this.value == 'value') { this.value = ''; }"></td>
+        <td>Last date: </td><td><input type="text" onfocus="if(this.value == 'value') { this.value = ''; }" name="to" value="30-6-2014"></td>
         </tr><tr>
-        <td /><td><input type="button" onclick="submitMe()" value="Submit" autofocus></td>
+        <td /><td><input type="button" onclick="submitMe()" value="Submit"></td>
       </table>
     </form>
 
