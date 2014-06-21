@@ -194,7 +194,7 @@ pg.connect(connectionString, function(err, client, done) {
 
       str += '</table></div></body></html>';
 //      res.send(200, str);
-      res.render('report.html', {"rows" : rows }, function(err, html){
+      res.render('report.html', { rows : "matt was here" }, function(err, html){
         // ...
       });
       done();
