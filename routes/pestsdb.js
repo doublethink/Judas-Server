@@ -182,8 +182,8 @@ pg.connect(connectionString, function(err, client, done) {
           json.latitude.substr(0, 7)+'</td><td>'+
           json.longitude.substr(0, 7)+'</td></tr>';
       }
-      res.send(200, report.start + tableContents + report.end);
       done();
+      res.send(200, report.start + tableContents + report.end);
     });
   }
 

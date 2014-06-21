@@ -19,7 +19,7 @@ exports.start = ''+
     '<meta charset="utf-8" />'+
     '<title>Pest Repost</title>'+
   '</head>'+
-  '<<body>'+
+  '<body>'+
     '<p>Report of pest sightings over the period selected.</P>'+
     '<div class="container">'+
       '<table>'+
@@ -27,7 +27,7 @@ exports.start = ''+
 
 // NB: table data is inserted here.
 
-exports.end += ''+
+exports.end = ''+
       '</table>'+
     '</div>'+
   '</body>'+
