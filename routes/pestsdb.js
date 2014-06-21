@@ -182,24 +182,21 @@ pg.connect(connectionString, function(err, client, done) {
               '<table>'+
                 '<tr><th>Date</th><th>Pest</th><th>Latitude</th><th>Longitude</th></tr>';
 
-//        var first = true;
-//    if(!first){ str += ', ' };
-
         for(i = 0; i < rows.length; i++){
-str += rows[i];
           var json = JSON.parse(rows[i]);
           str += '<tr><td>'+
-                 json.date.substr(0, 15)+'</td><td>'+
-                 json.pest+'</td><td>'+
-                 json.latitude.substr(0, 7)+'</td><td>'+
-                 json.longitude.substr(0, 7)+'</td></tr>';
+              json.date.substr(0, 15)+'</td><td>'+
+              json.pest+'</td><td>'+
+              json.latitude.substr(0, 7)+'</td><td>'+
+              json.longitude.substr(0, 7)+'</td></tr>';
 
-//          str += '{row : '+(i+1)+', value : '+rows[i] + '}';
-//          first = false;
         }
 
       str += '</table></div></body></html>';
-      res.send(200, str);
+//      res.send(200, str);
+      res.render('report', {"rows" : rows }, function(err, html){
+        // ...
+      });
       done();
     });
   }
