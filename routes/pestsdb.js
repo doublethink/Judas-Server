@@ -187,10 +187,10 @@ pg.connect(connectionString, function(err, client, done) {
 
         for(i = 0; i < rows.length; i++){
           str += '<tr><td>'+
-                 rows[i].datestamp+'</td><td>'+
-                 rows[i].pest+'</td><td>'+
-                 rows[i].latitude+'</td><td>'+
-                 rows[i].longitude+'</td></tr>';
+                 rows[i].datestamp.stringify()+'</td><td>'+
+                 rows[i].pest.stringify()+'</td><td>'+
+                 rows[i].latitude.stringify()+'</td><td>'+
+                 rows[i].longitude.stringify()+'</td></tr>';
 
 //          str += '{row : '+(i+1)+', value : '+rows[i] + '}';
 //          first = false;
