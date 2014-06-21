@@ -134,7 +134,7 @@ if(auth.admin(req)){
   console.log('MATT log notes---> Passed authentication.');
 pg.connect(connectionString, function(err, client, done) {
 
-  if(!dbhelp.validateDate(req.param('from')) && !dbhelp.validateDate(req.param('to')) ){
+  if(!(dbhelp.validateDate(req.param('from')) && dbhelp.validateDate(req.param('to'))) ){
  	return res.send(400, "Invalid date format. Use DD-MM-YYYY."); // 400 Bad Request, syntax.
   } else {
     console.log("MATT log note---> date validated.");

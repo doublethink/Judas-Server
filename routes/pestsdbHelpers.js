@@ -6,7 +6,7 @@
 exports.validateDate = function(d){
   var date = new String(d);
   // sufficient for now, would need upgrading in production. Leap years, variable days in month.
-  var reg = new RegExp('(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.](19|20)[0-9][0-9]');
+  var reg = new RegExp('(0[1-9]|[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|[1-9]|1[012])[-/.](19|20)[0-9][0-9]');
 
   var test = reg.test(date);
     console.log("MATT log note---> date regex result is; " + test);
