@@ -138,8 +138,8 @@ pg.connect(connectionString, function(err, client, done) {
     console.log("MATT log note---> date validated.");
 
   // format date to match db format
-    var from = formatDate(req.param('from');
-    var to =   formatDate(req.param('to');
+    var from = formatDate(req.param('from'));
+    var to =   formatDate(req.param('to'));
 
   // calc next day
     var nextDay = new Date(to);
@@ -212,7 +212,7 @@ pg.connect(connectionString, function(err, client, done) {
     console.log("MATT log note---> date validated.");
 
   // format date to match db format
-    var date = formatDate(req.param('date');
+    var date = formatDate(req.param('date'));
 
   // calc next day
     var nextDay = new Date(date);
