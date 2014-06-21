@@ -32,7 +32,6 @@ if(!config.facebook.appId || !config.facebook.appSecret) {
 
 //=============================
 // routing
-//app.get('/',                               './views/index');
 // add pest to database, returns the id
 app.post('/pestspotted',                    pests.pestspotted);
 // Return list of all pests spotted.
@@ -45,6 +44,9 @@ app.get('/pestspotted_on/:date/:json',      pests.pestspotted_onDateJson);
 app.get('/pestspotted/:user/:pest',         pests.pestspottedUserPest);
 // total noumber of pests logged by this user
 app.get('/pestspotted/:user',               pests.pestspottedUser);
+// get Park Management report
+app.get('/report/:from/:to',                pests.report);
+
 
 // Facebook stuff
 app.get( '/login',                          graph.login);

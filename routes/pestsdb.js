@@ -119,6 +119,80 @@ pg.connect(connectionString, function(err, client, done) {
 });}
 };
 
+function formatDate(date){
+    var split = req.param('date').split('-').reverse();
+    var date = split.toString().replace(",","-").replace(",","-"); // odd, needs replace twice
+    console.log("MATT log note---> date = "+ date);
+    return date;
+}
+
+exports.report = function(req, res){
+  console.log("MATT log note---> get pestspotted/:date");
+if(auth.admin(req)){
+  console.log('MATT log notes---> Passed authentication.');
+pg.connect(connectionString, function(err, client, done) {
+
+  if(!dbhelp.validateDate(req.param('from') && !dbhelp.validateDate(req.param('to'))){
+ 	return res.send(400, "Invalid date format. Use DD-MM-YYYY."); // 400 Bad Request, syntax.
+  } else {
+    console.log("MATT log note---> date validated.");
+
+  // format date to match db format
+    var from = formatDate(req.param('from');
+    var to =   formatDate(req.param('to');
+
+  // calc next day
+    var nextDay = new Date(to);
+    nextDay.setDate(nextDay.getDate()+1);
+    console.log("MATT log note---> to's nextDay = "+ nextDay);
+
+  // create next day string for db search
+    to = ""+nextDay.getFullYear();
+    var month = new String(nextDay.getMonth()+1);
+    to += month.length == 2 ? "-"+t : "-0"+t;
+    var day = new String(nextDay.getDate());
+    to += day.length == 2 ? "-"+t : "-0"+t;
+    console.log("MATT log note---> to's nextday = "+ to);
+
+  // conduct search
+    var rows = [];
+    var query = client.query('SELECT uid, pest, datestamp FROM '+DATABASE+
+        ' WHERE datestamp >= \'' + from + '\''+
+            ' AND datestamp < \''+ to   +'\' ;');
+
+  // build result
+    query.on('row', function(row, result){ 
+      rows.push('{userid : '+row.uid+', pest : '+row.pest+', date : '+row.datestamp+'}');
+      console.log('MATT log notes---> added : '+ rows[rows.length-1]);
+    });
+
+  // send it back to client
+    query.on('end', function(row, result){
+      console.log("MATT log note---> size : " + rows.length);
+      res.set({"Cache-Control": "no-store"});
+      var str = "";
+      if(req.param('json') == "json"){
+
+        var first = true;
+        for(i = 0; i < rows.length; i++){
+          if(!first){ str += ', ' };
+          str += '{row : '+(i+1)+', value : '+rows[i] + '}';
+          first = false;
+        }
+        res.json('{packet : [' + str + ']}');
+      } else {
+        for(i = 0; i < rows.length; i++){
+          str += "row : "+(i+1)+", value : "+rows[i] + "<br>";
+        }
+        res.send("pests on this day :<br>" + str +"There are " + rows.length + " rows.");
+      }
+      done();
+    });
+  }
+
+
+});}
+};
 
 exports.pestspotted_onDate = function(req, res){
   res.redirect('/pestspotted_on/' + req.param('date')+'/text');
@@ -138,9 +212,7 @@ pg.connect(connectionString, function(err, client, done) {
     console.log("MATT log note---> date validated.");
 
   // format date to match db format
-    var split = req.param('date').split('-').reverse();
-    var date = split.toString().replace(",","-").replace(",","-"); // odd, needs replace twice
-    console.log("MATT log note---> date = "+ date);
+    var date = formatDate(req.param('date');
 
   // calc next day
     var nextDay = new Date(date);
