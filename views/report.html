@@ -8,7 +8,9 @@
         document.getElementById("frm1").submit();
       }
       function checkSubmit(e){
-        if(e && e.keyCode == 13) { document.forms[0].submit(); }
+        if(e && e.keyCode == 13 &&
+            document.getElementById("txt1") &&
+            document.getElementById("txt2")) { document.forms[0].submit(); }
       }
     </script>
   </head>
@@ -20,9 +22,9 @@
 
     <form id="frm1" action="report_builder" onKeyPress="return checkSubmit(event)">
       <table row=1><tr>
-        <td>From date: </td><td><input type="text" name="from" value="1-5-2014" autofocus></td>
+        <td>From date: </td><td><input id="txt1" type="text" name="from" value="1-5-2014" autofocus></td>
         </tr><tr>
-        <td>Last date: </td><td><input type="text" name="to" value="30-6-2014"></td>
+        <td>Last date: </td><td><input id="txt2" type="text" name="to" value="30-6-2014"></td>
         </tr><tr>
         <td /><td><input type="button" onclick="submitMe()" value="Submit"></td>
       </table>
