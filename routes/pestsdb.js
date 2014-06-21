@@ -188,7 +188,7 @@ pg.connect(connectionString, function(err, client, done) {
         for(i = 0; i < rows.length; i++){
           str += '<tr><td>'+
                  rows[i]+'</td><td>'+
-                 rows[i].pest+'</td><td>'+
+                 JSON.stringify(rows[i].pest)+'</td><td>'+
                  rows[i].latitude+'</td><td>'+
                  rows[i].longitude+'</td></tr>';
 
