@@ -141,17 +141,17 @@ pg.connect(connectionString, function(err, client, done) {
     var from = formatDate(req.param('from'));
     var to =   formatDate(req.param('to'));
 
-  // calc next day
+  // add a day to 'to', as search is up to (to+1) 00:00:00
     var nextDay = new Date(to);
     nextDay.setDate(nextDay.getDate()+1);
     console.log("MATT log note---> to's nextDay = "+ nextDay);
 
-  // create next day string for db search
+  // create new 'to' string for db search
     to = ""+nextDay.getFullYear();
     var month = new String(nextDay.getMonth()+1);
-    to += month.length == 2 ? "-"+t : "-0"+t;
+    to += month.length == 2 ? "-"+month : "-0"+month;
     var day = new String(nextDay.getDate());
-    to += day.length == 2 ? "-"+t : "-0"+t;
+    to += day.length == 2 ? "-"+day : "-0"+day;
     console.log("MATT log note---> to's nextday = "+ to);
 
   // conduct search
