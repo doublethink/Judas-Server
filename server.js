@@ -64,7 +64,7 @@ var wallPost = {
   message: "I'm gonna come at you like a spider monkey, chip!"
 };
 
-graph2.post("/feed", wallPost, function(err, res) {
+graph2.get("/feed", wallPost, function(err, res) {
   // returns the post id
   console.log(res); // { id: xxxxx}
 });
@@ -84,8 +84,8 @@ app.get('/db/new',                      testURI.dbnew);
 app.get('/db/visits/i',                 testURI.dbvisitsi);
 app.get('/db/visits',                   testURI.dbvisits);
 // Return list of all pests spotted.
-app.get('/pestspotted/all',                 pests.pestspottedAll);
-app.get('/pestspotted/all/:json',           pests.pestspottedAllJson);
+app.get('/pestspotted_all',                 pests.pestspottedAll);
+app.get('/pestspotted_all/:json',           pests.pestspottedAllJson);
 // get all pests logged for this day, day format 24-05-2014
 app.get('/pestspotted_on/:date',            pests.pestspotted_onDate);
 app.get('/pestspotted_on/:date/:json',      pests.pestspotted_onDateJson);
