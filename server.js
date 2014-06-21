@@ -44,10 +44,11 @@ app.get('/pestspotted_on/:date/:json',      pests.pestspotted_onDateJson);
 app.get('/pestspotted/:user/:pest',         pests.pestspottedUserPest);
 // total noumber of pests logged by this user
 app.get('/pestspotted/:user',               pests.pestspottedUser);
-// get Park Management report
-app.get('/report_builder',                  pests.report);
+
 // get park management report date selector
-app.get('/report',                           'report');
+app.get('/report',                          pests.report);
+// get Park Management report
+app.get('/report_builder',                  pests.report_builder);
 
 
 // Facebook stuff

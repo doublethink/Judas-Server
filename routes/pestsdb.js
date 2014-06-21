@@ -127,8 +127,11 @@ function formatDate(date){
     return date;
 }
 
-
 exports.report = function(req, res){
+  res.sendfile('../views/report.html');
+};
+
+exports.report_builder = function(req, res){
   console.log("MATT log note---> get pestspotted/:date");
 if(auth.admin(req)){
   console.log('MATT log notes---> Passed authentication.');
