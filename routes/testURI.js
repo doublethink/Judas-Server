@@ -6,7 +6,8 @@
 var config =             require('../config')
   , pg =                 require('pg')
   , connectionString =   process.env.DATABASE_URL
-  , FB =                 require('fb');
+  , FB =                 require('fb')
+  , access_token;
 
 //client.connect();
 var mydb = "visits";
@@ -18,8 +19,27 @@ exports.test = function(req, res){
   res.send('Server responds to \"test\".<br>');
 };
 
+// ~/fbToken
+exports.fbToken = function(req, res){
+  console.log('MATT log notes---> ~/fbToken');
+  FB.api('oauth/access_token', {
+      client_id:      config.facebook.appId,
+      client_secret:  config.facebook.appSecret,
+      grant_type:     'client_credentials'
+  }, function (res) {
+      if(!res || res.error) {
+        console.log(!res ? 'error occurred' : res.error);
+        return;
+      }
+
+    accessToken = res.access_token;
+});
+};
+
 // ~/fbFeed
 // testing facebook posts.
+FB.setAccessToken('access_token');
+
 exports.fbFeed = function(req, res){
   console.log('MATT log notes---> ~/fbFeed');
   var body = 'My first post using facebook-node-sdk';
