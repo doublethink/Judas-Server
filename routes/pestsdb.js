@@ -186,6 +186,7 @@ pg.connect(connectionString, function(err, client, done) {
 //    if(!first){ str += ', ' };
 
         for(i = 0; i < rows.length; i++){
+str += rows[i];
           var json = JSON.parse(rows[i]);
           str += '<tr><td>'+
                  json.date+'</td><td>'+
