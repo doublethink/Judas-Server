@@ -180,7 +180,7 @@ pg.connect(connectionString, function(err, client, done) {
             '<p>Report of pest sightings over the period selected.</P>'+
             '<div class="container">'+
               '<table>'+
-                '<tr><th>Date</th><th>Pest</th><th>Latitude</th><th>Longitude</th></tr>;
+                '<tr><th>Date</th><th>Pest</th><th>Latitude</th><th>Longitude</th></tr>';
 
 //        var first = true;
 //    if(!first){ str += ', ' };
