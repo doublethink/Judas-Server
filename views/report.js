@@ -12,7 +12,7 @@
 // http://judas.herokuapp.com/report/08-05-2014/21-06-2014
 
 
-module.exports.startHTML = ''+
+module.exports.startReport = ''+
 '<!DOCTYPE html>'+
 '<html lan="en">'+
   '<head>'+
@@ -27,7 +27,7 @@ module.exports.startHTML = ''+
 
 // NB: table data is inserted here.
 
-module.exports.endHTML += ''+
+module.exports.endReport += ''+
       '</table>'+
     '</div>'+
   '</body>'+
