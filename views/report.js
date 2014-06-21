@@ -11,6 +11,7 @@
 // http://polar-forest-2324.herokuapp.com/report/04-05-2014/21-06-2014
 // http://judas.herokuapp.com/report/04-05-2014/21-06-2014
 
+// nb: real data may be larger than the dummy data used.
 
 exports.start = ''+
 '<!DOCTYPE html>'+
