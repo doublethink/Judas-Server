@@ -120,8 +120,8 @@ pg.connect(connectionString, function(err, client, done) {
 };
 
 function formatDate(date){
-    var split = req.param('date').split('-').reverse();
-    var date = split.toString().replace(",","-").replace(",","-"); // odd, needs replace twice
+    var split = date.split('-').reverse();
+    date = split.toString().replace(",","-").replace(",","-"); // odd, needs replace twice
     console.log("MATT log note---> date = "+ date);
     return date;
 }
