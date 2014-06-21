@@ -11,10 +11,6 @@ var config =             require('../config')
 //client.connect();
 var mydb = "visits";
 
-
-// NB: have cut n pasted code here, pulled export test functions to the top.
-// rest of file is commented out but kept as a personal node.js reference
-
 // ~/test
 exports.test = function(req, res){
   //...sends text
@@ -25,6 +21,7 @@ exports.test = function(req, res){
 // ~/fbFeed
 // testing facebook posts.
 exports.fbFeed = function(req, res){
+  console.log('MATT log notes---> ~/fbFeed');
   var body = 'My first post using facebook-node-sdk';
   FB.api('me/feed', 'post', { message: body}, function (res) {
     if(!res || res.error) {
@@ -33,6 +30,7 @@ exports.fbFeed = function(req, res){
     }
     console.log('Post Id: ' + res.id);
   });
+  res.send(200, "done...");
 };
 
 // ~/error/:id
