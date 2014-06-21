@@ -156,7 +156,7 @@ pg.connect(connectionString, function(err, client, done) {
 
   // conduct search
     var rows = [];
-    var query = client.query('SELECT uid, pest, datestamp FROM '+DATABASE+
+    var query = client.query('SELECT * FROM '+DATABASE+
         ' WHERE datestamp >= \'' + from + '\''+
             ' AND datestamp < \''+ to   +'\' ;');
 
