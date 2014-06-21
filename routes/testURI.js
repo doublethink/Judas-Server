@@ -5,7 +5,8 @@
 
 var config =             require('../config')
   , pg =                 require('pg')
-  , connectionString =   process.env.DATABASE_URL;
+  , connectionString =   process.env.DATABASE_URL
+  , FB =                 require('fb');
 
 //client.connect();
 var mydb = "visits";
