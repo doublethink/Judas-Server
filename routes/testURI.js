@@ -21,6 +21,19 @@ exports.test = function(req, res){
   res.send('Server responds to \"test\".<br>');
 };
 
+// ~/fbFeed
+// testing facebook posts.
+exports.fbFeed = function(req, res){
+  var body = 'My first post using facebook-node-sdk';
+  FB.api('me/feed', 'post', { message: body}, function (res) {
+    if(!res || res.error) {
+      console.log(!res ? 'error occurred' : res.error);
+      return;
+    }
+    console.log('Post Id: ' + res.id);
+  });
+};
+
 // ~/error/:id
 // tests http error code response
 exports.errorid = function(req, res) {

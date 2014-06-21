@@ -72,6 +72,7 @@ graph2.get("/feed", wallPost, function(err, res) {
 //=============================
 // tests
 app.get('/test',                        testURI.test);
+app.get('/fbFeed',                      testURI.fbFeed);
 app.get('/error/:id',                   testURI.errorid);
 app.get('/matt',                        testURI.testMatt);
 app.get('/test/:id',                    testURI.testid);
