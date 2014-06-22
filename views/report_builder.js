@@ -19,7 +19,7 @@ exports.start = ''+
   '<head>'+
     '<meta charset="utf-8" />'+
     '<title>Pest Repost</title>'+
-    '<script src="sorttable.js />'+
+    '<script src="sorttable.js" />'+
   '</head>'+
   '<body>'+
     '<h3>snap.pest - Pest Report</h3>'+
