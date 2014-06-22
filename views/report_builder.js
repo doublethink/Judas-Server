@@ -17,9 +17,9 @@ exports.start = ''+
 '<!DOCTYPE html>'+
 '<html lan="en">'+
   '<head>'+
-    '<meta charset="utf-8" />'+
+    '<meta charset="utf-8"></meta>'+
     '<title>Pest Repost</title>'+
-    '<script src="sorttable.js"></script>'+
+    '<script src="./js/sorttable.js"></script>'+
   '</head>'+
   '<body>'+
     '<h3>snap.pest - Pest Report</h3>'+
