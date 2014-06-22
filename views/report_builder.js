@@ -19,17 +19,17 @@ exports.start = ''+
   '<head>'+
     '<meta charset="utf-8"></meta>'+
     '<title>Pest Repost</title>'+
-    '<script type="text/javascript" src="sorttable.js"></script>'+
-    '<style type="text/css">'+
-      'th, td { padding: 3px !important; }'+
+    '<script type="text/javascript" src="sorttable.js"></script> '+
+    '<style type="text/css"> '+
+      'th, td { padding: 3px !important; } '+
       /* Sortable tables */
-      'table.sortable thead {'+
-        'background-color: #333;'+
-        'color: #cccccc;'+
-        'font-weight: bold;'+
-        'cursor: default;'+
-      '}'+
-      'th { font-size: 100%; }'+
+      'table.sortable thead { '+
+        'background-color: #333; '+
+        'color: #cccccc; '+
+        'font-weight: bold; '+
+        'cursor: default; '+
+      '} '+
+      'th { font-size: 100%; } '+
     '</style>'+
   '</head>'+
   '<body>'+
