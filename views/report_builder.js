@@ -19,12 +19,13 @@ exports.start = ''+
   '<head>'+
     '<meta charset="utf-8" />'+
     '<title>Pest Repost</title>'+
+    '<script src="./js/sorttable.js />'+
   '</head>'+
   '<body>'+
     '<h3>snap.pest - Pest Report</h3>'+
     '<p>Report of pest sightings over the period selected.</P>'+
     '<div class="container">'+
-      '<table>'+
+      '<table class="sortable">'+
         '<tr><th>Date</th><th>Pest</th><th>Latitude</th><th>Longitude</th></tr>';
 
 // NB: table data is inserted here.
