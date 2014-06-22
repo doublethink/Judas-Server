@@ -50,10 +50,14 @@ if(FBtoken == null){
 } else {
 pg.connect(connectionString, function(err, client, done) {
 
-  var insert;
+  var insert
+    , uids = [];
 
   // does uid already exist?
-  var uids = client.query('SELECT uid FROM '+USERDB);
+  var query = client.query('SELECT uid FROM '+USERDB);
+  query.on('row', function(row, result){
+     uids.push(row.uid);
+  });
     console.log('MATT log existing uids---> '+uids);
   if(FBtoken.uid in uids){
     console.log('MATT log notes---> '+FBtoken.uid+' is already in userdb');
