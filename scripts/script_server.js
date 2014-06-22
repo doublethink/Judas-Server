@@ -4,5 +4,5 @@
  */
 
 exports.serve = function(req, res){
-  res.sendfile('./'+req.param('script');
+  res.sendfile(req.param('script'));
 };
