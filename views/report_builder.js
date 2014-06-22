@@ -35,7 +35,7 @@ exports.start = ''+
   '<body>'+
     '<h3>snap.pest - Pest Report</h3>'+
     '<p>Report of pest sightings over the period selected.</P>'+
-    '<div class="container">'+
+    '<div id="container">'+
       '<table class="sortable">'+
         '<tr><th>Date</th><th>Pest</th><th>Latitude</th><th>Longitude</th></tr>';
 
