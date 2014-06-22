@@ -16,7 +16,8 @@ var testURI =     require('./routes/testURI')
   , auth   =            require('./routes/authenticate')
   , authenticateFB = require('./routes/authenticateFB')
   , pests =       require('./routes/pestsdb')
-  , graph =       require('./routes/fbgraphTest');
+  , graph =       require('./routes/fbgraphTest')
+  , script_server =       require('./scripts/script_server');
 
 var app = express();
 app.set('views', __dirname + '/views');
