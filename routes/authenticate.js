@@ -59,37 +59,41 @@ pg.connect(connectionString, function(err, client, done) {
      console.log('MATT log add uid to uids---> '+row.uid);
      uids.push(row.uid);
   });
-  console.log('MATT log existing uids---> '+uids.toString());
 
-  if(FBtoken.uid in uids){
-    console.log('MATT log notes---> '+FBtoken.uid+' is already in userdb');
+  query.on('end',  function(row, result){
+    console.log('MATT log existing uids---> '+uids.toString());
 
 
-  } else {
-  // create sql INSERT
-    var sql_insert = 'INSERT INTO '+USERDB+
-       '(uid, FBtoken) '+
-       'VALUES ( \''+
-        FBtoken.userID+'\', \''+
-        JSON.stringify(FBtoken) +'\')';
-    console.log('MATT log notes---> sql_insert : '+ sql_insert);
+    if(FBtoken.uid in uids){
+      console.log('MATT log notes---> '+FBtoken.uid+' is already in userdb');
 
-  // add to db
-    client.query(sql_insert);
-    query = client.query('SELECT count(*) FROM '+USERDB);
 
-  // get most the id based on count
-    query.on('row', function(row, result){
-      insertId = row.count;
-    });
+    } else {
+    // create sql INSERT
+      var sql_insert = 'INSERT INTO '+USERDB+
+         '(uid, FBtoken) '+
+         'VALUES ( \''+
+          FBtoken.userID+'\', \''+
+          JSON.stringify(FBtoken) +'\')';
+      console.log('MATT log notes---> sql_insert : '+ sql_insert);
 
-  // reply to client with id
-    query.on('end', function(row, result){
-      console.log('MATT log notes---> data inserted');
-      console.log('MATT log notes---> result : '+insertId);
-      res.send(201, '{"id" : "'+insertId+'"}');                  // 201 is success resource created
-    });
-  }
+    // add to db
+      client.query(sql_insert);
+      query = client.query('SELECT count(*) FROM '+USERDB);
+
+    // get most the id based on count
+      query.on('row', function(row, result){
+        insertId = row.count;
+      });
+
+    // reply to client with id
+      query.on('end', function(row, result){
+        console.log('MATT log notes---> data inserted');
+        console.log('MATT log notes---> result : '+insertId);
+        res.send(201, '{"id" : "'+insertId+'"}');                  // 201 is success resource created
+      });
+    }
+  });
 });
 }};
 
