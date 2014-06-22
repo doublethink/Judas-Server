@@ -1,6 +1,11 @@
 // NWEN304 Project
 //===================================
 
+// Data back-up, two dbs, write to each. read from each accept matches only.
+// Facebook security
+// switch off caching cache-control //res.writeHead(200, "Cache-Control: no-store/no-cache")
+// increase data returned by get requests, think park managers.
+
 
 var mydb = "visits";
 var DATABASE = "judasDB";
@@ -31,7 +36,7 @@ app.use(bodyParser());
 
 //============================
 // post /pestspotted
-// add pest to database
+// add pest to database, returns entries database id
 // curl localhost:5000/pestspotted2 -v -d '{"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "pest" : "rabbit", "auth": {"uid": "Matt"}}}' -H "Content-Type: application/json"
 
 app.post('/pestspotted', function(req, res) {
