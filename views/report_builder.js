@@ -20,7 +20,6 @@ exports.start = ''+
     '<meta charset="utf-8"></meta>'+
     '<title>Pest Repost</title>'+
 //    '<script type="text/javascript" src="/scripts/sorttable.js"></script> '+
-    '<script type="text/javascript" src="test.js"></script> '+
     '<style type="text/css"> '+
       'th, td { padding: 3px !important; } '+
       /* Sortable tables */
@@ -45,5 +44,6 @@ exports.start = ''+
 exports.end = ''+
       '</table>'+
     '</div>'+
+    '<script type="text/javascript" src="test.js"></script> '+
   '</body>'+
 '</html>';
