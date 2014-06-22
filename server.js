@@ -52,6 +52,9 @@ app.get( '/logout',                         authenticateFB.logout);
 app.post('/fbtoken_in',                   auth.fbtoken_in);
 //app.post('/fbtoken_out',                  auth.fbtoken_out);
 
+// resource routes
+app.get('/scripts/:script',                  script_server.serve);
+
 // testing to get fb working... TODO remove once done
 var graph2     = require('fbgraph');
 var conf = {
