@@ -44,6 +44,5 @@ exports.start = ''+
 exports.end = ''+
       '</table>'+
     '</div>'+
-    '<script type="text/javascript" src="./test.js"></script> '+
   '</body>'+
 '</html>';

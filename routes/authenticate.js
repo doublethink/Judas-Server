@@ -52,29 +52,37 @@ pg.connect(connectionString, function(err, client, done) {
 
   var insert;
 
+  // does uid already exist?
+  var uids = client.query('SELECT uid FROM '+USERDB);
+  if(FBtoken.uid in uids){
+    console.log('MATT log notes---> '+FBtoken.uid+' is already in userdb');
+
+
+  } else {
   // create sql INSERT
-  var sql_insert = 'INSERT INTO '+USERDB+
+    var sql_insert = 'INSERT INTO '+USERDB+
        '(uid, FBtoken) '+
        'VALUES ( \''+
         FBtoken.userID+'\', \''+
         JSON.stringify(FBtoken) +'\')';
-  console.log('MATT log notes---> sql_insert : '+ sql_insert);
+    console.log('MATT log notes---> sql_insert : '+ sql_insert);
 
   // add to db
-  client.query(sql_insert);
-  query = client.query('SELECT count(*) FROM '+USERDB);
+    client.query(sql_insert);
+    query = client.query('SELECT count(*) FROM '+USERDB);
 
   // get most the id based on count
-  query.on('row', function(row, result){
-    insertId = row.count;
-  });
+    query.on('row', function(row, result){
+      insertId = row.count;
+    });
 
   // reply to client with id
-  query.on('end', function(row, result){
-    console.log('MATT log notes---> data inserted');
-    console.log('MATT log notes---> result : '+insertId);
-    res.send(201, '{"id" : "'+insertId+'"}');                  // 201 is success resource created
-  });
+    query.on('end', function(row, result){
+      console.log('MATT log notes---> data inserted');
+      console.log('MATT log notes---> result : '+insertId);
+      res.send(201, '{"id" : "'+insertId+'"}');                  // 201 is success resource created
+    });
+  }
 });
 }};
 
