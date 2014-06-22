@@ -3,6 +3,6 @@
  *
  */
 
-exports.serve = funtion(req, res){
+exports.serve = function(req, res){
   res.sendfile(req.param('script');
 };
