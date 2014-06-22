@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lan="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Pest Repost</title>
+    <script>
+      function submitMe() {
+        document.forms[0].submit();
+      }
+      function checkSubmit(e){
+        if(e && e.keyCode == 13) { document.forms[0].submit(); }
+      }
+    </script>
+  </head>
+  <body>
+    <h3>snap.pest - Pest Report</h3>
+    <p>Generate a report of pest sightings over the period selected.</P>
+
+    <p>Enter dates in the fields, then click "Submit" to submit the form:</p>
+
+    <form id="frm1" action="report_builder" onKeyPress="return checkSubmit(event)">
+      <table row=1><tr>
+        <td>From date: </td><td><input type="text" onfocus="if(this.value == '1-5-2014') { this.value = ''; }" onblur="if(this.value == '') { this.value = '1-5-2014'; }" name="from" value="1-5-2014" ></td>
+        </tr><tr>
+        <td>Last date: </td><td><input type="text" onfocus="if(this.value == '30-6-2014') { this.value = ''; }" onblur="if(this.value == '') { this.value = '30-6-2014'; }" name="to" value="30-6-2014"></td>
+        </tr><tr>
+        <td /><td><input type="button" onclick="submitMe()" value="Submit"></td>
+      </table>
+    </form>
+
+  </body>
+</html>
+
