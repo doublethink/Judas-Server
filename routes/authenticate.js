@@ -58,7 +58,7 @@ pg.connect(connectionString, function(err, client, done) {
   query.on('row', function(row, result){
      uids.push(row.uid);
   });
-    console.log('MATT log existing uids---> '+uids);
+    console.log('MATT log existing uids---> '+uids.tostring());
   if(FBtoken.uid in uids){
     console.log('MATT log notes---> '+FBtoken.uid+' is already in userdb');
 
