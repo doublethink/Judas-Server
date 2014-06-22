@@ -54,6 +54,7 @@ pg.connect(connectionString, function(err, client, done) {
 
   // does uid already exist?
   var uids = client.query('SELECT uid FROM '+USERDB);
+    console.log('MATT log existing uids---> '+uids);
   if(FBtoken.uid in uids){
     console.log('MATT log notes---> '+FBtoken.uid+' is already in userdb');
 
