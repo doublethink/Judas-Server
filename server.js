@@ -7,17 +7,17 @@
 // park manager security
 // remove dodgy data from park manager results
 
-var express = require("express")
-  , logfmt = require("logfmt")
-  , bodyParser = require('body-parser');
+var express =           require("express")
+  , logfmt =            require("logfmt")
+  , bodyParser =        require('body-parser');
 
-var testURI =     require('./routes/testURI')
-  , config =      require('./config')
+var testURI =           require('./routes/testURI')
+  , config =            require('./config')
   , auth   =            require('./routes/authenticate')
-  , authenticateFB = require('./routes/authenticateFB')
-  , pests =       require('./routes/pestsdb')
-  , graph =       require('./routes/fbgraphTest')
-  , script_server =       require('./scripts/script_server');
+  , authenticateFB =    require('./routes/authenticateFB')
+  , pests =             require('./routes/pestsdb')
+  , graph =             require('./routes/fbgraphTest')
+  , script_server =     require('./scripts/script_server');
 
 var app = express();
 app.set('views', __dirname + '/views');
@@ -44,6 +44,10 @@ app.get('/pestspotted/:user',               pests.pestspottedUser);
 app.get('/report',                          pests.report);
 // get Park Management report
 app.get('/report_builder',                  pests.report_builder);
+
+// register a user
+app.get( '/register',                       auth.register);
+
 
 // Facebook stuff
 app.get( '/login',                          graph.login);
