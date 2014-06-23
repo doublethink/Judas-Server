@@ -19,7 +19,7 @@ exports.start = ''+
   '<head>'+
     '<meta charset="utf-8"></meta>'+
     '<title>Pest Repost</title>'+
-    '<script type="text/javascript" src="/scripts/sorttable.js"></script> '+
+    '<script type="text/javascript" src="sorttable.js"></script> '+
     '<style type="text/css"> '+
       'th, td { padding: 3px !important; } '+
       /* Sortable tables */
