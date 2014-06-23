@@ -50,6 +50,9 @@ pg.connect(connectionString, function(err, client, done) {
 
   query.on('error', function(error){
     console.log('MATT log ERROR---> '+ error);
+    done();
+    res.send(400, error);
+    return;
   });
 
   // reply to client with id
