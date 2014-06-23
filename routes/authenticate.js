@@ -153,7 +153,7 @@ pg.connect(connectionString, function(err, client, done) {
         console.log('MATT log notes---> data inserted');
         console.log('MATT log notes---> result : '+FBtoken.userID);
         done();
-        res.send(201 '{"id" : "'+FBtoken.userID+'"}');                  // 201 is success resource created
+        res.send(201, '{"id" : "'+FBtoken.userID+'"}');                  // 201 is success resource created
       });
 
   //=> NO, user does not exist
