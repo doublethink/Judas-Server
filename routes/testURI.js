@@ -7,6 +7,7 @@ var config =             require('../config')
   , pg =                 require('pg')
   , connectionString =   process.env.DATABASE_URL
   , FB =                 require('fb')
+  , auth   =            require('./authenticate')
   , access_token
   , mydb = "visits";
 
