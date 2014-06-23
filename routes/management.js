@@ -4,34 +4,34 @@
  */
 
 var pg =                require('pg')
-  , connectionString =  process.env.DATABASE_URL;
-
-var config =            require('../config')
+  , connectionString =  process.env.DATABASE_URL
+  , config =            require('../config')
   , auth   =            require('./authenticate')
-  , dbhelp =            require('./pestsdbHelpers')
-  , report_builder =    require('../views/report_builder');
+  , dbh =            require('./pestsdbHelpers')
+  , report_builder =    require('../views/report_builder')
+  , DATABASE =          config.DATABASE;
 
-var DATABASE =          config.DATABASE;
+//=========================================================================
 // send to report page to get from & to dates
 exports.report = function(req, res){
   res.sendfile('./views/report.html');
 };
 
-// have from & to dates, generate report
+// now have the from & to dates, generate report
 exports.report_builder = function(req, res){
   console.log("MATT log note---> get pestspotted/:date");
 if(auth.admin(req)){
   console.log('MATT log notes---> Passed authentication.');
 pg.connect(connectionString, function(err, client, done) {
 
-  if(!(dbhelp.validateDate(req.param('from')) && dbhelp.validateDate(req.param('to'))) ){
+  if(!(dbh.validateDate(req.param('from')) && dbh.validateDate(req.param('to'))) ){
  	return res.send(400, "Invalid date format. Use DD-MM-YYYY."); // 400 Bad Request, syntax.
   } else {
     console.log("MATT log note---> date validated.");
 
   // format date to match db format
-    var from = formatDate(req.param('from'));
-    var to =   formatDate(req.param('to'));
+    var from = dbh.formatDate(req.param('from'));
+    var to =   dbh.formatDate(req.param('to'));
 
   // add a day to 'to', as search is up to (to+1) 00:00:00
     var nextDay = new Date(to);

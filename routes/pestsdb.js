@@ -4,16 +4,13 @@
  */
 
 var pg =                require('pg')
-  , connectionString =  process.env.DATABASE_URL;
-
-var config =            require('../config')
+  , connectionString =  process.env.DATABASE_URL
+  , config =            require('../config')
   , auth   =            require('./authenticate')
-  , dbhelp =            require('./pestsdbHelpers');
+  , dbhelp =            require('./pestsdbHelpers')
+  , DATABASE =          config.DATABASE;
 
-var DATABASE =          config.DATABASE;
-
-
-//============================
+//==================================================================================
 // ADD PEST to database, returns the id
 // post ~/pestspotted
 
@@ -62,19 +59,9 @@ pg.connect(connectionString, function(err, client, done) {
 };
 
 
-
-function formatDate(date){
-    var split = date.split('-').reverse();
-    date = split.toString().replace(",","-").replace(",","-"); // odd, needs replace twice
-    console.log("MATT log note---> date = "+ date);
-    return date;
-}
-
-
-
 //=======================================================================
 // TOTAL PESTS logged by this user
-// NB: user is case sensitive
+// returns total
 exports.pestspottedUser = function(req, res){
   console.log("MATT log note---> get pestspotted/:user");
 
@@ -103,6 +90,7 @@ pg.connect(connectionString, function(err, client, done) {
 
 //======================================================================
 // TOTAL SPECIFIC PEST logged by this user
+// return total
 exports.pestspottedUserPest = function(req, res){
   console.log("MATT log note---> get pestspotted/:user/:pest");
 if(auth.user(req)){

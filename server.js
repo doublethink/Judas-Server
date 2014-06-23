@@ -1,11 +1,9 @@
 // NWEN304 Project
 //===================================
 
-
 // todo list
 // Facebook security
 // park manager security
-// remove dodgy data from park manager results
 
 var express =           require("express")
   , logfmt =            require("logfmt")

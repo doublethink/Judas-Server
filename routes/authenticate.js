@@ -13,21 +13,18 @@ var pg =                require('pg')
   , FB =                require('fb')
 //  , Step =              require('step')
 //  , crypto =            require('crypto')
-  , connectionString =  process.env.DATABASE_URL;
+  , connectionString =  process.env.DATABASE_URL
+  , config =            require('../config')
+  , dbhelp =            require('./pestsdbHelpers')
+  , USERDB   =          config.USERDB
 
-var config =            require('../config')
-//  , auth   =            require('./authenticate')
-  , dbhelp =            require('./pestsdbHelpers');
-
-var USERDB   =          config.USERDB;
-
-var APPID = config.facebook.appId
-  , APPSECRET = config.facebook.appSecret;
+  , APPID =             config.facebook.appId
+  , APPSECRET =         config.facebook.appSecret;
 
 FB.options({
-    appId: config.facebook.appId,
-    appSecret: config.facebook.appSecret,
-    redirectUri: config.facebook.redirectUri
+    appId:              config.facebook.appId,
+    appSecret:          config.facebook.appSecret,
+    redirectUri:        config.facebook.redirectUri
 });
 
 

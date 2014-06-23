@@ -14,6 +14,15 @@ exports.validateDate = function(d){
   return false;
 }
 
+
+exports.formatDate = function(date){
+    var split = date.split('-').reverse();
+    date = split.toString().replace(",","-").replace(",","-"); // odd, needs replace twice
+    console.log("MATT log note---> date = "+ date);
+    return date;
+}
+
+
 // Check input for pestspotted
 // return boolean on success/fail
 exports.verifyPestInput = function(req, res){

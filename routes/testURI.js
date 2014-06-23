@@ -7,11 +7,11 @@ var config =             require('../config')
   , pg =                 require('pg')
   , connectionString =   process.env.DATABASE_URL
   , FB =                 require('fb')
-  , access_token;
+  , access_token
+  , mydb = "visits";
 
-//client.connect();
-var mydb = "visits";
 
+//===================================================================
 // ~/test
 exports.test = function(req, res){
   //...sends text
