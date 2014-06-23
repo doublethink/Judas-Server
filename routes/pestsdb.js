@@ -92,7 +92,7 @@ pg.connect(connectionString, function(err, client, done) {
   });
 
   // send it back to client
-  query.on('end', function(row, result){
+  query.on('end', function(result){
     res.set({"Cache-Control": "no-store"});
     res.json('{count : ' + count +', reqest: \'get pestspotted/:user\'}');
     done();
@@ -120,7 +120,7 @@ pg.connect(connectionString, function(err, client, done) {
   });
 
   // send it back to client
-  query.on('end', function(row, result){
+  query.on('end', function(result){
     res.set({"Cache-Control": "no-store"});
     res.json('{count : ' + count +', request: \'get pestspotted/:user/:pest\'}');
     done();
