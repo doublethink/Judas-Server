@@ -2,7 +2,7 @@
 // config
 var config = { };
 
-config.DATABASE = "judasDB"
+config.DATABASE = "judas2DB"
 config.USERDB = "userDB";
 
 // should end in /
