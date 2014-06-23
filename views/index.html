@@ -12,13 +12,12 @@ Your Server-Master (err... aspring novice) Matt brings you stuff...<br>
  /register .. a post request with a FB token. Optionaly also an email address and a details json that can hold whatever you want, for example the users name.<br>
 Send the register uri post as soon as the user first registers. If the user is already in the system, you will get a 400 error to ignore.<br>
 A sample json object: {"authResponse" : {"accessToken": "startTokenABC", "expiresIn": "00:09:00", "signedRequest": "signedByMatt", "userID": "123456"}, "email" : "Homer@test.com", "details" : {"first" : "Homer", "second" : "Simpson"}}<br>
-Ignore the email & details if you want. I have populated tests user with details to show intent.
+Ignore the email & details if you want. I have populated tests user with details to show intent.<br><br>
  /fbtoken_in ... a post request with a body containg a Facebook authResponse token<br>
 If the user does not already exist, you will get a 400 error.
 </p><p>
 
-In the userdb already is userID "Matt", "Bob" & "Mary", testing against these will return a json authResponse object.<br>
-No security is currently implemented, Stephen & I need to co-ordinate before I lock him out...
+In the userdb already is userID "Matt", "Stephen", "Bob" & "1384121193", testing against these will return a json authResponse object. 1384121193 is hopefully Stephen's id...<br>
 </p><p>
 
  /pestspotted ... a post request that expects contents to be in a json format. For example;<br>
