@@ -62,13 +62,35 @@ pg.connect(connectionString, function(err, client, done) {
   query.on('end',  function(row, result){
     console.log('MATT log existing uids---> '+uids.toString());
     console.log('MATT log FBtoken.userID---> '+FBtoken.userID);
-
+    // YES, uid already exists
     if(uids.indexOf(FBtoken.userID) >= 0){
       console.log('MATT log notes---> '+FBtoken.uid+' is already in userdb');
 
+      // create sql INSERT
+      var sql_insert = 'INSERT INTO '+USERDB+
+         '(FBtoken) '+
+         'VALUES ( \''+
+          JSON.stringify(FBtoken) +'\')'+
+         'WHERE uid = FBtoken.userID;';
+      console.log('MATT log notes---> sql_insert : '+ sql_insert);
 
+      // add to db
+      client.query(sql_insert);
+
+      // reply to client with id
+      query.on('end', function(row, result){
+        console.log('MATT log notes---> data inserted');
+        console.log('MATT log notes---> result : '+insertId);
+        done();
+        res.send(201);                  // 201 is success resource created
+      });
+
+      done();
+      res.send(200);
+
+    // NO, insert a new uid
     } else {
-    // create sql INSERT
+      // create sql INSERT
       var sql_insert = 'INSERT INTO '+USERDB+
          '(uid, FBtoken) '+
          'VALUES ( \''+
@@ -76,19 +98,20 @@ pg.connect(connectionString, function(err, client, done) {
           JSON.stringify(FBtoken) +'\')';
       console.log('MATT log notes---> sql_insert : '+ sql_insert);
 
-    // add to db
+      // add to db
       client.query(sql_insert);
       query = client.query('SELECT count(*) FROM '+USERDB);
 
-    // get most the id based on count
+      // get the id based on count
       query.on('row', function(row, result){
         insertId = row.count;
       });
 
-    // reply to client with id
+      // reply to client with id
       query.on('end', function(row, result){
         console.log('MATT log notes---> data inserted');
         console.log('MATT log notes---> result : '+insertId);
+        done();
         res.send(201, '{"id" : "'+insertId+'"}');                  // 201 is success resource created
       });
     }
