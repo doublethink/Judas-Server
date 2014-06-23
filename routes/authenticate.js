@@ -154,35 +154,12 @@ pg.connect(connectionString, function(err, client, done) {
         res.send(201);                  // 201 is success resource created
       });
 
-//      done();
-//      res.send(200);
-
-  //=> NO, insert a new uid
+  //=> NO, user does not exist
     } else {
-      // create sql INSERT
-      var sql_insert = 'INSERT INTO '+USERDB+
-         '(uid, FBtoken) '+
-         'VALUES ( \''+
-          FBtoken.userID+'\', \''+
-          JSON.stringify(FBtoken) +'\')';
-      console.log('MATT log notes---> sql_insert : '+ sql_insert);
+      console.log('MATT log notes---> '+FBtoken.uid+' is not in userdb');
 
-      // add to db
-      client.query(sql_insert);
-      query = client.query('SELECT count(*) FROM '+USERDB);
-
-      // get the id based on count
-      query.on('row', function(row, result){
-        insertId = row.count;
-      });
-
-      // reply to client with id
-      query.on('end', function(row, result){
-        console.log('MATT log notes---> data inserted');
-        console.log('MATT log notes---> result : '+insertId);
-        done();
-        res.send(201, '{"id" : "'+insertId+'"}');                  // 201 is success resource created
-      });
+      done();
+      res.send(418, "I'm a teapot and this user does not exist. No changes made."); // 418, I'm a teapot error
     }
   });
 });
