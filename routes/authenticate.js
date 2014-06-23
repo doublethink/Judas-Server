@@ -207,12 +207,12 @@ exports.setResponse = function(res){
 
 exports.admin = function(req){
   var admin = false;
-  var access_code = req.session.access_code;
-  console.log('MATT log access_code---> '+acess_code);
-  var userID = req.session.userID;
-  console.log('MATT log userID---> '+userID);
-  var userID = req.session.userID;
-  console.log('MATT log userID---> '+userID);
+//  var access_code = req.session.access_code;
+//  console.log('MATT log access_code---> '+acess_code);
+//  var userID = req.session.userID;
+//  console.log('MATT log userID---> '+userID);
+//  var userID = req.session.userID;
+//  console.log('MATT log userID---> '+userID);
 
 
   admin = true;
@@ -220,12 +220,6 @@ exports.admin = function(req){
 }
 
 exports.user = function(req){
-  var access_code = req.session.access_code;
-  console.log('MATT log access_code---> '+acess_code);
-  var userID = req.session.userID;
-  console.log('MATT log userID---> '+userID);
-  var userID = req.session.userID;
-  console.log('MATT log userID---> '+userID);
   if(true) return true; // TODO
 
   res = setAuthenticateResponse(res);
