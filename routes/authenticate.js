@@ -210,7 +210,7 @@ exports.admin = function(req){
 //  var uid = req.
 
 
-
+  admin = true;
   return admin;
 }
 
