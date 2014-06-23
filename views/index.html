@@ -8,8 +8,13 @@ Your Server-Master (err... aspring novice) Matt brings you stuff...<br>
  All based on the prefix... judas.herokuapp.com <br>
 </p><p>
 <br>
+
+ /register .. a post request with a FB token. Optionaly also an email address and a details json that can hold whatever you want, for example the users name.<br>
+Send the register uri post as soon as the user first registers. If the user is already in the system, you will get a 400 error to ignore.<br>
+A sample json object: {"authResponse" : {"accessToken": "startTokenABC", "expiresIn": "00:09:00", "signedRequest": "signedByMatt", "userID": "123456"}, "email" : "Homer@test.com", "details" : {"first" : "Homer", "second" : "Simpson"}}<br>
+Ignore the email & details if you want. I have populated tests user with details to show intent.
  /fbtoken_in ... a post request with a body containg a Facebook authResponse token<br>
- /fbtoken_out ... a post request with a body containing json {"userID": "xxx"}, that returns the saved fbtoken
+If the user does not already exist, you will get a 400 error.
 </p><p>
 
 In the userdb already is userID "Matt", "Bob" & "Mary", testing against these will return a json authResponse object.<br>
@@ -19,11 +24,11 @@ No security is currently implemented, Stephen & I need to co-ordinate before I l
  /pestspotted ... a post request that expects contents to be in a json format. For example;<br>
       {"packet": {"position": {"longitude": "22", "latitude": "44", "accuracy": "0.5", "datestamp": "15 May"}, "pest" : "rabbit", "auth": {"uid": "Matt"}}}
 </p><p>
-
- /pestspotted/all    ... returns a list of all pests spotted<br>
- /pestspotted/all/json ... returns a json object of all pests spotted
+## depreciated, now assumed to be test uri's only
+ /pestspotted_all    ... returns a list of all pests spotted<br>
+ /pestspotted_all/json ... returns a json object of all pests spotted
 </p><p>
-
+## depreciated, now assumed to be test uri's only
  /pestspotted_on/:date ... where :date == DD-MM-YYYY, returns a list of pests spotted on that day<br>
  /pestspotted_on/:date/json ... returns a json object, doing the same
 </p><p>

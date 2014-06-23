@@ -88,6 +88,16 @@ CREATE TABLE judasdb(ID SERIAL PRIMARY KEY, longitude real NOT NULL, latitude re
 INSERT INTO judasdb(longitude, latitude, accuracy, datestamp, pest, uid) 
 VALUES (22, 33, 0.4, '2014-05-03', 'possum', 'Matt');
 
+
+DROP TABLE judas2db;
+CREATE TABLE judas2db(ID SERIAL PRIMARY KEY, longitude real NOT NULL, latitude real NOT NULL, accuracy real, datestamp date NOT NULL, pest varchar NOT NULL, uid varchar references userdb(uid));
+INSERT INTO judas2db(longitude, latitude, accuracy, datestamp, pest, uid) 
+VALUES (22, 33, 0.4, '2014-05-03', 'possum', 'Matt');
+INSERT INTO judas2db(longitude, latitude, accuracy, datestamp, pest, uid) 
+VALUES (22, 33, 0.4, '2014-05-03', 'possum', '1384121193');
+
+
+
 //userdb
 DROP TABLE userdb;
 CREATE TABLE userdb(uid varchar PRIMARY KEY, email varchar, admin boolean, details JSON, fbtoken JSON);
@@ -97,6 +107,10 @@ INSERT INTO userdb (uid, email, admin, details, fbtoken)
 VALUES ('Stephen', 'stephen@test.com', 'true', '{"first": "Stephen", "second": "Citizen"}', '{"accessToken": "letMeInMatt", "expiresIn": "00:02:00", "signedRequest": "signedByMatt", "userID": "Stephen"}');
 INSERT INTO userdb (uid, email, admin, details, fbtoken) 
 VALUES ('Bob', 'bob@test.com', 'false', '{"first": "Matt", "second": "Citizen"}', '{"accessToken": "letMeInYouGuys", "expiresIn": "00:03:00", "signedRequest": "signedByMatt", "userID": "Bob"}');
+INSERT INTO userdb (uid, email, admin, details, fbtoken) 
+VALUES ('1384121193', 'stephen@test.com', 'true', '{"first": "Stephen", "second": "Citizen"}', '{"accessToken": "letMeInMatt", "expiresIn": "00:02:00", "signedRequest": "signedByMatt", "userID": "1384121193"}');
+
+
 
 //FB app-secret
 DROP TABLE fbconfig;
