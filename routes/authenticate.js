@@ -106,6 +106,11 @@ pg.connect(connectionString, function(err, client, done) {
 
 exports.fbtoken_in = function(req, res){
   console.log("MATT log note---> post login");
+  console.log("MATT log note---> req.session1 "+req.session.toString());
+  console.log("MATT log note---> req.session2 "+req.session.access_token);
+  console.log("MATT log note---> req.session3 "+req.session.userID);
+  console.log("MATT log note---> req.session4 "+req.session.access_token.toString());
+  console.log("MATT log note---> req.session5 "+req.session.userID.toString());
 
   // FBtoken is the Facebook authResponse token
   // https://developers.facebook.com/docs/reference/javascript/FB.getLoginStatus/
@@ -201,9 +206,12 @@ exports.setResponse = function(res){
 }
 
 exports.admin = function(req){
-  if(true) return true; // TODO
+  var admin = false;
+  var uid = req.
 
-  return false;
+
+
+  return admin;
 }
 
 exports.user = function(req){

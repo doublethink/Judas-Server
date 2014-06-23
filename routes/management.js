@@ -47,17 +47,7 @@ pg.connect(connectionString, function(err, client, done) {
     console.log("MATT log note---> to's nextday = "+ to);
 
   // conduct search
-/*
-SELECT * FROM judas2db
-WHERE datestamp >= '2014-05-01'
- AND datestamp < '2014-06-30'
- AND (uid, datestamp) NOT IN (
-   SELECT uid, datestamp
-   FROM judas2db
-   group by uid, datestamp
-   having count(*) > 2
- );
-*/
+    // filters out results where users have entered many sightings in one day
     var sql = ''+
       'SELECT * FROM '+DATABASE+
       ' WHERE datestamp >= \''+ from +'\''+
@@ -66,7 +56,7 @@ WHERE datestamp >= '2014-05-01'
            ' SELECT uid, datestamp'+
            ' FROM '+DATABASE+
            ' GROUP BY uid, datestamp'+
-           ' HAVING COUNT(*) >= '+ config.pestSpottingLimit+
+           ' HAVING COUNT(*) > '+ config.pestSpottingLimit+
          ' );';
     var rows = [];
     var query = client.query(sql);
