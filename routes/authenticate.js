@@ -31,6 +31,31 @@ FB.options({
 });
 
 
+//=======================================================================
+// register user from phone
+
+exports.register = function(req, res){
+  console.log("MATT log note---> post register");
+
+  // FBtoken is the Facebook authResponse token
+  // https://developers.facebook.com/docs/reference/javascript/FB.getLoginStatus/
+  var FBtoken = req.body.authResponse;
+  var email = req.body.email;
+  var details = req.body.details;
+
+if(details == null){
+  res.send(401, "User details not recieved."); // 401 Unauthorized
+} else if(FBtoken == null){
+  res.send(401, "User token not recieved."); // 401 Unauthorized
+} else {
+pg.connect(connectionString, function(err, client, done) {
+  console.log("MATT log note---> pg connected");
+
+
+
+});
+};
+
 
 //=======================================================================
 // accept and store the FB response token
