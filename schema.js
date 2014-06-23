@@ -84,15 +84,19 @@ heroku pg:psql --app "judas"
 // pestspotted db
 // recreate table with uid as Foriegn key
 DROP TABLE judasdb;
-CREATE TABLE judasdb(ID SERIAL PRIMARY KEY, longitude real NOT NULL, latitude real NOT NULL, accuracy real, datestamp date NOT NULL, pest varchar NOT NULL, uid varchar NOT NULL);
+CREATE TABLE judasdb(ID SERIAL PRIMARY KEY, longitude real NOT NULL, latitude real NOT NULL, accuracy real, datestamp date NOT NULL, pest varchar NOT NULL, uid varchar references userdb(uid));
 INSERT INTO judasdb(longitude, latitude, accuracy, datestamp, pest, uid) 
 VALUES (22, 33, 0.4, '2014-05-03', 'possum', 'Matt');
 
 //userdb
 DROP TABLE userdb;
-CREATE TABLE userdb(uid varchar PRIMARY KEY, email varchar, details JSON, fbtoken JSON);
-INSERT INTO userdb (uid, email, details, fbtoken) 
-VALUES ('Matt', 'matt@test.com', '{"first": "Matt", "second": "Citizen"}', '{"accessToken": "letMeIn", "expiresIn": "00:01:00", "signedRequest": "signedByMatt", "userID": "Matt"}');
+CREATE TABLE userdb(uid varchar PRIMARY KEY, email varchar, admin boolean, details JSON, fbtoken JSON);
+INSERT INTO userdb (uid, email, admin, details, fbtoken) 
+VALUES ('Matt', 'matt@test.com', 'true', '{"first": "Matt", "second": "Citizen"}', '{"accessToken": "letMeIn", "expiresIn": "00:01:00", "signedRequest": "signedByMatt", "userID": "Matt"}');
+INSERT INTO userdb (uid, email, admin, details, fbtoken) 
+VALUES ('Stephen', 'stephen@test.com', 'true', '{"first": "Stephen", "second": "Citizen"}', '{"accessToken": "letMeInMatt", "expiresIn": "00:02:00", "signedRequest": "signedByMatt", "userID": "Stephen"}');
+INSERT INTO userdb (uid, email, admin, details, fbtoken) 
+VALUES ('Bob', 'bob@test.com', 'false', '{"first": "Matt", "second": "Citizen"}', '{"accessToken": "letMeInYouGuys", "expiresIn": "00:03:00", "signedRequest": "signedByMatt", "userID": "Bob"}');
 
 //FB app-secret
 DROP TABLE fbconfig;

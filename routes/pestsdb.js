@@ -48,6 +48,10 @@ pg.connect(connectionString, function(err, client, done) {
     insertId = row.count;
   });
 
+  query.on('error', function(row, result){
+    console.log('MATT log ERROR---> '+ err);
+  });
+
   // reply to client with id
   query.on('end', function(row, result){
     console.log('MATT log notes---> result : '+insertId);

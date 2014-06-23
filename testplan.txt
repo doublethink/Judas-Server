@@ -13,11 +13,11 @@ Three types
 //=== Users ===
 ARC, register a user
 http://polar-forest-2324.herokuapp.com/register
-{"authResponse" : {"accessToken": "mytoken2014", "expiresIn": "00:09:00", "signedRequest": "signedByMatt", "userID": "stranger"}, "email" : "test@test.com", "details" : {"first" : "Homer", "second" : "Simpson"}}
+{"authResponse" : {"accessToken": "startTokenABC", "expiresIn": "00:09:00", "signedRequest": "signedByMatt", "userID": "stranger"}, "email" : "test@test.com", "details" : {"first" : "Homer", "second" : "Simpson"}}
 
 ARC, send FBtoken from phone app to server
 http://polar-forest-2324.herokuapp.com/fbtoken_in
-
+{"authResponse" : {"accessToken": "newTokenXYZ", "expiresIn": "00:12:00", "signedRequest": "signedByMatt", "userID": "stranger"}}
 
 
 //=== Pest has been spotted ===
@@ -102,14 +102,16 @@ http://polar-forest-2324.herokuapp.com/db/visits
 http://polar-forest-2324.herokuapp.com/pestspotted_all
 
 
-http://polar-forest-2324.herokuapp.com/pestspotted_all/:json
+  - http://polar-forest-2324.herokuapp.com/pestspotted_all/:json
+http://polar-forest-2324.herokuapp.com/pestspotted_all/json
 
 
 //=== get all pests logged for this day, day format 24-05-2014 ===
-http://polar-forest-2324.herokuapp.com/pestspotted_on/:date
+  - http://polar-forest-2324.herokuapp.com/pestspotted_on/:date
+http://polar-forest-2324.herokuapp.com/pestspotted_on/07-05-2014
 
 
-http://polar-forest-2324.herokuapp.com/pestspotted_on/:date/:json
-
+  - http://polar-forest-2324.herokuapp.com/pestspotted_on/:date/:json
+http://polar-forest-2324.herokuapp.com/pestspotted_on/07-05-2014/json
 
 
