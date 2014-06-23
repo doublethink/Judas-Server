@@ -207,7 +207,10 @@ exports.setResponse = function(res){
 
 exports.admin = function(req){
   var admin = false;
-//  var uid = req.
+  var access_code = req.session.access_code;
+  console.log('MATT log access_code---> '+acess_code);
+  var userID = req.session.userID;
+  console.log('MATT log userID---> '+userID);
 
 
   admin = true;

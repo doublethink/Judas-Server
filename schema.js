@@ -109,6 +109,8 @@ INSERT INTO userdb (uid, email, admin, details, fbtoken)
 VALUES ('Bob', 'bob@test.com', 'false', '{"first": "Matt", "second": "Citizen"}', '{"accessToken": "letMeInYouGuys", "expiresIn": "00:03:00", "signedRequest": "signedByMatt", "userID": "Bob"}');
 INSERT INTO userdb (uid, email, admin, details, fbtoken) 
 VALUES ('1384121193', 'stephen@test.com', 'true', '{"first": "Stephen", "second": "Citizen"}', '{"accessToken": "letMeInMatt", "expiresIn": "00:02:00", "signedRequest": "signedByMatt", "userID": "1384121193"}');
+INSERT INTO userdb (uid, email, admin, details, fbtoken) 
+VALUES ('undefined673ddc106fed47b1', 'stephen@test.com', 'true', '{"first": "Stephen", "second": "Citizen"}', '{"accessToken": "letMeInMatt", "expiresIn": "00:02:00", "signedRequest": "signedByMatt", "userID": "undefined673ddc106fed47b1"}');
 
 
 
