@@ -62,16 +62,17 @@ pg.connect(connectionString, function(err, client, done) {
   query.on('end',  function(row, result){
     console.log('MATT log existing uids---> '+uids.toString());
     console.log('MATT log FBtoken.userID---> '+FBtoken.userID);
-    // YES, uid already exists
+
+    //=> YES, uid already exists
     if(uids.indexOf(FBtoken.userID) >= 0){
       console.log('MATT log notes---> '+FBtoken.uid+' is already in userdb');
 
       // create sql INSERT
-      var sql_insert = 'INSERT INTO '+USERDB+
-         '(FBtoken) '+
-         'VALUES ( \''+
+      var sql_insert = 'UPDATE '+USERDB+
+         'SET fbtoken = \''+
           JSON.stringify(FBtoken) +'\')'+
-         'WHERE uid = FBtoken.userID;';
+         'WHERE uid = \''+
+          FBtoken.userID+'\';';
       console.log('MATT log notes---> sql_insert : '+ sql_insert);
 
       // add to db
@@ -88,7 +89,7 @@ pg.connect(connectionString, function(err, client, done) {
       done();
       res.send(200);
 
-    // NO, insert a new uid
+    //=> NO, insert a new uid
     } else {
       // create sql INSERT
       var sql_insert = 'INSERT INTO '+USERDB+
