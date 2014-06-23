@@ -56,14 +56,14 @@ pg.connect(connectionString, function(err, client, done) {
   // does uid already exist?
   var query = client.query('SELECT uid FROM '+USERDB);
   query.on('row', function(row, result){
-     console.log('MATT log add uid to uids---> '+row.uid);
      uids.push(row.uid);
   });
 
   query.on('end',  function(row, result){
     console.log('MATT log existing uids---> '+uids.toString());
     console.log('MATT log FBtoken.userID---> '+FBtoken.userID);
-    if(FBtoken.userID in uids){
+
+    if(uids.indexOf(FBtoken.userID) >= 0){
       console.log('MATT log notes---> '+FBtoken.uid+' is already in userdb');
 
 
