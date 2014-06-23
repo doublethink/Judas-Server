@@ -43,7 +43,7 @@ app.get('/pestspotted/:user',       pests.pestspottedUser);// total pests logged
 
 //=== Park Management ===
 app.get('/report',                  graph.login); // management.report);// date selector for management report
-app.get('/report_builder',          management.report_builder);// park management report
+app.get('/login/report_builder',          management.report_builder);// park management report
 
 //=== Facebook ===
 app.get('/login',                   graph.login);
