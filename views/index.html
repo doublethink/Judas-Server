@@ -9,7 +9,7 @@ Your Server-Master (err... aspring novice) Matt brings you stuff...<br>
 </p><p>
 <br>
 
- /register .. a post request with a FB token. Optionaly also an email address and a details json that can hold whatever you want, for example the users name.<br>
+ /register .. a post request with a Facebook authResponse token. Optionaly also an email address and a details json that can hold whatever you want, for example the users name.<br>
 Send the register uri post as soon as the user first registers. If the user is already in the system, you will get a 400 error to ignore.<br>
 A sample json object: {"authResponse" : {"accessToken": "startTokenABC", "expiresIn": "00:09:00", "signedRequest": "signedByMatt", "userID": "123456"}, "email" : "Homer@test.com", "details" : {"first" : "Homer", "second" : "Simpson"}}<br>
 Ignore the email & details if you want. I have populated tests user with details to show intent.<br><br>
