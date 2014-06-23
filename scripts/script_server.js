@@ -4,6 +4,6 @@
  */
 
 exports.serve = function(req, res){
-  console.log("MATT log note---> script_server");
+  console.log("MATT log script_server---> " +req.param('script'));
   res.sendfile(req.param('script'));
 };
