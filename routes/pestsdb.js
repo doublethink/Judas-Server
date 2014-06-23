@@ -25,7 +25,7 @@ pg.connect(connectionString, function(err, client, done) {
   if(!dbh.verifyPestInput(req, res)){ return }; // 400 error on fail, value missing
 
   var packet = req.body.packet
-    , insertId;
+    , insertId = 99;
 
   // create sql INSERT
   var sql_insert = 'INSERT INTO '+DATABASE+
@@ -40,12 +40,12 @@ pg.connect(connectionString, function(err, client, done) {
   console.log('MATT log notes---> sql_insert : '+ sql_insert);
 
   // add to db
-  client.query(sql_insert);
-  query = client.query('SELECT count(*) FROM '+DATABASE);
+  query = client.query(sql_insert);
+//  query = client.query('SELECT count(*) FROM '+DATABASE);
 
   // get most recent inserts id based on row count
   query.on('row', function(row, result){
-    insertId = row.count;
+//    insertId = row.count;
   });
 
   query.on('error', function(error){
