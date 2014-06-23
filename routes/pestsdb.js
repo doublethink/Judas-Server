@@ -7,7 +7,7 @@ var pg =                require('pg')
   , connectionString =  process.env.DATABASE_URL
   , config =            require('../config')
   , auth   =            require('./authenticate')
-  , dbhelp =            require('./pestsdbHelpers')
+  , dbh =               require('./pestsdbHelpers')
   , DATABASE =          config.DATABASE;
 
 //==================================================================================
@@ -22,7 +22,7 @@ if(auth.user(req)){
   console.log('MATT log notes---> Passed authentication.');
 pg.connect(connectionString, function(err, client, done) {
 
-  if(!dbhelp.verifyPestInput(req, res)){ return }; // 400 error on fail, value missing
+  if(!dbh.verifyPestInput(req, res)){ return }; // 400 error on fail, value missing
 
   var packet = req.body.packet
     , insertId;

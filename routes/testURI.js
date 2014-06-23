@@ -7,7 +7,8 @@ var config =             require('../config')
   , pg =                 require('pg')
   , connectionString =   process.env.DATABASE_URL
   , FB =                 require('fb')
-  , auth   =            require('./authenticate')
+  , auth   =             require('./authenticate')
+  , dbh =                require('./pestsdbHelpers')
   , access_token
   , mydb = "visits"
   , DATABASE =          config.DATABASE;
@@ -276,7 +277,7 @@ if(auth.admin(req)){
   console.log('MATT log notes---> Passed authentication.');
 pg.connect(connectionString, function(err, client, done) {
 
-  if(!dbhelp.validateDate(req.param('date'))){
+  if(!dbh.validateDate(req.param('date'))){
  	return res.send(400, "Invalid date format. Use DD-MM-YYYY."); // 400 Bad Request, syntax.
   } else {
     console.log("MATT log note---> date validated.");
