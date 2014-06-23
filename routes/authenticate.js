@@ -79,7 +79,7 @@ pg.connect(connectionString, function(err, client, done) {
          'VALUES ( \'' +
           FBtoken.userID +'\', \''+
           (email == undefined ? "" : email) +'\', \''+
-          JSON.strindify(details == undefined ? "" : details) +'\', \''+
+          JSON.stringify(details == undefined ? "" : details) +'\', \''+
           JSON.stringify(FBtoken) +'\')';
 
       console.log('MATT log notes---> sql_insert : '+ sql_insert);
