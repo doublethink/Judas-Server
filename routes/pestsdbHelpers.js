@@ -2,6 +2,7 @@
 // helpers
 //======================================
 
+var weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 exports.validateDate = function(d){
   var date = new String(d);
@@ -20,6 +21,19 @@ exports.formatDate = function(date){
     date = split.toString().replace(",","-").replace(",","-"); // odd, needs replace twice
     console.log("MATT log note---> date = "+ date);
     return date;
+}
+
+exports.formatDateForNZ = function(date){
+    d = new Date(date);
+    var r = "";
+    var day = new String(d.getDate());
+    r += day.length == 2 ? ""+day : "0"+day;
+    var month = new String(d.getMonth()+1);
+    r += month.length == 2 ? "-"+month : "-0"+month;
+    r += "-"+d.getFullYear();
+    r += " "+weekdays[d.getday()]; 
+    console.log("MATT log note---> date = "+ r);
+    return r;
 }
 
 

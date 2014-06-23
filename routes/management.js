@@ -76,7 +76,7 @@ WHERE datestamp >= '2014-05-01'
       rows.push('{\"latitude\" : \"'+row.latitude+
              '\", \"longitude\" : \"'+row.longitude+
              '\", \"pest\" : \"'+row.pest+
-             '\", \"date\" : \"'+row.datestamp+'\"}');
+             '\", \"date\" : \"'+dbh.formatDateForNZ(row.datestamp)+'\"}');
       console.log('MATT log notes---> added : '+ rows[rows.length-1]);
     });
 
