@@ -25,7 +25,7 @@ pg.connect(connectionString, function(err, client, done) {
   if(!dbh.verifyPestInput(req, res)){ return }; // 400 error on fail, value missing
 
   var packet = req.body.packet
-    , insertId = 99;
+    , insertId;
 
   // create sql INSERT
   var sql_insert = 'INSERT INTO '+DATABASE+
