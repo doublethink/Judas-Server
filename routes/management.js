@@ -47,10 +47,27 @@ pg.connect(connectionString, function(err, client, done) {
     console.log("MATT log note---> to's nextday = "+ to);
 
   // conduct search
+/*
+SELECT * FROM judas2db
+WHERE datestamp >= '2014-05-01'
+ AND datestamp < '2014-06-30'
+ AND (uid, datestamp) NOT IN (
+   SELECT uid, datestamp
+   FROM judas2db
+   group by uid, datestamp
+   having count(*) > 2
+ );
+*/
     var sql = ''+
       'SELECT * FROM '+DATABASE+
       ' WHERE datestamp >= \''+ from +'\''+
-         ' AND datestamp < \''+ to   +'\' ;';
+         ' AND datestamp < \''+ to   +'\''+
+         ' AND (uid, datestamp) NOT IN ('+
+           ' SELECT uid, datestamp'+
+           ' FROM '+DATABASE+
+           ' GROUP BY uid, datestamp'+
+           ' HAVING COUNT(*) >= '+ config.pestSpottingLimit+
+         ' );';
     var rows = [];
     var query = client.query(sql);
 

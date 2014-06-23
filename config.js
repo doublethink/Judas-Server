@@ -16,6 +16,9 @@ config.facebook = {
     redirectUri: process.env.FACEBOOK_REDIRECTURI || config.rootUrl + 'login/callback'
 };
 
+// Can later use an algorithm to determine this.
+config.pestSpottingLimit = 3;
+
 //====================================
 // dummy data for testing
 //====================================
