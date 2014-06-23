@@ -17,7 +17,7 @@ var pg =                require('pg')
 
 var config =            require('../config')
 //  , auth   =            require('./authenticate')
-  , dbhelp =          require('./pestsdbHelpers');
+  , dbhelp =            require('./pestsdbHelpers');
 
 var USERDB   =          config.USERDB;
 
@@ -49,8 +49,6 @@ if(details == null){
   res.send(401, "User token not recieved."); // 401 Unauthorized
 } else {
 pg.connect(connectionString, function(err, client, done) {
-  console.log("MATT log note---> pg connected");
-
   var insert
     , uids = [];
 
@@ -69,7 +67,7 @@ pg.connect(connectionString, function(err, client, done) {
       console.log('MATT log notes---> '+FBtoken.uid+' is already in userdb');
 
       done();
-      res.send(418, "I'm a teapot and this user already exists."); // 418, I'm a teapot error
+      res.send(418, "I'm a teapot and this user already exists. No changes made."); // 418, I'm a teapot error
 
   //=> NO, insert a new uid
     } else {
@@ -85,7 +83,7 @@ pg.connect(connectionString, function(err, client, done) {
       console.log('MATT log notes---> sql_insert : '+ sql_insert);
 
       // add to db
-      client.query(sql_insert);
+      query = client.query(sql_insert);
 
       // reply to client with id
       query.on('end', function(row, result){
@@ -156,8 +154,8 @@ pg.connect(connectionString, function(err, client, done) {
         res.send(201);                  // 201 is success resource created
       });
 
-      done();
-      res.send(200);
+//      done();
+//      res.send(200);
 
   //=> NO, insert a new uid
     } else {
