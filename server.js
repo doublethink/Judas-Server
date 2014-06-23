@@ -46,7 +46,7 @@ app.get('/report',                          pests.report);
 app.get('/report_builder',                  pests.report_builder);
 
 // register a user
-app.get( '/register',                       auth.register);
+app.post( '/register',                       auth.register);
 
 
 // Facebook stuff
