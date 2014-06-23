@@ -1,0 +1,64 @@
+Manual url tests.
+
+Three types 
+ - BROWSER, typically Chrome, can also use ARC
+ - ARC,     Advanced Rest Client for POSTs on Chrome
+ - COMPAT,  browser compatability checks for IE, Firefox and Opera
+
+
+
+//=============================
+// ROUTES
+
+//=== Users ===
+ARC, register a user
+http://polar-forest-2324.herokuapp.com/register
+ARC, send FBtoken from phone app to server
+http://polar-forest-2324.herokuapp.com/fbtoken_in
+
+//=== Pest has been spotted ===
+ARC, add pest to database, returns the id
+ahttp://polar-forest-2324.herokuapp.com/pestspotted
+BROWSER, total of a specific pest type logged by this user
+http://polar-forest-2324.herokuapp.com/pestspotted/:user/:pest
+BROWSER, total noumber of pests logged by this user
+http://polar-forest-2324.herokuapp.com/pestspotted/:user
+
+//=== Park Management ===
+BROWSER, COMPAT, get park management report date selector
+http://polar-forest-2324.herokuapp.com/report
+BROWSER, COMPAT, get Park Management report
+http://polar-forest-2324.herokuapp.com/report_builder
+
+//=== Facebook ===
+BROWSER
+http://polar-forest-2324.herokuapp.com/login
+http://polar-forest-2324.herokuapp.com/login/callback
+http://polar-forest-2324.herokuapp.com/logout
+
+
+
+
+//=============================
+// TESTS
+//=== tests, basic Browser===
+http://polar-forest-2324.herokuapp.com/test
+http://polar-forest-2324.herokuapp.com/fbFeed
+http://polar-forest-2324.herokuapp.com/fbToken
+http://polar-forest-2324.herokuapp.com/error/:id
+http://polar-forest-2324.herokuapp.com/matt
+http://polar-forest-2324.herokuapp.com/test/:id
+//=== tests using dummy data in arrays ===
+http://polar-forest-2324.herokuapp.com/pests/spotted
+http://polar-forest-2324.herokuapp.com/pests/:id
+http://polar-forest-2324.herokuapp.com/pests/:id/:s
+//=== tests setting up a Postgresql database ===
+http://polar-forest-2324.herokuapp.com/db/new
+http://polar-forest-2324.herokuapp.com/db/visits/i
+http://polar-forest-2324.herokuapp.com/db/visits
+//=== Return list of all pests spotted ===
+http://polar-forest-2324.herokuapp.com/pestspotted_all
+http://polar-forest-2324.herokuapp.com/pestspotted_all/:json
+//=== get all pests logged for this day, day format 24-05-2014 ===
+http://polar-forest-2324.herokuapp.com/pestspotted_on/:date
+http://polar-forest-2324.herokuapp.com/pestspotted_on/:date/:json

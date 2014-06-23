@@ -216,7 +216,7 @@ exports.dbvisits = function(req, res){
 
 
 exports.pestspottedAll= function(req, res){
-  res.redirect('/pestspotted/all/text');
+  res.redirect('/pestspotted_all/text');
 };
 //=======================================================
 // Returns list of all pests spotted. 
