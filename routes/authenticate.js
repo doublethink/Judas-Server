@@ -74,13 +74,14 @@ pg.connect(connectionString, function(err, client, done) {
   //=> NO, insert a new uid
     } else {
       // create sql INSERT
-      var sql_insert = 'INSERT INTO '+USERDB+
-         '(uid, email, details, FBtoken) '+
-         'VALUES ( \''+
-          FBtoken.userID+'\', \''+
-          email == undefined ? "" : email +'\', \''+
-          details == undefined ? "" : details +'\', \''+
+      var sql_insert = 'INSERT INTO ' +USERDB+
+         '(uid, email, details, FBtoken) ' +
+         'VALUES ( \'' +
+          FBtoken.userID +'\', \''+
+          (email == undefined ? "" : email) +'\', \''+
+          JSON.strindify(details == undefined ? "" : details) +'\', \''+
           JSON.stringify(FBtoken) +'\')';
+
       console.log('MATT log notes---> sql_insert : '+ sql_insert);
 
       // add to db
