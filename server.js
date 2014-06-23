@@ -1,14 +1,12 @@
 // NWEN304 Project
 //===================================
 
-// todo list
-// Facebook security
-// park manager security
-
+// Libraries
 var express =           require("express")
   , logfmt =            require("logfmt")
   , bodyParser =        require('body-parser');
 
+// Models
 var testURI =           require('./routes/testURI')
   , config =            require('./config')
   , auth   =            require('./routes/authenticate')
@@ -18,91 +16,66 @@ var testURI =           require('./routes/testURI')
   , graph =             require('./routes/fbgraphTest')
   , script_server =     require('./scripts/script_server');
 
+// Set up app
 var app = express();
 app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
-
 app.use(logfmt.requestLogger());
 app.use(bodyParser());
 app.use(express.static(__dirname + '/views'));
 
+// Facebook app id & app secret
 if(!config.facebook.appId || !config.facebook.appSecret) {
     throw new Error('facebook appId and appSecret required in config.js');
 }
-
-
-// testing to get fb working... TODO remove once done
-var graph2     = require('fbgraph');
-var conf = {
-    client_id:      config.facebook.appId
-  , client_secret:  config.facebook.appSecret
-  , scope:          config.facebook.scope
-  , redirect_uri:   config.facebook.redirectUri
-};
-
-var wallPost = {
-  message: "I'm gonna come at you like a spider monkey, chip!"
-};
-
-graph2.get("/feed", wallPost, function(err, res) {
-  // returns the post id
-  console.log(res); // { id: xxxxx}
-});
 
 //=============================
 // ROUTES
 
 //=== Users ===
-// register a user
-app.post( '/register',                      auth.register);
-// send FBtoken from phone app to server
-app.post( '/fbtoken_in',                    auth.fbtoken_in);
+app.post('/register',               auth.register);// register a user
+app.post('/fbtoken_in',             auth.fbtoken_in);// send FBtoken from phone app to server
 
 //=== Pest has been spotted ===
-// add pest to database, returns the id
-app.post( '/pestspotted',                   pests.pestspotted);
-// total of a specific pest type logged by this user
-app.get( '/pestspotted/:user/:pest',        pests.pestspottedUserPest);
-// total noumber of pests logged by this user
-app.get( '/pestspotted/:user',              pests.pestspottedUser);
+app.post('/pestspotted',            pests.pestspotted);// add pest to database, returns the id
+app.get('/pestspotted/:user/:pest', pests.pestspottedUserPest);// total <pest_type> logged by this user
+app.get('/pestspotted/:user',       pests.pestspottedUser);// total pests logged by this user
 
 //=== Park Management ===
-// get park management report date selector
-app.get( '/report',                         management.report);
-// get Park Management report
-app.get( '/report_builder',                 management.report_builder);
+app.get('/report',                  graph.login); // management.report);// date selector for management report
+app.get('/report_builder',          management.report_builder);// park management report
 
 //=== Facebook ===
-app.get( '/login',                          graph.login);
-app.get( '/login/callback',                 graph.loginCallback);
-app.get( '/logout',                         authenticateFB.logout);
+app.get('/login',                   graph.login);
+app.get('/login/callback',          graph.loginCallback);
+app.get('/logout',                  authenticateFB.logout);
 
 //=== scripts ===
-app.get( '/scripts/:script',                script_server.serve);
+app.get('/scripts/:script',         script_server.serve);
 
 //=============================
 // TESTS
 //=== tests, basic ===
-app.get('/test',                            testURI.test);
-app.get('/fbFeed',                          testURI.fbFeed);
-app.get('/fbToken',                         testURI.fbToken);
-app.get('/error/:id',                       testURI.errorid);
-app.get('/matt',                            testURI.testMatt);
-app.get('/test/:id',                        testURI.testid);
+app.get('/test',                    testURI.test);
+app.get('/fbFeed',                  testURI.fbFeed);
+app.get('/fbToken',                 testURI.fbToken);
+app.get('/error/:id',               testURI.errorid);
+app.get('/matt',                    testURI.testMatt);
+app.get('/test/:id',                testURI.testid);
 //=== tests using dummy data in arrays ===
-app.get('/pests/spotted',                   testURI.pestsspotted);
-app.get('/pests/:id',                       testURI.pestsid);
-app.get('/pests/:id/:s',                    testURI.pestsidfound);
+app.get('/pests/spotted',           testURI.pestsspotted);
+app.get('/pests/:id',               testURI.pestsid);
+app.get('/pests/:id/:s',            testURI.pestsidfound);
 //=== tests setting up a Postgresql database ===
-app.get('/db/new',                          testURI.dbnew);
-app.get('/db/visits/i',                     testURI.dbvisitsi);
-app.get('/db/visits',                       testURI.dbvisits);
+app.get('/db/new',                  testURI.dbnew);
+app.get('/db/visits/i',             testURI.dbvisitsi);
+app.get('/db/visits',               testURI.dbvisits);
 //=== Return list of all pests spotted ===
-app.get('/pestspotted_all',                 testURI.pestspottedAll);
-app.get('/pestspotted_all/:json',           testURI.pestspottedAllJson);
+app.get('/pestspotted_all',         testURI.pestspottedAll);
+app.get('/pestspotted_all/:json',   testURI.pestspottedAllJson);
 //=== get all pests logged for this day, day format 24-05-2014 ===
-app.get('/pestspotted_on/:date',            testURI.pestspotted_onDate);
-app.get('/pestspotted_on/:date/:json',      testURI.pestspotted_onDateJson);
+app.get('/pestspotted_on/:date',    testURI.pestspotted_onDate);
+app.get('/pestspotted_on/:date/:json', testURI.pestspotted_onDateJson);
 
 //======================================
 // server start
@@ -110,5 +83,4 @@ var port = Number(process.env.PORT || 5000);
 app.listen(port, function() {
   console.log("Listening on " + port);
 });
-// end server
 

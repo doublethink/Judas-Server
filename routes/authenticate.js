@@ -1,12 +1,7 @@
 /*
  * Authenticate user
- * 
- * User logs into Phonegap application.
- * Phonegap application authenticates user with Facebook and recieves a access token
- * Phonegap passes token to Server post json token /FBtoken_in
- * Server seeks long lived token from FBtoken
- * Server saves long lived token to db
- * From here server can access FB on behalf of user (assuming permissions)
+ * Still needs works...
+ *
  */
 
 var pg =                require('pg')
@@ -169,42 +164,8 @@ pg.connect(connectionString, function(err, client, done) {
 });
 }};
 
-/*
-//===============================================
-// Get FB application access token
-// php version $appsecret_proof= hash_hmac('sha256', $access_token, $app_secret); 
-// ### This launched straight away...
-
-FB.api('oauth/access_token', {
-    client_id: 'app_id',
-    client_secret: 'app_secret',
-    grant_type: 'client_credentials'
-}, function (res) {
-    if(!res || res.error) {
-        console.log(!res ? 'error occurred' : res.error);
-        return;
-    }
-
-    var accessToken = res.access_token;
-});
-*/
-
-
-exports.setResponse = function(res){
-  // Challenge Digest scheme is...
-  //   source http://technet.microsoft.com/en-us/library/cc780170%28v=ws.10%29.aspx
-  // Challenge = “Digest” digest-challenge
-  // HTTP Authentication digest-challenge = 1# (
-  //   realm=realm | [domain=“domainname”] |
-  //   nonce=“nonce-value” | [opaque=“opaque-value”] | [stale=(“true” | “false”)] |
-  //   [algorithm=(“MD5” | “MD5-sess” | token] |
-  //   [qop=1#(“auth” | “auth-int” | token)] | [auth-parm]
-  res.set({'WWW-Authenticate' : 'Digest Realm=\"user@judas.heroku.com\"',
-    'qop' : 'auth', // qop Quality Of Protection, auth = authorisation only
-    'nonce' : '12345'}); // nonce, unique encoded value generated for this challenge
-  return res;	
-}
-
+//================================================
+// AUTHORISATION CHECKS admin & user
 exports.admin = function(req){
   var admin = false;
 //  var access_code = req.session.access_code;
@@ -226,5 +187,23 @@ exports.user = function(req){
   res.send(401, "User ID has not been recognised."); // 401 Unauthorized
   return false;
 }
+
+//=================================================
+// HELPERS
+exports.setResponse = function(res){
+  // Challenge Digest scheme is...
+  //   source http://technet.microsoft.com/en-us/library/cc780170%28v=ws.10%29.aspx
+  // Challenge = “Digest” digest-challenge
+  // HTTP Authentication digest-challenge = 1# (
+  //   realm=realm | [domain=“domainname”] |
+  //   nonce=“nonce-value” | [opaque=“opaque-value”] | [stale=(“true” | “false”)] |
+  //   [algorithm=(“MD5” | “MD5-sess” | token] |
+  //   [qop=1#(“auth” | “auth-int” | token)] | [auth-parm]
+  res.set({'WWW-Authenticate' : 'Digest Realm=\"user@judas.heroku.com\"',
+    'qop' : 'auth', // qop Quality Of Protection, auth = authorisation only
+    'nonce' : '12345'}); // nonce, unique encoded value generated for this challenge
+  return res;	
+}
+
 
 

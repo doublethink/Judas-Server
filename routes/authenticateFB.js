@@ -1,10 +1,14 @@
 /*
+ * facebook-node-sdk
+ * Library for authenticating with Facebook, recommended by Facebook
+ *
  * Sample code from Node.js github repository
  * https://github.com/Thuzi/facebook-node-sdk/blob/master/samples/scrumptious/routes/home.js
  */
 
+// NB: failed to work on server
 
-var FB = require('fb'),
+var FB = require('fb'),  // facebook-node-sdk
     Step = require('step'),
     config = require('../config');
 

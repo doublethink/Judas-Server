@@ -1,10 +1,12 @@
-/**
- * Module dependencies.
+/*
+ * fbgraph
+ * Library for authenticating with facebook
+ * https://github.com/criso/fbgraph
+ *
  */
 
 var express   = require('express')
-  , graph     = require('fbgraph')
-//  , app       = module.exports = express.createServer()
+  , graph     = require('fbgraph') // fbgraph
   , config = require('../config');
 
 // this should really be in a config file!
@@ -14,31 +16,6 @@ var conf = {
   , scope:          config.facebook.scope
   , redirect_uri:   config.facebook.redirectUri
 };
-
-// Configuration
-/*
-app.configure(function(){
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
-});
-
-app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
-
-app.configure('production', function(){
-  app.use(express.errorHandler());
-});
-*/
-// Routes
-
-//app.get('/', function(req, res){
-//  res.render("index", { title: "click link to connect" });
-//});
 
 exports.login = function(req, res) {
 
@@ -87,7 +64,7 @@ graph.post("/feed", wallPost, function(err, res) {
 
 // user gets sent here after being authorized
 exports.loginCallback = function(req, res) {
-  res.render("index.html", { title: "Logged In" });
+  res.render("report.html", { title: "Logged In" });
 };
 
 
