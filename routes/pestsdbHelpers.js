@@ -31,7 +31,7 @@ exports.formatDateForNZ = function(date){
     var month = new String(d.getMonth()+1);
     r += month.length == 2 ? "-"+month : "-0"+month;
     r += "-"+d.getFullYear();
-    r += " "+weekdays[d.getday()]; 
+    r += " "+weekdays[d.getDay()]; 
     console.log("MATT log note---> date = "+ r);
     return r;
 }
