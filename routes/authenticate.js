@@ -32,7 +32,7 @@ FB.options({
 
 
 //=======================================================================
-// register user from phone
+// REGISTER USER on server, from client
 // test post json object
 // {"authResponse" : {"accessToken": "letMeInToo", "expiresIn": "00:09:00", "signedRequest": "signedByMatt", "userID": "Tywin"}, "email" : "test@test.com", "details" : {"first" : "Homer", "second" : "Simpson"}}
 
@@ -45,10 +45,10 @@ exports.register = function(req, res){
   var email = req.body.email;
   var details = req.body.details;
 
-if(details == null){
-  res.send(401, "User details not recieved."); // 401 Unauthorized
-} else if(FBtoken == null){
+if(FBtoken == null){
   res.send(401, "User token not recieved."); // 401 Unauthorized
+//} else if(details == null){
+//  res.send(401, "User details not recieved."); // 401 Unauthorized
 } else {
 pg.connect(connectionString, function(err, client, done) {
   var insert
@@ -69,7 +69,7 @@ pg.connect(connectionString, function(err, client, done) {
       console.log('MATT log notes---> '+FBtoken.uid+' is already in userdb');
 
       done();
-      res.send(418, "I'm a teapot and this user already exists. No changes made."); // 418, I'm a teapot error
+      res.send(400, "This user already exists. No changes made."); // 400, Bad request
 
   //=> NO, insert a new uid
     } else {
@@ -102,7 +102,7 @@ pg.connect(connectionString, function(err, client, done) {
 
 
 //=======================================================================
-// accept and store the FB response token
+// ACCEPT FB response token, from client
 // pre-requisite: body contains the Facebook authResponse token
 // NB: not sure this is sufficient to be sure we are communicating with the phone app.
 // tested post content -> {"authResponse" : {"accessToken": "letMeInToo", "expiresIn": "00:01:00", "signedRequest": "signedByMatt", "userID": "Bob"}}
@@ -161,7 +161,7 @@ pg.connect(connectionString, function(err, client, done) {
       console.log('MATT log notes---> '+FBtoken.uid+' is not in userdb');
 
       done();
-      res.send(418, "I'm a teapot and this user does not exist. No changes made."); // 418, I'm a teapot error
+      res.send(400, "This user does not exist. No changes made."); // 400, Bad Request
     }
   });
 });
@@ -187,54 +187,6 @@ FB.api('oauth/access_token', {
 });
 */
 
-
-//=====================================================================
-// respond with the Facebook authResponse token
-// pre-requisite: Body contains json {"userID": "xxx"}
-// prerequisite: userID value matches the userID in the token
-// tested post content -> {"userID": "Matt"}
-
-exports.fbtoken_out = function(req, res){
-  console.log("MATT log note---> post login");
-
-  var FBuserID = req.body.userID
-    , FBtoken;
-
-if(FBuserID == null){
-  res.send(401, "UserID has not been recieved."); // 401 Unauthorized
-} else {
-pg.connect(connectionString, function(err, client, done) {
-  var insert;
-
-  // create sql SELECT
-  var sql = 'SELECT * FROM '+USERDB+
-       ' WHERE uid = \''+ FBuserID +'\';';
-  console.log('MATT log notes---> sql : '+ sql);
-
-  // retrieve from db
-  query = client.query(sql);
-
-  // get most recent inserts id based on row count
-  query.on('row', function(row, result){
-    FBtoken = row.fbtoken;  // column name is lowercase out of db
-    console.log('MATT log notes---> FBtoken : '+ FBtoken);
-
-    // little point in checking the userID, but sets up conditional for something stronger
-    if(FBtoken == undefined){
-      return res.send(401, "UserID does not exist in the db."); // 401 Unauthorized
-    }
-    if(FBtoken.userID != FBuserID){
-      return res.send(401, "UserID does not match the stored token."); // 401 Unauthorized
-    }
-  });
-
-  // reply to client with id
-  query.on('end', function(row, result){
-    console.log('MATT log notes---> returning data');
-    res.json(202, FBtoken);                  // 202 request accepted
-  });
-});
-}};
 
 exports.setResponse = function(res){
   // Challenge Digest scheme is...
@@ -266,37 +218,3 @@ exports.user = function(req){
 }
 
 
-// test curl for authenticating user
-// curl --request POST "localhost:5000/user" --data "userId=Matt&password=stuff"
-//app.post('/user', function(req,res){
-/* 
-ref RFC2831 Digest SASL Authentication for steps to implement
-  NB: not a great security protocol, but gets basic securtity in place that can be upgraded later.
-  using qop = 'auth'
-  1. User has not recently authenticated
-  2. User has already authenticated and knows {userId, realm, qop and nonce}
-
-
-  var error;
-  console.log("Authenticating user.")
-  if(req.body.userId == null || req.body.password == null){
-    error = "No user or password supplied.";
-  }else{
-    for (i in users){
-      //console.log("userId : " + users[i].userId);
-      //console.log("password : " + users[i].password);
-      if(req.body.userId == users[i].userId && req.body.password == users[i].password){
-        var success = "Supplied user and password match.";
-        console.log(success);
-        res.send(200, success);
-			  return;
-      }
-    }
-  }
-
-  var error = error || "Supplied user and password failed.";
-  console.log(error);
-  res = setAuthenticateResponse(res)
-  res.send(401, error); // 401 Unauthorized
-});
-*/

@@ -16,6 +16,7 @@ var testURI =           require('./routes/testURI')
   , auth   =            require('./routes/authenticate')
   , authenticateFB =    require('./routes/authenticateFB')
   , pests =             require('./routes/pestsdb')
+  , management =        require('./routes/management')
   , graph =             require('./routes/fbgraphTest')
   , script_server =     require('./scripts/script_server');
 
@@ -31,34 +32,6 @@ if(!config.facebook.appId || !config.facebook.appSecret) {
     throw new Error('facebook appId and appSecret required in config.js');
 }
 
-//=============================
-// routing
-// add pest to database, returns the id
-app.post('/pestspotted',                    pests.pestspotted);
-// total of a specific pest type logged by this user
-app.get('/pestspotted/:user/:pest',         pests.pestspottedUserPest);
-// total noumber of pests logged by this user
-app.get('/pestspotted/:user',               pests.pestspottedUser);
-
-// get park management report date selector
-app.get('/report',                          pests.report);
-// get Park Management report
-app.get('/report_builder',                  pests.report_builder);
-
-// register a user
-app.post( '/register',                       auth.register);
-
-
-// Facebook stuff
-app.get( '/login',                          graph.login);
-app.get( '/login/callback',                 graph.loginCallback);
-app.get( '/logout',                         authenticateFB.logout);
-// getting token from the phone app
-app.post('/fbtoken_in',                     auth.fbtoken_in);
-//app.post('/fbtoken_out',                  auth.fbtoken_out);
-
-// script routes
-app.get('/scripts/:script',                 script_server.serve);
 
 // testing to get fb working... TODO remove once done
 var graph2     = require('fbgraph');
@@ -79,27 +52,59 @@ graph2.get("/feed", wallPost, function(err, res) {
 });
 
 //=============================
-// tests
-app.get('/test',                        testURI.test);
-app.get('/fbFeed',                      testURI.fbFeed);
-app.get('/fbToken',                     testURI.fbToken);
-app.get('/error/:id',                   testURI.errorid);
-app.get('/matt',                        testURI.testMatt);
-app.get('/test/:id',                    testURI.testid);
-// tests using dummy data in arrays
-app.get('/pests/spotted',               testURI.pestsspotted);
-app.get('/pests/:id',                   testURI.pestsid);
-app.get('/pests/:id/:s',                testURI.pestsidfound);
-// tests setting up a Postgresql database
-app.get('/db/new',                      testURI.dbnew);
-app.get('/db/visits/i',                 testURI.dbvisitsi);
-app.get('/db/visits',                   testURI.dbvisits);
-// Return list of all pests spotted.
-app.get('/pestspotted_all',                 pests.pestspottedAll);
-app.get('/pestspotted_all/:json',           pests.pestspottedAllJson);
-// get all pests logged for this day, day format 24-05-2014
-app.get('/pestspotted_on/:date',            pests.pestspotted_onDate);
-app.get('/pestspotted_on/:date/:json',      pests.pestspotted_onDateJson);
+// ROUTES
+
+//=== Users ===
+// register a user
+app.post( '/register',                      auth.register);
+// send FBtoken from phone app to server
+app.post( '/fbtoken_in',                    auth.fbtoken_in);
+
+//=== Pest has been spotted ===
+// add pest to database, returns the id
+app.post( '/pestspotted',                   pests.pestspotted);
+// total of a specific pest type logged by this user
+app.get( '/pestspotted/:user/:pest',        pests.pestspottedUserPest);
+// total noumber of pests logged by this user
+app.get( '/pestspotted/:user',              pests.pestspottedUser);
+
+//=== Park Management ===
+// get park management report date selector
+app.get( '/report',                         management.report);
+// get Park Management report
+app.get( '/report_builder',                 management.report_builder);
+
+//=== Facebook ===
+app.get( '/login',                          graph.login);
+app.get( '/login/callback',                 graph.loginCallback);
+app.get( '/logout',                         authenticateFB.logout);
+
+//=== scripts ===
+app.get( '/scripts/:script',                script_server.serve);
+
+//=============================
+// TESTS
+//=== tests, basic ===
+app.get('/test',                            testURI.test);
+app.get('/fbFeed',                          testURI.fbFeed);
+app.get('/fbToken',                         testURI.fbToken);
+app.get('/error/:id',                       testURI.errorid);
+app.get('/matt',                            testURI.testMatt);
+app.get('/test/:id',                        testURI.testid);
+//=== tests using dummy data in arrays ===
+app.get('/pests/spotted',                   testURI.pestsspotted);
+app.get('/pests/:id',                       testURI.pestsid);
+app.get('/pests/:id/:s',                    testURI.pestsidfound);
+//=== tests setting up a Postgresql database ===
+app.get('/db/new',                          testURI.dbnew);
+app.get('/db/visits/i',                     testURI.dbvisitsi);
+app.get('/db/visits',                       testURI.dbvisits);
+//=== Return list of all pests spotted ===
+app.get('/pestspotted_all',                 testURI.pestspottedAll);
+app.get('/pestspotted_all/:json',           testURI.pestspottedAllJson);
+//=== get all pests logged for this day, day format 24-05-2014 ===
+app.get('/pestspotted_on/:date',            testURI.pestspotted_onDate);
+app.get('/pestspotted_on/:date/:json',      testURI.pestspotted_onDateJson);
 
 //======================================
 // server start

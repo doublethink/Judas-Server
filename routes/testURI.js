@@ -215,3 +215,207 @@ exports.dbvisits = function(req, res){
 }; // end test Postgresql database
 
 
+exports.pestspottedAll= function(req, res){
+  res.redirect('/pestspotted/all/text');
+};
+//=======================================================
+// Returns list of all pests spotted. 
+// Limited details, can expand on request from team
+exports.pestspottedAllJson = function(req, res){
+  console.log("MATT log note---> get pestspotted/all");
+if(auth.admin(req)){
+  console.log('MATT log notes---> Passed authentication.');
+pg.connect(connectionString, function(err, client, done) {
+
+  // conduct search
+  var rows = [];
+  var query = client.query('SELECT * FROM '+DATABASE+';');
+
+  // build result
+  query.on('row', function(row, result){ 
+    // collect pest name and datetime they were spotted
+    rows.push('{userid : '+row.uid+', pest : '+row.pest+', date : '+row.datestamp+'}');
+    console.log("row ID: " + row.ID + " pest: " +row.pest);
+  });
+
+  // send it back to client
+  query.on('end', function(row, result){
+    console.log("size : " + rows.length);
+    res.set({"Cache-Control": "no-store"});
+		var str = "";
+    if(req.param('json') == "json"){
+      var first = true;
+      for(i = 0; i < rows.length; i++){
+        if(!first){ str += ', ' };
+        str += '{row : '+(i+1)+', value : '+rows[i] + '}';
+        first = false;
+      }
+      res.json(200, '{packet : [' + str + ']}');
+    } else {  
+      for(i = 0; i < rows.length; i++){
+        str += "row : "+(i+1)+", value : "+rows[i] + "<br>";
+      }
+      res.send(200,"List of pests in db :<br>" + str +"There are " + rows.length + " rows.");
+    }
+    done();
+  });
+});}
+};
+
+exports.pestspotted_onDate = function(req, res){
+  res.redirect('/pestspotted_on/' + req.param('date')+'/text');
+};
+//=======================================================================
+// get all pests logged for this day
+// Day format must equal DD-MM-YYYY for example /pestspotted_on/04-05-2014
+exports.pestspotted_onDateJson = function(req, res){
+  console.log("MATT log note---> get pestspotted/:date");
+if(auth.admin(req)){
+  console.log('MATT log notes---> Passed authentication.');
+pg.connect(connectionString, function(err, client, done) {
+
+  if(!dbhelp.validateDate(req.param('date'))){
+ 	return res.send(400, "Invalid date format. Use DD-MM-YYYY."); // 400 Bad Request, syntax.
+  } else {
+    console.log("MATT log note---> date validated.");
+
+  // format date to match db format
+    var date = formatDate(req.param('date'));
+
+  // calc next day
+    var nextDay = new Date(date);
+    nextDay.setDate(nextDay.getDate()+1);
+    console.log("MATT log note---> nextDay = "+ nextDay);
+
+  // create next day string for db search
+    var nextDayStr = ""+nextDay.getFullYear();
+    var t = new String(nextDay.getMonth()+1);
+    nextDayStr += t.length == 2 ? "-"+t : "-0"+t;
+    t = new String(nextDay.getDate());
+    nextDayStr += t.length == 2 ? "-"+t : "-0"+t;
+    console.log("MATT log note---> nextDayStr = "+ nextDayStr);
+
+  // conduct search
+    var rows = [];
+    var query = client.query('SELECT uid, pest, datestamp FROM '+DATABASE+
+        ' WHERE datestamp >= \'' + date + '\''+
+            ' AND datestamp < \''+nextDayStr+'\' ;');
+
+  // build result
+    query.on('row', function(row, result){ 
+      rows.push('{userid : '+row.uid+', pest : '+row.pest+', date : '+row.datestamp+'}');
+      console.log('MATT log notes---> added : '+ rows[rows.length-1]);
+    });
+
+  // send it back to client
+    query.on('end', function(row, result){
+      console.log("MATT log note---> size : " + rows.length);
+      res.set({"Cache-Control": "no-store"});
+      var str = "";
+      if(req.param('json') == "json"){
+        var first = true;
+        for(i = 0; i < rows.length; i++){
+          if(!first){ str += ', ' };
+          str += '{row : '+(i+1)+', value : '+rows[i] + '}';
+          first = false;
+        }
+        res.json('{packet : [' + str + ']}');
+      } else {
+        for(i = 0; i < rows.length; i++){
+          str += "row : "+(i+1)+", value : "+rows[i] + "<br>";
+        }
+        res.send("pests on this day :<br>" + str +"There are " + rows.length + " rows.");
+      }
+      done();
+    });
+  }
+});}
+};
+
+// NOTEPAD, old code kept for the moment
+
+/*
+//=====================================================================
+// respond with the Facebook authResponse token
+// pre-requisite: Body contains json {"userID": "xxx"}
+// prerequisite: userID value matches the userID in the token
+// tested post content -> {"userID": "Matt"}
+
+exports.fbtoken_out = function(req, res){
+  console.log("MATT log note---> post login");
+
+  var FBuserID = req.body.userID
+    , FBtoken;
+
+if(FBuserID == null){
+  res.send(401, "UserID has not been recieved."); // 401 Unauthorized
+} else {
+pg.connect(connectionString, function(err, client, done) {
+  var insert;
+
+  // create sql SELECT
+  var sql = 'SELECT * FROM '+USERDB+
+       ' WHERE uid = \''+ FBuserID +'\';';
+  console.log('MATT log notes---> sql : '+ sql);
+
+  // retrieve from db
+  query = client.query(sql);
+
+  // get most recent inserts id based on row count
+  query.on('row', function(row, result){
+    FBtoken = row.fbtoken;  // column name is lowercase out of db
+    console.log('MATT log notes---> FBtoken : '+ FBtoken);
+
+    // little point in checking the userID, but sets up conditional for something stronger
+    if(FBtoken == undefined){
+      return res.send(401, "UserID does not exist in the db."); // 401 Unauthorized
+    }
+    if(FBtoken.userID != FBuserID){
+      return res.send(401, "UserID does not match the stored token."); // 401 Unauthorized
+    }
+  });
+
+  // reply to client with id
+  query.on('end', function(row, result){
+    console.log('MATT log notes---> returning data');
+    res.json(202, FBtoken);                  // 202 request accepted
+  });
+});
+}};
+*/
+
+
+// test curl for authenticating user
+// curl --request POST "localhost:5000/user" --data "userId=Matt&password=stuff"
+//app.post('/user', function(req,res){
+/* 
+ref RFC2831 Digest SASL Authentication for steps to implement
+  NB: not a great security protocol, but gets basic securtity in place that can be upgraded later.
+  using qop = 'auth'
+  1. User has not recently authenticated
+  2. User has already authenticated and knows {userId, realm, qop and nonce}
+
+
+  var error;
+  console.log("Authenticating user.")
+  if(req.body.userId == null || req.body.password == null){
+    error = "No user or password supplied.";
+  }else{
+    for (i in users){
+      //console.log("userId : " + users[i].userId);
+      //console.log("password : " + users[i].password);
+      if(req.body.userId == users[i].userId && req.body.password == users[i].password){
+        var success = "Supplied user and password match.";
+        console.log(success);
+        res.send(200, success);
+			  return;
+      }
+    }
+  }
+
+  var error = error || "Supplied user and password failed.";
+  console.log(error);
+  res = setAuthenticateResponse(res)
+  res.send(401, error); // 401 Unauthorized
+});
+*/
