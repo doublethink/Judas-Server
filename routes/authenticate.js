@@ -54,6 +54,7 @@ pg.connect(connectionString, function(err, client, done) {
 
 
 });
+}
 };
 
 
