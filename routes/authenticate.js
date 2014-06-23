@@ -1,6 +1,6 @@
 /*
  * Authenticate user
- * Still needs works...
+ * Still needs work.
  *
  */
 
