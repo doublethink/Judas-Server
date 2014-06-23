@@ -69,9 +69,9 @@ pg.connect(connectionString, function(err, client, done) {
 
       // create sql INSERT
       var sql_insert = 'UPDATE '+USERDB+
-         'SET fbtoken = \''+
+         ' SET fbtoken = \''+
           JSON.stringify(FBtoken) +'\')'+
-         'WHERE uid = \''+
+         ' WHERE uid = \''+
           FBtoken.userID+'\';';
       console.log('MATT log notes---> sql_insert : '+ sql_insert);
 
