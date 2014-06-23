@@ -33,6 +33,8 @@ FB.options({
 
 //=======================================================================
 // register user from phone
+// test post json object
+// {"authResponse" : {"accessToken": "letMeInToo", "expiresIn": "00:09:00", "signedRequest": "signedByMatt", "userID": "Tywin"}, "email" : "test@test.com", "details" : {"first" : "Homer", "second" : "Simpson"}}
 
 exports.register = function(req, res){
   console.log("MATT log note---> post register");
@@ -144,7 +146,7 @@ pg.connect(connectionString, function(err, client, done) {
       console.log('MATT log notes---> sql_insert : '+ sql_insert);
 
       // add to db
-      client.query(sql_insert);
+      query = client.query(sql_insert);
 
       // reply to client with id
       query.on('end', function(row, result){
