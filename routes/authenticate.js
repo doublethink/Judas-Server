@@ -51,8 +51,50 @@ if(details == null){
 pg.connect(connectionString, function(err, client, done) {
   console.log("MATT log note---> pg connected");
 
+  var insert
+    , uids = [];
 
+  // does uid already exist?
+  var query = client.query('SELECT uid FROM '+USERDB);
+  query.on('row', function(row, result){
+     uids.push(row.uid);
+  });
 
+  query.on('end',  function(row, result){
+    console.log('MATT log existing uids---> '+uids.toString());
+    console.log('MATT log FBtoken.userID---> '+FBtoken.userID);
+
+  //=> YES, uid already exists
+    if(uids.indexOf(FBtoken.userID) >= 0){
+      console.log('MATT log notes---> '+FBtoken.uid+' is already in userdb');
+
+      done();
+      res.send(418, "I'm a teapot and this user already exists."); // 418, I'm a teapot error
+
+  //=> NO, insert a new uid
+    } else {
+      // create sql INSERT
+      var sql_insert = 'INSERT INTO '+USERDB+
+         '(uid, email, details, FBtoken) '+
+         'VALUES ( \''+
+          FBtoken.userID+'\', \''+
+          email == undefined ? "" : email +'\', \''+
+          details == undefined ? "" : details +'\', \''+
+          JSON.stringify(FBtoken) +'\')';
+      console.log('MATT log notes---> sql_insert : '+ sql_insert);
+
+      // add to db
+      client.query(sql_insert);
+
+      // reply to client with id
+      query.on('end', function(row, result){
+        console.log('MATT log notes---> data inserted');
+        console.log('MATT log notes---> result : '+insertId);
+        done();
+        res.send(201, '{"id" : "'+FBtoken.userID+'"}');                  // 201 is success resource created
+      });
+    }
+  });
 });
 }
 };
@@ -89,7 +131,7 @@ pg.connect(connectionString, function(err, client, done) {
     console.log('MATT log existing uids---> '+uids.toString());
     console.log('MATT log FBtoken.userID---> '+FBtoken.userID);
 
-    //=> YES, uid already exists
+  //=> YES, uid already exists
     if(uids.indexOf(FBtoken.userID) >= 0){
       console.log('MATT log notes---> '+FBtoken.uid+' is already in userdb');
 
@@ -116,7 +158,7 @@ pg.connect(connectionString, function(err, client, done) {
       done();
       res.send(200);
 
-    //=> NO, insert a new uid
+  //=> NO, insert a new uid
     } else {
       // create sql INSERT
       var sql_insert = 'INSERT INTO '+USERDB+
