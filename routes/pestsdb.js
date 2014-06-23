@@ -41,26 +41,31 @@ pg.connect(connectionString, function(err, client, done) {
 
   // add to db
   query = client.query(sql_insert);
-//  query = client.query('SELECT count(*) FROM '+DATABASE);
-
-  // get most recent inserts id based on row count
-  query.on('row', function(row, result){
-//    insertId = row.count;
-  });
 
   query.on('error', function(error){
     console.log('MATT log ERROR---> '+ error);
     done();
-    res.send(400, error);
+    res.send(400, "DB error, is the user valid?");
     return;
   });
 
   // reply to client with id
   query.on('end', function(row, result){
-    console.log('MATT log notes---> result : '+insertId);
-    res.set({"Cache-Control": "no-store"});
-    res.send(201, '{"id" : "'+insertId+'"}');    // 201 is success resource created
-    done();
+    // get id of last entry
+    innerQuery = client.query('SELECT count(*) FROM '+DATABASE);
+
+    // get most recent inserts id based on row count
+    innerQuery.on('row', function(row, result){
+      insertId = row.count;
+    });
+
+    // use id
+    innerQuery.on('end', function(result){
+      console.log('MATT log notes---> result : '+insertId);
+      res.set({"Cache-Control": "no-store"});
+      res.send(201, '{"id" : "'+insertId+'"}');    // 201 is success resource created
+      done();
+    });
   });
 });}
 };
