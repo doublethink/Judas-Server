@@ -88,7 +88,7 @@ pg.connect(connectionString, function(err, client, done) {
       // reply to client with id
       query.on('end', function(row, result){
         console.log('MATT log notes---> data inserted');
-        console.log('MATT log notes---> result : '+insertId);
+        console.log('MATT log notes---> userID : '+FBtoken.userID);
         done();
         res.send(201, '{"id" : "'+FBtoken.userID+'"}');                  // 201 is success resource created
       });
