@@ -9,7 +9,8 @@ var config =             require('../config')
   , FB =                 require('fb')
   , auth   =            require('./authenticate')
   , access_token
-  , mydb = "visits";
+  , mydb = "visits"
+  , DATABASE =          config.DATABASE;
 
 
 //===================================================================
