@@ -207,7 +207,7 @@ exports.setResponse = function(res){
 
 exports.admin = function(req){
   var admin = false;
-  var uid = req.
+//  var uid = req.
 
 
 
