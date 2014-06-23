@@ -94,7 +94,7 @@ CREATE TABLE judas2db(ID SERIAL PRIMARY KEY, longitude real NOT NULL, latitude r
 INSERT INTO judas2db(longitude, latitude, accuracy, datestamp, pest, uid) 
 VALUES (22, 33, 0.4, '2014-05-03', 'possum', 'Matt');
 INSERT INTO judas2db(longitude, latitude, accuracy, datestamp, pest, uid) 
-VALUES (22, 33, 0.4, '2014-05-03', 'possum', '1384121193');
+VALUES (174.775, -41.3049, 34.45, '2014-05-03', 'possum', '1384121193');
 
 
 

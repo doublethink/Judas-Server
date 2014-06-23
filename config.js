@@ -6,7 +6,8 @@ config.DATABASE = "judas2DB"
 config.USERDB = "userDB";
 
 // should end in /
-config.rootUrl = process.env.ROOT_URL || 'http://polar-forest-2324.herokuapp.com/';
+//config.rootUrl = process.env.ROOT_URL || 'http://polar-forest-2324.herokuapp.com/';
+config.rootUrl = process.env.ROOT_URL || 'http://judas.herokuapp.com/';
 
 config.facebook = {
     appId: process.env.FACEBOOK_APPID || '724664727600591',
