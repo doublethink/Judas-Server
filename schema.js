@@ -111,7 +111,8 @@ INSERT INTO userdb (uid, email, admin, details, fbtoken)
 VALUES ('1384121193', 'stephen@test.com', 'true', '{"first": "Stephen", "second": "Citizen"}', '{"accessToken": "letMeInMatt", "expiresIn": "00:02:00", "signedRequest": "signedByMatt", "userID": "1384121193"}');
 INSERT INTO userdb (uid, email, admin, details, fbtoken) 
 VALUES ('undefined673ddc106fed47b1', 'stephen@test.com', 'true', '{"first": "Stephen", "second": "Citizen"}', '{"accessToken": "letMeInMatt", "expiresIn": "00:02:00", "signedRequest": "signedByMatt", "userID": "undefined673ddc106fed47b1"}');
-
+INSERT INTO userdb (uid, email, admin, details, fbtoken) 
+VALUES ('undefined49D929C2-7D1A-4E1F-BC52-EF0BDB2752A1', 'tammy@test.com', 'true', '{"first": "Tammy", "second": "Citizen"}', '{"accessToken": "letMeInMatt", "expiresIn": "00:02:00", "signedRequest": "signedByMatt", "userID": "undefined49D929C2-7D1A-4E1F-BC52-EF0BDB2752A1"}');
 
 
 //FB app-secret
