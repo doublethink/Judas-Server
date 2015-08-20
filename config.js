@@ -2,16 +2,16 @@
 // config
 var config = { };
 
-config.DATABASE = "judas2DB"
-config.USERDB = "userDB";
+config.DATABASE = "xxx"
+config.USERDB = "xxx";
 
 // should end in /
 //config.rootUrl = process.env.ROOT_URL || 'http://polar-forest-2324.herokuapp.com/';
 config.rootUrl = process.env.ROOT_URL || 'http://judas.herokuapp.com/';
 
 config.facebook = {
-    appId: process.env.FACEBOOK_APPID || '724664727600591',
-    appSecret: process.env.FACEBOOK_APPSECRET || '68914e65743a43fae4fae9a258920c0e',
+    appId: process.env.FACEBOOK_APPID || 'xxx',
+    appSecret: process.env.FACEBOOK_APPSECRET || 'xxx',
     appNamespace: process.env.FACEBOOK_APPNAMESPACE || 'snappest',
     scope: 'email, user_about_me, user_birthday, user_location, publish_stream',
     redirectUri: process.env.FACEBOOK_REDIRECTURI || config.rootUrl + 'login/callback'
